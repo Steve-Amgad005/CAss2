@@ -194,7 +194,7 @@ namespace CAss2 {
 private: System::Void label4_Click(System::Object^ sender, System::EventArgs^ e) {
 	CAss2::Forgot^ forgotForm = gcnew CAss2::Forgot();
 	forgotForm->Show();
-	this->Close();
+	this->Hide();
 }
 private: System::Void Login_Load(System::Object^ sender, System::EventArgs^ e) {
 }
