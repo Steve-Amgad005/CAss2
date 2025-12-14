@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Forgot1.h"
 namespace CAss2 {
 
 	using namespace System;
@@ -8,6 +8,8 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace CAss2;
+
 
 	/// <summary>
 	/// Summary for Login
@@ -59,13 +61,13 @@ namespace CAss2 {
 		{
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(Login::typeid));
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->label2 = (gcnew System::Windows::Forms::Label());
-			this->label3 = (gcnew System::Windows::Forms::Label());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
-			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->label4 = (gcnew System::Windows::Forms::Label());
+			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
+			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->label3 = (gcnew System::Windows::Forms::Label());
+			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->panel1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -85,30 +87,46 @@ namespace CAss2 {
 			this->panel1->TabIndex = 0;
 			this->panel1->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &Login::panel1_Paint);
 			// 
-			// label1
+			// button1
 			// 
-			this->label1->AutoSize = true;
-			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 26.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->button1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label1->ForeColor = System::Drawing::Color::White;
-			this->label1->Location = System::Drawing::Point(255, 20);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(106, 39);
-			this->label1->TabIndex = 0;
-			this->label1->Text = L"Login";
+			this->button1->ForeColor = System::Drawing::Color::Purple;
+			this->button1->Location = System::Drawing::Point(199, 285);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(226, 48);
+			this->button1->TabIndex = 6;
+			this->button1->Text = L"Login";
+			this->button1->UseVisualStyleBackColor = true;
 			// 
-			// label2
+			// label4
 			// 
-			this->label2->AutoSize = true;
-			this->label2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label4->AutoSize = true;
+			this->label4->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label2->ForeColor = System::Drawing::Color::White;
-			this->label2->Location = System::Drawing::Point(48, 126);
-			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(191, 33);
-			this->label2->TabIndex = 1;
-			this->label2->Text = L"Student Code";
-			this->label2->Click += gcnew System::EventHandler(this, &Login::label2_Click);
+			this->label4->ForeColor = System::Drawing::Color::White;
+			this->label4->Location = System::Drawing::Point(443, 242);
+			this->label4->Name = L"label4";
+			this->label4->Size = System::Drawing::Size(104, 20);
+			this->label4->TabIndex = 5;
+			this->label4->Text = L"Forgot code\?";
+			this->label4->Click += gcnew System::EventHandler(this, &Login::label4_Click);
+			// 
+			// textBox2
+			// 
+			this->textBox2->Location = System::Drawing::Point(299, 195);
+			this->textBox2->Multiline = true;
+			this->textBox2->Name = L"textBox2";
+			this->textBox2->Size = System::Drawing::Size(248, 33);
+			this->textBox2->TabIndex = 4;
+			// 
+			// textBox1
+			// 
+			this->textBox1->Location = System::Drawing::Point(299, 126);
+			this->textBox1->Multiline = true;
+			this->textBox1->Name = L"textBox1";
+			this->textBox1->Size = System::Drawing::Size(248, 33);
+			this->textBox1->TabIndex = 3;
 			// 
 			// label3
 			// 
@@ -123,45 +141,30 @@ namespace CAss2 {
 			this->label3->Text = L"National Number";
 			this->label3->Click += gcnew System::EventHandler(this, &Login::label3_Click);
 			// 
-			// textBox1
+			// label2
 			// 
-			this->textBox1->Location = System::Drawing::Point(299, 126);
-			this->textBox1->Multiline = true;
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(248, 33);
-			this->textBox1->TabIndex = 3;
-			// 
-			// textBox2
-			// 
-			this->textBox2->Location = System::Drawing::Point(299, 195);
-			this->textBox2->Multiline = true;
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(248, 33);
-			this->textBox2->TabIndex = 4;
-			// 
-			// label4
-			// 
-			this->label4->AutoSize = true;
-			this->label4->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->label2->AutoSize = true;
+			this->label2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label4->ForeColor = System::Drawing::Color::White;
-			this->label4->Location = System::Drawing::Point(443, 242);
-			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(104, 20);
-			this->label4->TabIndex = 5;
-			this->label4->Text = L"Forgot code\?";
+			this->label2->ForeColor = System::Drawing::Color::White;
+			this->label2->Location = System::Drawing::Point(48, 126);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(191, 33);
+			this->label2->TabIndex = 1;
+			this->label2->Text = L"Student Code";
+			this->label2->Click += gcnew System::EventHandler(this, &Login::label2_Click);
 			// 
-			// button1
+			// label1
 			// 
-			this->button1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->label1->AutoSize = true;
+			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 26.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->button1->ForeColor = System::Drawing::Color::Purple;
-			this->button1->Location = System::Drawing::Point(199, 285);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(226, 48);
-			this->button1->TabIndex = 6;
-			this->button1->Text = L"Login";
-			this->button1->UseVisualStyleBackColor = true;
+			this->label1->ForeColor = System::Drawing::Color::White;
+			this->label1->Location = System::Drawing::Point(255, 20);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(106, 39);
+			this->label1->TabIndex = 0;
+			this->label1->Text = L"Login";
 			// 
 			// Login
 			// 
@@ -175,6 +178,7 @@ namespace CAss2 {
 			this->MinimizeBox = false;
 			this->Name = L"Login";
 			this->Text = L"Login";
+			this->Load += gcnew System::EventHandler(this, &Login::Login_Load);
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
 			this->ResumeLayout(false);
@@ -187,5 +191,12 @@ namespace CAss2 {
 	}
 	private: System::Void label3_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
+private: System::Void label4_Click(System::Object^ sender, System::EventArgs^ e) {
+	CAss2::Forgot^ forgotForm = gcnew CAss2::Forgot();
+	forgotForm->Show();
+	this->Close();
+}
+private: System::Void Login_Load(System::Object^ sender, System::EventArgs^ e) {
+}
 };
 }
