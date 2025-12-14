@@ -121,10 +121,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AdminPage.cpp" />
     <ClCompile Include="Forgot1.cpp" />
     <ClCompile Include="Login.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AdminPage.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="Forgot1.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -133,6 +137,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AdminPage.resx">
+      <DependentUpon>AdminPage.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forgot1.resx">
       <DependentUpon>Forgot1.h</DependentUpon>
     </EmbeddedResource>
