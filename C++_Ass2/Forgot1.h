@@ -59,20 +59,20 @@ namespace CAss2 {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(Forgot::typeid));
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->label2 = (gcnew System::Windows::Forms::Label());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->panel1->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// panel1
 			// 
-			this->panel1->BackColor = System::Drawing::Color::Purple;
+			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
+				static_cast<System::Int32>(static_cast<System::Byte>(64)));
 			this->panel1->Controls->Add(this->textBox1);
 			this->panel1->Controls->Add(this->label2);
 			this->panel1->Controls->Add(this->button1);
@@ -83,6 +83,27 @@ namespace CAss2 {
 			this->panel1->Name = L"panel1";
 			this->panel1->Size = System::Drawing::Size(624, 366);
 			this->panel1->TabIndex = 1;
+			// 
+			// textBox1
+			// 
+			this->textBox1->Location = System::Drawing::Point(187, 230);
+			this->textBox1->Multiline = true;
+			this->textBox1->Name = L"textBox1";
+			this->textBox1->Size = System::Drawing::Size(248, 33);
+			this->textBox1->TabIndex = 8;
+			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label2->ForeColor = System::Drawing::Color::White;
+			this->label2->Location = System::Drawing::Point(222, 185);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(178, 33);
+			this->label2->TabIndex = 7;
+			this->label2->Text = L"Your code is";
+			this->label2->Click += gcnew System::EventHandler(this, &Forgot::label2_Click);
 			// 
 			// button1
 			// 
@@ -129,37 +150,17 @@ namespace CAss2 {
 			this->label1->Text = L"Forgot Code";
 			this->label1->Click += gcnew System::EventHandler(this, &Forgot::label1_Click);
 			// 
-			// label2
-			// 
-			this->label2->AutoSize = true;
-			this->label2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label2->ForeColor = System::Drawing::Color::White;
-			this->label2->Location = System::Drawing::Point(222, 185);
-			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(178, 33);
-			this->label2->TabIndex = 7;
-			this->label2->Text = L"Your code is";
-			this->label2->Click += gcnew System::EventHandler(this, &Forgot::label2_Click);
-			// 
-			// textBox1
-			// 
-			this->textBox1->Location = System::Drawing::Point(187, 230);
-			this->textBox1->Multiline = true;
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(248, 33);
-			this->textBox1->TabIndex = 8;
-			// 
 			// Forgot
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
+			this->BackColor = System::Drawing::Color::Purple;
 			this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
 			this->ClientSize = System::Drawing::Size(872, 493);
 			this->Controls->Add(this->panel1);
 			this->Name = L"Forgot";
 			this->Text = L"Forgot";
+			this->Load += gcnew System::EventHandler(this, &Forgot::Forgot_Load);
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
 			this->ResumeLayout(false);
@@ -169,6 +170,8 @@ namespace CAss2 {
 	private: System::Void label1_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
 private: System::Void label2_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void Forgot_Load(System::Object^ sender, System::EventArgs^ e) {
 }
 };
 }
