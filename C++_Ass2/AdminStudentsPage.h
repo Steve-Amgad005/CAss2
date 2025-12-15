@@ -1,4 +1,5 @@
 #pragma once
+#include "AdminAddStudent.h";
 
 namespace CAss2 {
 
@@ -296,6 +297,8 @@ namespace CAss2 {
 		}
 #pragma endregion
 	private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e) {
+		CAss2::AdminAddStudent^ addStudentForm = gcnew CAss2::AdminAddStudent();
+		addStudentForm->Show();
 	}
 private: System::Void AdminStudentsPage_Load(System::Object^ sender, System::EventArgs^ e) {
 }
