@@ -2,7 +2,7 @@
 #include "Forgot1.h"
 #include "StudetMainPage.h"
 #include "AdminPage.h"
-
+#include "ProfessorPage.h"
 namespace CAss2 {
 
 	using namespace System;
@@ -229,6 +229,11 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 	else if (code->Equals("000")&&comboBox1->SelectedItem->Equals("Admin")) {
 		CAss2::AdminPage^ adminPage = gcnew CAss2::AdminPage();
 		adminPage->Show();
+		this->Hide();
+	}
+	else if (code->Equals("kmr") && comboBox1->SelectedItem->Equals("Teacher")) {
+		CAss2::ProfessorPage^ prof = gcnew CAss2::ProfessorPage();
+		prof->Show();
 		this->Hide();
 	}
 	else {

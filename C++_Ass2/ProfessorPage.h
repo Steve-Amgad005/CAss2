@@ -192,6 +192,7 @@ namespace CAss2 {
 			this->button1->Size = System::Drawing::Size(41, 39);
 			this->button1->TabIndex = 4;
 			this->button1->UseVisualStyleBackColor = false;
+			this->button1->Click += gcnew System::EventHandler(this, &ProfessorPage::button1_Click);
 			// 
 			// panel1
 			// 
@@ -359,5 +360,7 @@ namespace CAss2 {
 
 		}
 #pragma endregion
+		// declaration for back button handler
+		private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
 	};
 }
