@@ -199,8 +199,7 @@ namespace CAss2 {
 	}
 	private: System::Void label1_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
-	private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
-	}
+	private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e);
 	private: System::Void AdminPage_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
 
