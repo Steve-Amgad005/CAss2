@@ -251,7 +251,7 @@ namespace CAss2 {
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(226, 48);
 			this->button2->TabIndex = 18;
-			this->button2->Text = L"Enter";
+			this->button2->Text = L"Add";
 			this->button2->UseVisualStyleBackColor = true;
 			this->button2->Click += gcnew System::EventHandler(this, &AdminAddStudent::button2_Click);
 			// 

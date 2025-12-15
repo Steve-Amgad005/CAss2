@@ -68,6 +68,8 @@ namespace CAss2 {
 		{
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->label8 = (gcnew System::Windows::Forms::Label());
+			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
 			this->comboBox3 = (gcnew System::Windows::Forms::ComboBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
@@ -81,8 +83,6 @@ namespace CAss2 {
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->label7 = (gcnew System::Windows::Forms::Label());
-			this->label8 = (gcnew System::Windows::Forms::Label());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
 			this->panel1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -122,6 +122,26 @@ namespace CAss2 {
 			this->panel1->Name = L"panel1";
 			this->panel1->Size = System::Drawing::Size(429, 512);
 			this->panel1->TabIndex = 2;
+			// 
+			// label8
+			// 
+			this->label8->AutoSize = true;
+			this->label8->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label8->ForeColor = System::Drawing::Color::White;
+			this->label8->Location = System::Drawing::Point(25, 29);
+			this->label8->Name = L"label8";
+			this->label8->Size = System::Drawing::Size(125, 24);
+			this->label8->TabIndex = 29;
+			this->label8->Text = L"Student Code";
+			// 
+			// textBox3
+			// 
+			this->textBox3->Location = System::Drawing::Point(192, 26);
+			this->textBox3->Multiline = true;
+			this->textBox3->Name = L"textBox3";
+			this->textBox3->Size = System::Drawing::Size(214, 33);
+			this->textBox3->TabIndex = 30;
 			// 
 			// comboBox3
 			// 
@@ -259,7 +279,7 @@ namespace CAss2 {
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(226, 48);
 			this->button2->TabIndex = 18;
-			this->button2->Text = L"Enter";
+			this->button2->Text = L"Modify";
 			this->button2->UseVisualStyleBackColor = true;
 			// 
 			// label7
@@ -273,26 +293,6 @@ namespace CAss2 {
 			this->label7->Size = System::Drawing::Size(53, 24);
 			this->label7->TabIndex = 13;
 			this->label7->Text = L"Fees";
-			// 
-			// label8
-			// 
-			this->label8->AutoSize = true;
-			this->label8->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label8->ForeColor = System::Drawing::Color::White;
-			this->label8->Location = System::Drawing::Point(25, 29);
-			this->label8->Name = L"label8";
-			this->label8->Size = System::Drawing::Size(125, 24);
-			this->label8->TabIndex = 29;
-			this->label8->Text = L"Student Code";
-			// 
-			// textBox3
-			// 
-			this->textBox3->Location = System::Drawing::Point(192, 26);
-			this->textBox3->Multiline = true;
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(214, 33);
-			this->textBox3->TabIndex = 30;
 			// 
 			// AdminModifyStudent
 			// 

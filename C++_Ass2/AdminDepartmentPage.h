@@ -1,4 +1,7 @@
 #pragma once
+#include "AdminAddDepartment.h"
+#include "AdminModifyDepartment.h"
+#include "AdminDeleteDepartment.h"
 
 namespace CAss2 {
 
@@ -67,6 +70,10 @@ namespace CAss2 {
 			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(AdminDepartmentPage::typeid));
 			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
+			this->DepartmentName = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->DepartmentCode = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->StudentsCount = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->DoctorsCount = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->button5 = (gcnew System::Windows::Forms::Button());
 			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
@@ -75,10 +82,6 @@ namespace CAss2 {
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
-			this->DepartmentName = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->DepartmentCode = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->StudentsCount = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->DoctorsCount = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->panel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
@@ -111,6 +114,26 @@ namespace CAss2 {
 			this->dataGridView1->Size = System::Drawing::Size(838, 302);
 			this->dataGridView1->TabIndex = 11;
 			// 
+			// DepartmentName
+			// 
+			this->DepartmentName->HeaderText = L"Department Name";
+			this->DepartmentName->Name = L"DepartmentName";
+			// 
+			// DepartmentCode
+			// 
+			this->DepartmentCode->HeaderText = L"Department Code";
+			this->DepartmentCode->Name = L"DepartmentCode";
+			// 
+			// StudentsCount
+			// 
+			this->StudentsCount->HeaderText = L"Students Count";
+			this->StudentsCount->Name = L"StudentsCount";
+			// 
+			// DoctorsCount
+			// 
+			this->DoctorsCount->HeaderText = L"Doctors Count";
+			this->DoctorsCount->Name = L"DoctorsCount";
+			// 
 			// button5
 			// 
 			this->button5->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
@@ -126,6 +149,7 @@ namespace CAss2 {
 			this->button5->TabIndex = 7;
 			this->button5->Text = L"Add Department";
 			this->button5->UseVisualStyleBackColor = false;
+			this->button5->Click += gcnew System::EventHandler(this, &AdminDepartmentPage::button5_Click);
 			// 
 			// button4
 			// 
@@ -140,8 +164,9 @@ namespace CAss2 {
 			this->button4->Name = L"button4";
 			this->button4->Size = System::Drawing::Size(187, 60);
 			this->button4->TabIndex = 8;
-			this->button4->Text = L"Edit Department";
+			this->button4->Text = L"Modify Department";
 			this->button4->UseVisualStyleBackColor = false;
+			this->button4->Click += gcnew System::EventHandler(this, &AdminDepartmentPage::button4_Click);
 			// 
 			// button3
 			// 
@@ -158,6 +183,7 @@ namespace CAss2 {
 			this->button3->TabIndex = 9;
 			this->button3->Text = L"Delete Department";
 			this->button3->UseVisualStyleBackColor = false;
+			this->button3->Click += gcnew System::EventHandler(this, &AdminDepartmentPage::button3_Click);
 			// 
 			// button2
 			// 
@@ -224,26 +250,6 @@ namespace CAss2 {
 			this->pictureBox1->TabIndex = 0;
 			this->pictureBox1->TabStop = false;
 			// 
-			// DepartmentName
-			// 
-			this->DepartmentName->HeaderText = L"Department Name";
-			this->DepartmentName->Name = L"DepartmentName";
-			// 
-			// DepartmentCode
-			// 
-			this->DepartmentCode->HeaderText = L"Department Code";
-			this->DepartmentCode->Name = L"DepartmentCode";
-			// 
-			// StudentsCount
-			// 
-			this->StudentsCount->HeaderText = L"Students Count";
-			this->StudentsCount->Name = L"StudentsCount";
-			// 
-			// DoctorsCount
-			// 
-			this->DoctorsCount->HeaderText = L"Doctors Count";
-			this->DoctorsCount->Name = L"DoctorsCount";
-			// 
 			// AdminDepartmentPage
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -273,5 +279,17 @@ namespace CAss2 {
 
 	// declaration for back button handler
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
-	};
+	private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e) {
+		AdminAddDepartment^ addDeptForm = gcnew AdminAddDepartment();
+		addDeptForm->ShowDialog();
+	}
+private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
+	AdminModifyDepartment^ modifyDeptForm = gcnew AdminModifyDepartment();
+	modifyDeptForm->ShowDialog();
+}
+private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+	AdminDeleteDepartment^ deleteDeptForm = gcnew AdminDeleteDepartment();
+	deleteDeptForm->ShowDialog();
+}
+};
 }
