@@ -1,5 +1,7 @@
 #pragma once
 #include "Forgot1.h"
+#include "StudetMainPage.h"
+
 namespace CAss2 {
 
 	using namespace System;
@@ -98,6 +100,7 @@ namespace CAss2 {
 			this->button1->TabIndex = 6;
 			this->button1->Text = L"Login";
 			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &Login::button1_Click);
 			// 
 			// label4
 			// 
@@ -197,6 +200,11 @@ private: System::Void label4_Click(System::Object^ sender, System::EventArgs^ e)
 	this->Hide();
 }
 private: System::Void Login_Load(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+	CAss2::StudetMainPage^ forgotForm = gcnew CAss2::StudetMainPage();
+	forgotForm->Show();
+	this->Hide();
 }
 };
 }
