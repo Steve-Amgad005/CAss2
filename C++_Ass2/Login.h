@@ -226,7 +226,7 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 		studentPage->Show();
 		this->Hide();
 	}
-	else if (code->Equals("000")&&comboBox1->SelectedText->Equals("Admin")) {
+	else if (code->Equals("000")&&comboBox1->SelectedItem->Equals("Admin")) {
 		CAss2::AdminPage^ adminPage = gcnew CAss2::AdminPage();
 		adminPage->Show();
 		this->Hide();
