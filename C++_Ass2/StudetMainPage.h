@@ -414,6 +414,7 @@ namespace CAss2 {
 			this->button5->TabIndex = 8;
 			this->button5->Text = L"Student fees";
 			this->button5->UseVisualStyleBackColor = false;
+			this->button5->Click += gcnew System::EventHandler(this, &StudetMainPage::button5_Click);
 			// 
 			// button6
 			// 
@@ -521,6 +522,29 @@ private: System::Void button6_Click(System::Object^ sender, System::EventArgs^ e
 private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
 	StudentAcademicCourses^ coursesForm = gcnew StudentAcademicCourses();
 	coursesForm->Show();
+}
+private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e) {
+	bool isPaid = true;
+
+	int totalFees = 15500;
+	int paidAmount = 15500;
+
+	int remaining = totalFees - paidAmount;
+
+	String^ status = isPaid ? "Paid" : "Not Paid";
+
+	String^ message =
+		"Student Fees Status\n\n"
+		"Status: " + status + "\n"
+		"Amount Paid: " + paidAmount.ToString() + " EGP\n"
+		"Remaining: " + remaining.ToString() + " EGP";
+
+	MessageBox::Show(
+		message,
+		"Student Fees",
+		MessageBoxButtons::OK,
+		MessageBoxIcon::Information
+	);
 }
 };
 }
