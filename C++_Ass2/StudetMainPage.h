@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "StudentGrades.h"
+
 namespace CAss2 {
 
 	using namespace System;
@@ -498,6 +500,8 @@ namespace CAss2 {
 		);
 	}
 	private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+		StudentGrades^ gradesForm = gcnew StudentGrades();
+		gradesForm->Show();
 	}
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
 private: System::Void button7_Click(System::Object^ sender, System::EventArgs^ e) {
