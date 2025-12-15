@@ -1,5 +1,8 @@
 #pragma once
 #include "AdminAddStudent.h";
+#include "AdminModifyStudent.h"
+#include "AdminDeleteStudent.h"
+
 
 namespace CAss2 {
 
@@ -68,9 +71,9 @@ namespace CAss2 {
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(AdminStudentsPage::typeid));
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle4 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle5 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle6 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
@@ -173,6 +176,7 @@ namespace CAss2 {
 			this->button3->TabIndex = 3;
 			this->button3->Text = L"Delete Student";
 			this->button3->UseVisualStyleBackColor = false;
+			this->button3->Click += gcnew System::EventHandler(this, &AdminStudentsPage::button3_Click);
 			// 
 			// button4
 			// 
@@ -187,8 +191,9 @@ namespace CAss2 {
 			this->button4->Name = L"button4";
 			this->button4->Size = System::Drawing::Size(187, 60);
 			this->button4->TabIndex = 3;
-			this->button4->Text = L"Edit Student";
+			this->button4->Text = L"Modify Student";
 			this->button4->UseVisualStyleBackColor = false;
+			this->button4->Click += gcnew System::EventHandler(this, &AdminStudentsPage::button4_Click);
 			// 
 			// button5
 			// 
@@ -209,17 +214,17 @@ namespace CAss2 {
 			// 
 			// dataGridView1
 			// 
-			dataGridViewCellStyle4->BackColor = System::Drawing::Color::White;
-			this->dataGridView1->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
-			dataGridViewCellStyle5->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle5->BackColor = System::Drawing::Color::DarkGray;
-			dataGridViewCellStyle5->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
+			dataGridViewCellStyle1->BackColor = System::Drawing::Color::White;
+			this->dataGridView1->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle2->BackColor = System::Drawing::Color::DarkGray;
+			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle5->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle5->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle5->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle5->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dataGridView1->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+			dataGridViewCellStyle2->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->dataGridView1->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(8) {
 				this->StudentName,
@@ -227,8 +232,8 @@ namespace CAss2 {
 			});
 			this->dataGridView1->Location = System::Drawing::Point(189, 255);
 			this->dataGridView1->Name = L"dataGridView1";
-			dataGridViewCellStyle6->BackColor = System::Drawing::Color::White;
-			this->dataGridView1->RowsDefaultCellStyle = dataGridViewCellStyle6;
+			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
+			this->dataGridView1->RowsDefaultCellStyle = dataGridViewCellStyle3;
 			this->dataGridView1->Size = System::Drawing::Size(838, 302);
 			this->dataGridView1->TabIndex = 4;
 			// 
@@ -305,5 +310,13 @@ private: System::Void AdminStudentsPage_Load(System::Object^ sender, System::Eve
 
 	// declaration of back handler
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
+	AdminModifyStudent^ AMS = gcnew AdminModifyStudent();
+	AMS->Show();
+}
+private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+	AdminDeleteStudent^ AMS = gcnew AdminDeleteStudent();
+	AMS->Show();
+}
 };
 }

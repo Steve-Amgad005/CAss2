@@ -122,7 +122,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AdminAddStudent.cpp" />
+    <ClCompile Include="AdminDeleteStudent.cpp" />
     <ClCompile Include="AdminDepartmentPage.cpp" />
+    <ClCompile Include="AdminModifyStudent.cpp" />
     <ClCompile Include="AdminPage.cpp" />
     <ClCompile Include="AdminStudentsPage.cpp" />
     <ClCompile Include="Forgot1.cpp" />
@@ -138,7 +140,13 @@
     <ClInclude Include="AdminAddStudent.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="AdminDeleteStudent.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="AdminDepartmentPage.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="AdminModifyStudent.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="AdminPage.h">
@@ -176,8 +184,14 @@
     <EmbeddedResource Include="AdminAddStudent.resx">
       <DependentUpon>AdminAddStudent.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AdminDeleteStudent.resx">
+      <DependentUpon>AdminDeleteStudent.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AdminDepartmentPage.resx">
       <DependentUpon>AdminDepartmentPage.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdminModifyStudent.resx">
+      <DependentUpon>AdminModifyStudent.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AdminPage.resx">
       <DependentUpon>AdminPage.h</DependentUpon>
