@@ -45,6 +45,9 @@
     <ClCompile Include="ProfessorEnterGrades.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ProfessorAttendanceSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Login.h">
@@ -75,6 +78,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ProfessorEnterGrades.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProfessorAttendanceSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
