@@ -314,7 +314,6 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 	openFileDialog->Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
 
 	if (openFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK) {
-		pictureBox1->Image = Image::FromFile(openFileDialog->FileName);
 	}
 
 }
