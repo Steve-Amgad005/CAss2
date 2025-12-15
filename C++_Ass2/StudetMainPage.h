@@ -80,6 +80,7 @@ namespace CAss2 {
 		{
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(StudetMainPage::typeid));
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			this->panel2 = (gcnew System::Windows::Forms::Panel());
 			this->label12 = (gcnew System::Windows::Forms::Label());
@@ -102,7 +103,6 @@ namespace CAss2 {
 			this->button5 = (gcnew System::Windows::Forms::Button());
 			this->button6 = (gcnew System::Windows::Forms::Button());
 			this->button7 = (gcnew System::Windows::Forms::Button());
-			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->panel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->panel2->SuspendLayout();
@@ -120,6 +120,18 @@ namespace CAss2 {
 			this->panel1->Name = L"panel1";
 			this->panel1->Size = System::Drawing::Size(1122, 100);
 			this->panel1->TabIndex = 0;
+			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 26.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label1->ForeColor = System::Drawing::Color::White;
+			this->label1->Location = System::Drawing::Point(262, 31);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(599, 39);
+			this->label1->TabIndex = 2;
+			this->label1->Text = L"New Cairo Technological University";
 			// 
 			// pictureBox1
 			// 
@@ -433,24 +445,13 @@ namespace CAss2 {
 			this->button7->Text = L"University website";
 			this->button7->UseVisualStyleBackColor = false;
 			// 
-			// label1
-			// 
-			this->label1->AutoSize = true;
-			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 26.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label1->ForeColor = System::Drawing::Color::White;
-			this->label1->Location = System::Drawing::Point(262, 31);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(599, 39);
-			this->label1->TabIndex = 2;
-			this->label1->Text = L"New Cairo Technological University";
-			// 
 			// StudetMainPage
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::Purple;
 			this->ClientSize = System::Drawing::Size(1242, 599);
+			this->ControlBox = false;
 			this->Controls->Add(this->button5);
 			this->Controls->Add(this->button6);
 			this->Controls->Add(this->button7);
@@ -463,7 +464,6 @@ namespace CAss2 {
 			this->ForeColor = System::Drawing::SystemColors::ControlText;
 			this->Name = L"StudetMainPage";
 			this->Text = L"StudetMainPage";
-			this->WindowState = System::Windows::Forms::FormWindowState::Maximized;
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
