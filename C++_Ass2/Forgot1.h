@@ -1,5 +1,5 @@
 #pragma once
-#include "Login.h"
+
 namespace CAss2 {
 
 	using namespace System;
@@ -50,7 +50,7 @@ namespace CAss2 {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -116,7 +116,6 @@ namespace CAss2 {
 			this->button1->TabIndex = 6;
 			this->button1->Text = L"Back";
 			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &Forgot::button1_Click);
 			// 
 			// textBox2
 			// 
@@ -170,14 +169,9 @@ namespace CAss2 {
 #pragma endregion
 	private: System::Void label1_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
-private: System::Void label2_Click(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void Forgot_Load(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-	CAss2::Login^ Loginform = gcnew CAss2::Login();
-	Loginform->Show();
-	this->Close();
-}
-};
+	private: System::Void label2_Click(System::Object^ sender, System::EventArgs^ e) {
+	}
+	private: System::Void Forgot_Load(System::Object^ sender, System::EventArgs^ e) {
+	}
+	};
 }

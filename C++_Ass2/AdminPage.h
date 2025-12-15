@@ -47,7 +47,7 @@ namespace CAss2 {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -58,8 +58,8 @@ namespace CAss2 {
 		{
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(AdminPage::typeid));
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
+			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
@@ -80,19 +80,6 @@ namespace CAss2 {
 			this->panel1->TabIndex = 0;
 			this->panel1->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &AdminPage::panel1_Paint);
 			// 
-			// label1
-			// 
-			this->label1->AutoSize = true;
-			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 26.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label1->ForeColor = System::Drawing::Color::White;
-			this->label1->Location = System::Drawing::Point(301, 28);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(599, 39);
-			this->label1->TabIndex = 1;
-			this->label1->Text = L"New Cairo Technological University";
-			this->label1->Click += gcnew System::EventHandler(this, &AdminPage::label1_Click);
-			// 
 			// pictureBox1
 			// 
 			this->pictureBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
@@ -105,6 +92,19 @@ namespace CAss2 {
 			this->pictureBox1->TabIndex = 0;
 			this->pictureBox1->TabStop = false;
 			this->pictureBox1->Click += gcnew System::EventHandler(this, &AdminPage::pictureBox1_Click);
+			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 26.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label1->ForeColor = System::Drawing::Color::White;
+			this->label1->Location = System::Drawing::Point(301, 26);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(599, 39);
+			this->label1->TabIndex = 1;
+			this->label1->Text = L"New Cairo Technological University";
+			this->label1->Click += gcnew System::EventHandler(this, &AdminPage::label1_Click);
 			// 
 			// button1
 			// 
@@ -195,9 +195,9 @@ namespace CAss2 {
 	}
 	private: System::Void label1_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
-private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
-}
-private: System::Void AdminPage_Load(System::Object^ sender, System::EventArgs^ e) {
-}
-};
+	private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
+	}
+	private: System::Void AdminPage_Load(System::Object^ sender, System::EventArgs^ e) {
+	}
+	};
 }
