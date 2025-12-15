@@ -119,6 +119,7 @@ namespace CAss2 {
 			this->button1->Size = System::Drawing::Size(41, 39);
 			this->button1->TabIndex = 16;
 			this->button1->UseVisualStyleBackColor = false;
+			this->button1->Click += gcnew System::EventHandler(this, &ProfessorAttendanceSet::button1_Click);
 			// 
 			// panel2
 			// 
@@ -304,5 +305,8 @@ namespace CAss2 {
 	}
 private: System::Void panel2_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
 }
+
+	// back button handler declaration
+	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }
