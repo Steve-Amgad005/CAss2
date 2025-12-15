@@ -66,6 +66,7 @@ namespace CAss2 {
 	private: System::Windows::Forms::Button^ button6;
 	private: System::Windows::Forms::Button^ button7;
 	private: System::Windows::Forms::Label^ label1;
+	private: System::Windows::Forms::Button^ button8;
 
 
 	private:
@@ -106,6 +107,7 @@ namespace CAss2 {
 			this->button5 = (gcnew System::Windows::Forms::Button());
 			this->button6 = (gcnew System::Windows::Forms::Button());
 			this->button7 = (gcnew System::Windows::Forms::Button());
+			this->button8 = (gcnew System::Windows::Forms::Button());
 			this->panel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->panel2->SuspendLayout();
@@ -454,6 +456,25 @@ namespace CAss2 {
 			this->button7->UseVisualStyleBackColor = false;
 			this->button7->Click += gcnew System::EventHandler(this, &StudetMainPage::button7_Click);
 			// 
+			// button8
+			// 
+			this->button8->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
+				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->button8->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)),
+				static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->button8->FlatAppearance->BorderSize = 0;
+			this->button8->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button8->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->button8->ForeColor = System::Drawing::Color::White;
+			this->button8->Location = System::Drawing::Point(441, 518);
+			this->button8->Name = L"button8";
+			this->button8->Size = System::Drawing::Size(289, 69);
+			this->button8->TabIndex = 9;
+			this->button8->Text = L"Student Schedule";
+			this->button8->UseVisualStyleBackColor = false;
+			this->button8->Click += gcnew System::EventHandler(this, &StudetMainPage::button8_Click);
+			// 
 			// StudetMainPage
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -461,6 +482,7 @@ namespace CAss2 {
 			this->BackColor = System::Drawing::Color::Purple;
 			this->ClientSize = System::Drawing::Size(1242, 599);
 			this->ControlBox = false;
+			this->Controls->Add(this->button8);
 			this->Controls->Add(this->button5);
 			this->Controls->Add(this->button6);
 			this->Controls->Add(this->button7);
@@ -545,6 +567,12 @@ private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e
 		MessageBoxButtons::OK,
 		MessageBoxIcon::Information
 	);
+}
+private: System::Void button8_Click(System::Object^ sender, System::EventArgs^ e) {
+	ProcessStartInfo^ psi = gcnew ProcessStartInfo();
+	psi->FileName = "https://drive.google.com/drive/folders/1K6CMYRDOvsRMaM32yJVu8EelwJBnJeNv?usp=sharing";
+	psi->UseShellExecute = true;
+	Process::Start(psi);
 }
 };
 }
