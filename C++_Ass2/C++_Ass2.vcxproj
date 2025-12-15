@@ -127,6 +127,7 @@
     <ClCompile Include="Forgot1.cpp" />
     <ClCompile Include="Login.cpp" />
     <ClCompile Include="ProfessorPage.cpp" />
+    <ClCompile Include="StudentAcademicCourses.cpp" />
     <ClCompile Include="StudentGrades.cpp" />
     <ClCompile Include="StudetMainPage.cpp" />
   </ItemGroup>
@@ -147,6 +148,9 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="ProfessorPage.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="StudentAcademicCourses.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="StudentGrades.h">
@@ -174,6 +178,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ProfessorPage.resx">
       <DependentUpon>ProfessorPage.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StudentAcademicCourses.resx">
+      <DependentUpon>StudentAcademicCourses.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="StudentGrades.resx">
       <DependentUpon>StudentGrades.h</DependentUpon>

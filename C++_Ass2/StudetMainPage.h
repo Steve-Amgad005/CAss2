@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "StudentGrades.h"
+#include "StudentAcademicCourses.h"
 
 namespace CAss2 {
 
@@ -394,6 +395,7 @@ namespace CAss2 {
 			this->button4->TabIndex = 5;
 			this->button4->Text = L"Student\'s academic courses";
 			this->button4->UseVisualStyleBackColor = false;
+			this->button4->Click += gcnew System::EventHandler(this, &StudetMainPage::button4_Click);
 			// 
 			// button5
 			// 
@@ -515,6 +517,10 @@ private: System::Void button6_Click(System::Object^ sender, System::EventArgs^ e
 	psi->FileName = "http://193.227.0.21/Nctu/Registration/ED_Login.aspx";
 	psi->UseShellExecute = true;
 	Process::Start(psi);
+}
+private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
+	StudentAcademicCourses^ coursesForm = gcnew StudentAcademicCourses();
+	coursesForm->Show();
 }
 };
 }
