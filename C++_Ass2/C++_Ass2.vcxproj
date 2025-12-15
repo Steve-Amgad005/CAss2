@@ -129,6 +129,7 @@
     <ClCompile Include="AdminModifyDepartment.cpp" />
     <ClCompile Include="AdminModifyStudent.cpp" />
     <ClCompile Include="AdminPage.cpp" />
+    <ClCompile Include="AdminShowMarks.cpp" />
     <ClCompile Include="AdminStudentsPage.cpp" />
     <ClCompile Include="Forgot1.cpp" />
     <ClCompile Include="Login.cpp" />
@@ -162,6 +163,9 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="AdminPage.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="AdminShowMarks.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="AdminStudentsPage.h">
@@ -216,6 +220,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AdminPage.resx">
       <DependentUpon>AdminPage.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdminShowMarks.resx">
+      <DependentUpon>AdminShowMarks.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AdminStudentsPage.resx">
       <DependentUpon>AdminStudentsPage.h</DependentUpon>
