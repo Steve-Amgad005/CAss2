@@ -99,7 +99,7 @@ namespace CAss2 {
 			this->comboBox1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(3) { L"Student", L"Teacher", L"Admin" });
+			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(3) { L"Student", L"Professor", L"Admin" });
 			this->comboBox1->Location = System::Drawing::Point(460, 20);
 			this->comboBox1->Name = L"comboBox1";
 			this->comboBox1->Size = System::Drawing::Size(148, 33);
@@ -231,7 +231,7 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 		adminPage->Show();
 		this->Hide();
 	}
-	else if (code->Equals("kmr") && comboBox1->SelectedItem->Equals("Teacher")) {
+	else if (code->Equals("kmr") && comboBox1->SelectedItem->Equals("Professor")) {
 		CAss2::ProfessorPage^ prof = gcnew CAss2::ProfessorPage();
 		prof->Show();
 		this->Hide();
