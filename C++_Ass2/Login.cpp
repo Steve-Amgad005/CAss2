@@ -1,4 +1,5 @@
 #include "Login.h"
+#include "Forgot1.h"
 using namespace System;
 using namespace System::Windows::Forms;
 [STAThread]

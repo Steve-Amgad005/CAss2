@@ -116,6 +116,7 @@ namespace CAss2 {
 			this->button1->TabIndex = 6;
 			this->button1->Text = L"Back";
 			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &Forgot::button1_Click);
 			// 
 			// textBox2
 			// 
@@ -172,6 +173,9 @@ namespace CAss2 {
 	private: System::Void label2_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
 	private: System::Void Forgot_Load(System::Object^ sender, System::EventArgs^ e) {
-	}
+		}
+
+	// declaration only — implementation in Forgot1.cpp to avoid circular include
+	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
 	};
 }
