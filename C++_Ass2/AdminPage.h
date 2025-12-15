@@ -151,9 +151,10 @@ namespace CAss2 {
 			this->button3->Location = System::Drawing::Point(525, 303);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(240, 60);
-			this->button3->TabIndex = 2;
+			this->button3->TabIndex = 4;
 			this->button3->Text = L"Departments";
 			this->button3->UseVisualStyleBackColor = false;
+			this->button3->Click += gcnew System::EventHandler(this, &AdminPage::button3_Click);
 			// 
 			// button4
 			// 
@@ -205,5 +206,6 @@ namespace CAss2 {
 
 	// declaration only — implementation in AdminPage.cpp to avoid circular include with Login.h
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e);
 	};
 }
