@@ -112,12 +112,16 @@ namespace CAss2 {
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
 			this->button1->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"button1.BackgroundImage")));
 			this->button1->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
+			this->button1->FlatAppearance->BorderColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)),
+				static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->button1->FlatAppearance->BorderSize = 0;
 			this->button1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button1->Location = System::Drawing::Point(1144, 28);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(72, 75);
 			this->button1->TabIndex = 1;
 			this->button1->UseVisualStyleBackColor = false;
+			this->button1->Click += gcnew System::EventHandler(this, &AdminPage::button1_Click);
 			// 
 			// button2
 			// 
@@ -132,7 +136,7 @@ namespace CAss2 {
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(240, 60);
 			this->button2->TabIndex = 2;
-			this->button2->Text = L"Year\'s Marks";
+			this->button2->Text = L"Year's Marks";
 			this->button2->UseVisualStyleBackColor = false;
 			// 
 			// button3
@@ -199,5 +203,8 @@ namespace CAss2 {
 	}
 	private: System::Void AdminPage_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
+
+	// declaration only — implementation in AdminPage.cpp to avoid circular include with Login.h
+	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
 	};
 }

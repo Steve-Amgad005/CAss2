@@ -1,6 +1,7 @@
 #pragma once
 #include "Forgot1.h"
 #include "StudetMainPage.h"
+#include "AdminPage.h"
 
 namespace CAss2 {
 
@@ -202,9 +203,20 @@ private: System::Void label4_Click(System::Object^ sender, System::EventArgs^ e)
 private: System::Void Login_Load(System::Object^ sender, System::EventArgs^ e) {
 }
 private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-	CAss2::StudetMainPage^ forgotForm = gcnew CAss2::StudetMainPage();
-	forgotForm->Show();
-	this->Hide();
+	String^ code = this->textBox1->Text->Trim();
+	if (code->Equals("123")) {
+		CAss2::StudetMainPage^ studentPage = gcnew CAss2::StudetMainPage();
+		studentPage->Show();
+		this->Hide();
+	}
+	else if (code->Equals("000")) {
+		CAss2::AdminPage^ adminPage = gcnew CAss2::AdminPage();
+		adminPage->Show();
+		this->Hide();
+	}
+	else {
+		MessageBox::Show("Invalid student code", "Login failed", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+	}
 }
 };
 }
