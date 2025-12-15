@@ -47,6 +47,7 @@ namespace CAss2 {
 	private: System::Windows::Forms::Label^ label4;
 	private: System::Windows::Forms::TextBox^ textBox2;
 	private: System::Windows::Forms::TextBox^ textBox1;
+	private: System::Windows::Forms::ComboBox^ comboBox1;
 	protected:
 
 	private:
@@ -63,6 +64,7 @@ namespace CAss2 {
 		void InitializeComponent(void)
 		{
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
@@ -77,6 +79,7 @@ namespace CAss2 {
 			// 
 			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->panel1->Controls->Add(this->comboBox1);
 			this->panel1->Controls->Add(this->button1);
 			this->panel1->Controls->Add(this->label4);
 			this->panel1->Controls->Add(this->textBox2);
@@ -89,6 +92,19 @@ namespace CAss2 {
 			this->panel1->Size = System::Drawing::Size(624, 366);
 			this->panel1->TabIndex = 0;
 			this->panel1->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &Login::panel1_Paint);
+			// 
+			// comboBox1
+			// 
+			this->comboBox1->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->comboBox1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->comboBox1->FormattingEnabled = true;
+			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(3) { L"Student", L"Teacher", L"Admin" });
+			this->comboBox1->Location = System::Drawing::Point(460, 20);
+			this->comboBox1->Name = L"comboBox1";
+			this->comboBox1->Size = System::Drawing::Size(148, 33);
+			this->comboBox1->TabIndex = 7;
+			this->comboBox1->SelectedIndexChanged += gcnew System::EventHandler(this, &Login::comboBox1_SelectedIndexChanged);
 			// 
 			// button1
 			// 
@@ -201,15 +217,16 @@ private: System::Void label4_Click(System::Object^ sender, System::EventArgs^ e)
 	this->Hide();
 }
 private: System::Void Login_Load(System::Object^ sender, System::EventArgs^ e) {
+	comboBox1->SelectedIndex = 0;
 }
 private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 	String^ code = this->textBox1->Text->Trim();
-	if (code->Equals("123")) {
+	if (code->Equals("123") && comboBox1->SelectedItem->Equals("Student")) {
 		CAss2::StudetMainPage^ studentPage = gcnew CAss2::StudetMainPage();
 		studentPage->Show();
 		this->Hide();
 	}
-	else if (code->Equals("000")) {
+	else if (code->Equals("000")&&comboBox1->SelectedText->Equals("Admin")) {
 		CAss2::AdminPage^ adminPage = gcnew CAss2::AdminPage();
 		adminPage->Show();
 		this->Hide();
@@ -217,6 +234,8 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 	else {
 		MessageBox::Show("Invalid student code", "Login failed", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 	}
+}
+private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 }
 };
 }
