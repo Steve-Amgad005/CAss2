@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "StudentGrades.h"
+
 namespace CAss2 {
 
 	using namespace System;
@@ -8,6 +10,8 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Diagnostics;
+
 
 	/// <summary>
 	/// Summary for StudetMainPage
@@ -426,6 +430,7 @@ namespace CAss2 {
 			this->button6->TabIndex = 7;
 			this->button6->Text = L"Student Portal";
 			this->button6->UseVisualStyleBackColor = false;
+			this->button6->Click += gcnew System::EventHandler(this, &StudetMainPage::button6_Click);
 			// 
 			// button7
 			// 
@@ -444,6 +449,7 @@ namespace CAss2 {
 			this->button7->TabIndex = 6;
 			this->button7->Text = L"University website";
 			this->button7->UseVisualStyleBackColor = false;
+			this->button7->Click += gcnew System::EventHandler(this, &StudetMainPage::button7_Click);
 			// 
 			// StudetMainPage
 			// 
@@ -486,9 +492,29 @@ namespace CAss2 {
 	private: System::Void label11_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
 	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+		MessageBox::Show(
+			"Your seat number is: " + 20241397,
+			"Student Seat Number",
+			MessageBoxButtons::OK,
+			MessageBoxIcon::Information
+		);
 	}
 	private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+		StudentGrades^ gradesForm = gcnew StudentGrades();
+		gradesForm->Show();
 	}
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void button7_Click(System::Object^ sender, System::EventArgs^ e) {
+	ProcessStartInfo^ psi = gcnew ProcessStartInfo();
+	psi->FileName = "https://nctu.edu.eg/";
+	psi->UseShellExecute = true;
+	Process::Start(psi);
+}
+private: System::Void button6_Click(System::Object^ sender, System::EventArgs^ e) {
+	ProcessStartInfo^ psi = gcnew ProcessStartInfo();
+	psi->FileName = "http://193.227.0.21/Nctu/Registration/ED_Login.aspx";
+	psi->UseShellExecute = true;
+	Process::Start(psi);
+}
 };
 }
