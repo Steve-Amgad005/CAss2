@@ -279,8 +279,9 @@ namespace CAss2 {
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(289, 69);
 			this->button3->TabIndex = 8;
-			this->button3->Text = L"Course Schedula View";
+			this->button3->Text = L"Lectures Schedule";
 			this->button3->UseVisualStyleBackColor = false;
+			this->button3->Click += gcnew System::EventHandler(this, &ProfessorPage::button3_Click);
 			// 
 			// dataGridView1
 			// 
@@ -362,5 +363,11 @@ namespace CAss2 {
 #pragma endregion
 		// declaration for back button handler
 		private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
-	};
+	private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+		ProcessStartInfo^ psi = gcnew ProcessStartInfo();
+		psi->FileName = "https://drive.google.com/drive/folders/1K6CMYRDOvsRMaM32yJVu8EelwJBnJeNv?usp=sharing";
+		psi->UseShellExecute = true;
+		Process::Start(psi);
+	}
+};
 }
