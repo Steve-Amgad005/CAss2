@@ -121,6 +121,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AddBulding.cpp" />
+    <ClCompile Include="AdminAddBuilding.cpp" />
     <ClCompile Include="AdminAddDepartment.cpp" />
     <ClCompile Include="AdminAddStudent.cpp" />
     <ClCompile Include="AdminDeleteDepartment.cpp" />
@@ -141,6 +143,9 @@
     <ClCompile Include="StudetMainPage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AdminAddBuilding.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="AdminAddDepartment.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -197,6 +202,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AdminAddBuilding.resx">
+      <DependentUpon>AdminAddBuilding.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AdminAddDepartment.resx">
       <DependentUpon>AdminAddDepartment.h</DependentUpon>
     </EmbeddedResource>
