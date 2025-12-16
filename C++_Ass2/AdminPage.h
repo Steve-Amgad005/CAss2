@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "AdminBuildingsPage.h";
+
 namespace CAss2 {
 
 	using namespace System;
@@ -190,6 +192,7 @@ namespace CAss2 {
 			this->button5->TabIndex = 5;
 			this->button5->Text = L"Buldings";
 			this->button5->UseVisualStyleBackColor = false;
+			this->button5->Click += gcnew System::EventHandler(this, &AdminPage::button5_Click);
 			// 
 			// AdminPage
 			// 
@@ -226,5 +229,6 @@ namespace CAss2 {
 	// declaration only — implementation in AdminPage.cpp to avoid circular include with Login.h
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
 	private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e);
-	};
+	private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e);
+};
 }

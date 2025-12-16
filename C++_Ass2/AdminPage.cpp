@@ -2,6 +2,7 @@
 #include "Login.h"
 #include "AdminStudentsPage.h"
 #include "AdminDepartmentPage.h"
+#include "AdminBuildingsPage.h"
 
 using namespace System;
 using namespace System::Windows::Forms;
@@ -27,5 +28,10 @@ namespace CAss2 {
 		deptPage->Show();
 		this->Hide();
 	}
+System::Void AdminPage::button5_Click(System::Object^ sender, System::EventArgs^ e) {
+	AdminBuildingsPage^ buildingsPage = gcnew AdminBuildingsPage();
+	buildingsPage->Show();
+	this->Close();
+}
 }
 

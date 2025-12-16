@@ -124,9 +124,12 @@
     <ClCompile Include="AdminAddBuilding.cpp" />
     <ClCompile Include="AdminAddDepartment.cpp" />
     <ClCompile Include="AdminAddStudent.cpp" />
+    <ClCompile Include="AdminBuildingsPage.cpp" />
+    <ClCompile Include="AdminDeleteBuilding.cpp" />
     <ClCompile Include="AdminDeleteDepartment.cpp" />
     <ClCompile Include="AdminDeleteStudent.cpp" />
     <ClCompile Include="AdminDepartmentPage.cpp" />
+    <ClCompile Include="AdminModifyBuilding.cpp" />
     <ClCompile Include="AdminModifyDepartment.cpp" />
     <ClCompile Include="AdminModifyStudent.cpp" />
     <ClCompile Include="AdminPage.cpp" />
@@ -151,6 +154,12 @@
     <ClInclude Include="AdminAddStudent.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="AdminBuildingsPage.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="AdminDeleteBuilding.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="AdminDeleteDepartment.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -158,6 +167,9 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="AdminDepartmentPage.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="AdminModifyBuilding.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="AdminModifyDepartment.h">
@@ -210,6 +222,12 @@
     <EmbeddedResource Include="AdminAddStudent.resx">
       <DependentUpon>AdminAddStudent.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AdminBuildingsPage.resx">
+      <DependentUpon>AdminBuildingsPage.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdminDeleteBuilding.resx">
+      <DependentUpon>AdminDeleteBuilding.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AdminDeleteDepartment.resx">
       <DependentUpon>AdminDeleteDepartment.h</DependentUpon>
     </EmbeddedResource>
@@ -218,6 +236,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AdminDepartmentPage.resx">
       <DependentUpon>AdminDepartmentPage.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdminModifyBuilding.resx">
+      <DependentUpon>AdminModifyBuilding.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AdminModifyDepartment.resx">
       <DependentUpon>AdminModifyDepartment.h</DependentUpon>
