@@ -1,4 +1,5 @@
 #pragma once
+#include "AdminAddBuilding.h"
 
 namespace CAss2 {
 
@@ -89,8 +90,8 @@ namespace CAss2 {
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->button6 = (gcnew System::Windows::Forms::Button());
 			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
+			this->button6 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->panel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->BeginInit();
@@ -161,6 +162,7 @@ namespace CAss2 {
 			this->button5->TabIndex = 7;
 			this->button5->Text = L"Add Building";
 			this->button5->UseVisualStyleBackColor = false;
+			this->button5->Click += gcnew System::EventHandler(this, &BuildingsPage::button5_Click);
 			// 
 			// button4
 			// 
@@ -233,6 +235,17 @@ namespace CAss2 {
 			this->label1->TabIndex = 1;
 			this->label1->Text = L"New Cairo Technological University";
 			// 
+			// pictureBox2
+			// 
+			this->pictureBox2->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox2.BackgroundImage")));
+			this->pictureBox2->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
+			this->pictureBox2->Location = System::Drawing::Point(25, 19);
+			this->pictureBox2->Name = L"pictureBox2";
+			this->pictureBox2->Size = System::Drawing::Size(82, 67);
+			this->pictureBox2->TabIndex = 13;
+			this->pictureBox2->TabStop = false;
+			this->pictureBox2->Click += gcnew System::EventHandler(this, &BuildingsPage::pictureBox2_Click);
+			// 
 			// button6
 			// 
 			this->button6->AccessibleName = L"back";
@@ -249,17 +262,6 @@ namespace CAss2 {
 			this->button6->Size = System::Drawing::Size(63, 60);
 			this->button6->TabIndex = 12;
 			this->button6->UseVisualStyleBackColor = false;
-			// 
-			// pictureBox2
-			// 
-			this->pictureBox2->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox2.BackgroundImage")));
-			this->pictureBox2->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
-			this->pictureBox2->Location = System::Drawing::Point(25, 19);
-			this->pictureBox2->Name = L"pictureBox2";
-			this->pictureBox2->Size = System::Drawing::Size(82, 67);
-			this->pictureBox2->TabIndex = 13;
-			this->pictureBox2->TabStop = false;
-			this->pictureBox2->Click += gcnew System::EventHandler(this, &BuildingsPage::pictureBox2_Click);
 			// 
 			// BuildingsPage
 			// 
@@ -289,5 +291,9 @@ namespace CAss2 {
 	}
 	private: System::Void pictureBox2_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
+private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e) {
+	AdminAddBuilding^ adminBuilding = gcnew AdminAddBuilding();
+	adminBuilding->Show();
+}
 };
 }
