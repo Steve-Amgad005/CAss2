@@ -43,9 +43,12 @@ namespace CAss2 {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ CW;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Final;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Total;
+
+
+	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::ComboBox^ comboBox1;
 	private: System::Windows::Forms::ComboBox^ comboBox2;
-	private: System::Windows::Forms::Label^ label1;
+	private: System::Windows::Forms::Button^ button1;
 	protected:
 
 
@@ -80,9 +83,10 @@ namespace CAss2 {
 			this->CW = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Final = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->Total = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			this->comboBox2 = (gcnew System::Windows::Forms::ComboBox());
-			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->button1 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -106,11 +110,11 @@ namespace CAss2 {
 				this->StudentCode,
 					this->StudentName, this->Course, this->Ass1, this->Ass2, this->CW, this->Final, this->Total
 			});
-			this->dataGridView1->Location = System::Drawing::Point(147, 235);
+			this->dataGridView1->Location = System::Drawing::Point(95, 235);
 			this->dataGridView1->Name = L"dataGridView1";
 			dataGridViewCellStyle12->BackColor = System::Drawing::Color::White;
 			this->dataGridView1->RowsDefaultCellStyle = dataGridViewCellStyle12;
-			this->dataGridView1->Size = System::Drawing::Size(750, 292);
+			this->dataGridView1->Size = System::Drawing::Size(837, 292);
 			this->dataGridView1->TabIndex = 11;
 			this->dataGridView1->CellContentClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &AdminShowMarks::dataGridView1_CellContentClick);
 			// 
@@ -155,35 +159,60 @@ namespace CAss2 {
 			this->Total->HeaderText = L"Total";
 			this->Total->Name = L"Total";
 			// 
-			// comboBox1
-			// 
-			this->comboBox1->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Location = System::Drawing::Point(587, 119);
-			this->comboBox1->Name = L"comboBox1";
-			this->comboBox1->Size = System::Drawing::Size(123, 21);
-			this->comboBox1->TabIndex = 12;
-			// 
-			// comboBox2
-			// 
-			this->comboBox2->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->comboBox2->FormattingEnabled = true;
-			this->comboBox2->Location = System::Drawing::Point(749, 119);
-			this->comboBox2->Name = L"comboBox2";
-			this->comboBox2->Size = System::Drawing::Size(123, 21);
-			this->comboBox2->TabIndex = 13;
-			// 
 			// label1
 			// 
 			this->label1->AutoSize = true;
 			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 26.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->label1->ForeColor = System::Drawing::Color::White;
-			this->label1->Location = System::Drawing::Point(378, 27);
+			this->label1->Location = System::Drawing::Point(352, 23);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(262, 39);
+			this->label1->Size = System::Drawing::Size(373, 39);
 			this->label1->TabIndex = 14;
-			this->label1->Text = L"Show Students";
+			this->label1->Text = L"Show Students Marks";
+			// 
+			// comboBox1
+			// 
+			this->comboBox1->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->comboBox1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->comboBox1->FormattingEnabled = true;
+			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(10) {
+				L"ICT", L"", L"", L"Mechatronics", L"", L"", L"Autotronics",
+					L"", L"", L"Renewable Energy"
+			});
+			this->comboBox1->Location = System::Drawing::Point(226, 147);
+			this->comboBox1->Name = L"comboBox1";
+			this->comboBox1->Size = System::Drawing::Size(148, 33);
+			this->comboBox1->TabIndex = 15;
+			this->comboBox1->SelectedIndexChanged += gcnew System::EventHandler(this, &AdminShowMarks::comboBox1_SelectedIndexChanged);
+			// 
+			// comboBox2
+			// 
+			this->comboBox2->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->comboBox2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->comboBox2->FormattingEnabled = true;
+			this->comboBox2->Items->AddRange(gcnew cli::array< System::Object^  >(4) {
+				L"First Year", L"Secound Year", L"Third Year ",
+					L"Forth Year"
+			});
+			this->comboBox2->Location = System::Drawing::Point(678, 147);
+			this->comboBox2->Name = L"comboBox2";
+			this->comboBox2->Size = System::Drawing::Size(148, 33);
+			this->comboBox2->TabIndex = 16;
+			// 
+			// button1
+			// 
+			this->button1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->button1->ForeColor = System::Drawing::Color::Purple;
+			this->button1->Location = System::Drawing::Point(441, 139);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(177, 41);
+			this->button1->TabIndex = 17;
+			this->button1->Text = L"Show";
+			this->button1->UseVisualStyleBackColor = true;
 			// 
 			// AdminShowMarks
 			// 
@@ -191,9 +220,10 @@ namespace CAss2 {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::Purple;
 			this->ClientSize = System::Drawing::Size(1002, 539);
-			this->Controls->Add(this->label1);
+			this->Controls->Add(this->button1);
 			this->Controls->Add(this->comboBox2);
 			this->Controls->Add(this->comboBox1);
+			this->Controls->Add(this->label1);
 			this->Controls->Add(this->dataGridView1);
 			this->Name = L"AdminShowMarks";
 			this->Text = L"AdminShowMarks";
@@ -205,5 +235,7 @@ namespace CAss2 {
 #pragma endregion
 	private: System::Void dataGridView1_CellContentClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellEventArgs^ e) {
 	}
+private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+}
 };
 }
