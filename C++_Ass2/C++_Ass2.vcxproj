@@ -123,17 +123,21 @@
   <ItemGroup>
     <ClCompile Include="AdminAddBuilding.cpp" />
     <ClCompile Include="AdminAddDepartment.cpp" />
+    <ClCompile Include="AdminAddHall.cpp" />
     <ClCompile Include="AdminAddLap.cpp" />
     <ClCompile Include="AdminAddStudent.cpp" />
     <ClCompile Include="AdminBuildingsPage.cpp" />
     <ClCompile Include="AdminDeleteBuilding.cpp" />
     <ClCompile Include="AdminDeleteDepartment.cpp" />
+    <ClCompile Include="AdminDeleteHall.cpp" />
     <ClCompile Include="AdminDeleteLap.cpp" />
     <ClCompile Include="AdminDeleteStudent.cpp" />
     <ClCompile Include="AdminDepartmentPage.cpp" />
+    <ClCompile Include="AdminHallsPage.cpp" />
     <ClCompile Include="AdminLapsPage.cpp" />
     <ClCompile Include="AdminModifyBuilding.cpp" />
     <ClCompile Include="AdminModifyDepartment.cpp" />
+    <ClCompile Include="AdminModifyHall.cpp" />
     <ClCompile Include="AdminModifyLap.cpp" />
     <ClCompile Include="AdminModifyStudent.cpp" />
     <ClCompile Include="AdminPage.cpp" />
@@ -155,6 +159,9 @@
     <ClInclude Include="AdminAddDepartment.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="AdminAddHall.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="AdminAddLap.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -170,6 +177,9 @@
     <ClInclude Include="AdminDeleteDepartment.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="AdminDeleteHall.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="AdminDeleteLap.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -179,6 +189,9 @@
     <ClInclude Include="AdminDepartmentPage.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="AdminHallsPage.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="AdminLapsPage.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -186,6 +199,9 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="AdminModifyDepartment.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="AdminModifyHall.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="AdminModifyLap.h">
@@ -235,6 +251,9 @@
     <EmbeddedResource Include="AdminAddDepartment.resx">
       <DependentUpon>AdminAddDepartment.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AdminAddHall.resx">
+      <DependentUpon>AdminAddHall.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AdminAddLap.resx">
       <DependentUpon>AdminAddLap.h</DependentUpon>
     </EmbeddedResource>
@@ -250,6 +269,9 @@
     <EmbeddedResource Include="AdminDeleteDepartment.resx">
       <DependentUpon>AdminDeleteDepartment.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AdminDeleteHall.resx">
+      <DependentUpon>AdminDeleteHall.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AdminDeleteLap.resx">
       <DependentUpon>AdminDeleteLap.h</DependentUpon>
     </EmbeddedResource>
@@ -259,6 +281,9 @@
     <EmbeddedResource Include="AdminDepartmentPage.resx">
       <DependentUpon>AdminDepartmentPage.h</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AdminHallsPage.resx">
+      <DependentUpon>AdminHallsPage.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AdminLapsPage.resx">
       <DependentUpon>AdminLapsPage.h</DependentUpon>
     </EmbeddedResource>
@@ -267,6 +292,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AdminModifyDepartment.resx">
       <DependentUpon>AdminModifyDepartment.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdminModifyHall.resx">
+      <DependentUpon>AdminModifyHall.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AdminModifyLap.resx">
       <DependentUpon>AdminModifyLap.h</DependentUpon>
