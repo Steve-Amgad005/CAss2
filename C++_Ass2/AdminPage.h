@@ -230,6 +230,7 @@ namespace CAss2 {
 			this->button7->TabIndex = 7;
 			this->button7->Text = L"Halls";
 			this->button7->UseVisualStyleBackColor = false;
+			this->button7->Click += gcnew System::EventHandler(this, &AdminPage::button7_Click);
 			// 
 			// AdminPage
 			// 
@@ -270,5 +271,6 @@ namespace CAss2 {
 	private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e);
 	private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e);
 private: System::Void button6_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void button7_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }

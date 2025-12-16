@@ -203,6 +203,7 @@ namespace CAss2 {
 			this->button1->Size = System::Drawing::Size(71, 65);
 			this->button1->TabIndex = 20;
 			this->button1->UseVisualStyleBackColor = false;
+			this->button1->Click += gcnew System::EventHandler(this, &AdminHallsPage::button1_Click);
 			// 
 			// label1
 			// 
@@ -291,5 +292,6 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 	AdminDeleteHall^ deleteHallForm = gcnew AdminDeleteHall();
 	deleteHallForm->Show();
 }
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }
