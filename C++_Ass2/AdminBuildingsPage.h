@@ -301,10 +301,6 @@ private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e
 	AdminModifyBuilding^ modifyBuildingForm = gcnew AdminModifyBuilding();
 	modifyBuildingForm->Show();
 }
-private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-	/*AdminPage^ adminPageForm = gcnew AdminPage();
-	adminPageForm->Show();
-	this->Hide();*/
-}
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }
