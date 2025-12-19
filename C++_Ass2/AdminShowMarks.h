@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "AdminPage.h"
 
@@ -18,6 +18,46 @@ namespace CAss2 {
 	/// </summary>
 	public ref class AdminShowMarks : public System::Windows::Forms::Form
 	{
+		void LoadYears()
+		{
+			cmbYear->Items->Clear();
+			cmbYear->Items->Add("All");
+			cmbYear->Items->Add("First");
+			cmbYear->Items->Add("Second");
+			cmbYear->Items->Add("Third");
+			cmbYear->Items->Add("Fourth");
+			cmbYear->SelectedIndex = 0;
+		}
+
+		void LoadDepartments()
+		{
+			String^ connStr =
+				"Server=localhost\\SQLEXPRESS;"
+				"Database=MyDB;"
+				"Trusted_Connection=True;"
+				"TrustServerCertificate=True;";
+
+			SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+			try
+			{
+				String^ query = "SELECT id, name FROM Departments";
+				SqlDataAdapter^ da = gcnew SqlDataAdapter(query, conn);
+				DataTable^ dt = gcnew DataTable();
+				da->Fill(dt);
+
+				cmbDepartment->DataSource = dt;
+				cmbDepartment->DisplayMember = "name";
+				cmbDepartment->ValueMember = "id";
+
+				cmbDepartment->SelectedIndex = -1;
+			}
+			catch (Exception^ ex)
+			{
+				MessageBox::Show(ex->Message);
+			}
+		}
+
 		void LoadAllStudentsMarks()
 		{
 			String^ connStr =
@@ -77,6 +117,8 @@ namespace CAss2 {
 			InitializeComponent();
 			AdminCode = code;
 			LoadAllStudentsMarks();
+			LoadDepartments();
+			LoadYears();
 			//
 			//TODO: Add the constructor code here
 			//
@@ -107,8 +149,10 @@ namespace CAss2 {
 
 
 	private: System::Windows::Forms::Label^ label1;
-	private: System::Windows::Forms::ComboBox^ comboBox1;
-	private: System::Windows::Forms::ComboBox^ comboBox2;
+private: System::Windows::Forms::ComboBox^ cmbDepartment;
+private: System::Windows::Forms::ComboBox^ cmbYear;
+
+
 	private: System::Windows::Forms::Button^ button1;
 	private: System::Windows::Forms::Button^ button2;
 	protected:
@@ -139,8 +183,8 @@ namespace CAss2 {
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(AdminShowMarks::typeid));
 			this->dataGridViewMarks = (gcnew System::Windows::Forms::DataGridView());
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
-			this->comboBox2 = (gcnew System::Windows::Forms::ComboBox());
+			this->cmbDepartment = (gcnew System::Windows::Forms::ComboBox());
+			this->cmbYear = (gcnew System::Windows::Forms::ComboBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewMarks))->BeginInit();
@@ -182,36 +226,28 @@ namespace CAss2 {
 			this->label1->TabIndex = 14;
 			this->label1->Text = L"Show Students Marks";
 			// 
-			// comboBox1
+			// cmbDepartment
 			// 
-			this->comboBox1->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->comboBox1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->cmbDepartment->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->cmbDepartment->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(10) {
-				L"ICT", L"", L"", L"Mechatronics", L"", L"", L"Autotronics",
-					L"", L"", L"Renewable Energy"
-			});
-			this->comboBox1->Location = System::Drawing::Point(226, 147);
-			this->comboBox1->Name = L"comboBox1";
-			this->comboBox1->Size = System::Drawing::Size(148, 33);
-			this->comboBox1->TabIndex = 15;
-			this->comboBox1->SelectedIndexChanged += gcnew System::EventHandler(this, &AdminShowMarks::comboBox1_SelectedIndexChanged);
+			this->cmbDepartment->FormattingEnabled = true;
+			this->cmbDepartment->Location = System::Drawing::Point(226, 147);
+			this->cmbDepartment->Name = L"cmbDepartment";
+			this->cmbDepartment->Size = System::Drawing::Size(148, 33);
+			this->cmbDepartment->TabIndex = 15;
+			this->cmbDepartment->SelectedIndexChanged += gcnew System::EventHandler(this, &AdminShowMarks::comboBox1_SelectedIndexChanged);
 			// 
-			// comboBox2
+			// cmbYear
 			// 
-			this->comboBox2->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->comboBox2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->cmbYear->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->cmbYear->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->comboBox2->FormattingEnabled = true;
-			this->comboBox2->Items->AddRange(gcnew cli::array< System::Object^  >(4) {
-				L"First Year", L"Secound Year", L"Third Year ",
-					L"Forth Year"
-			});
-			this->comboBox2->Location = System::Drawing::Point(678, 147);
-			this->comboBox2->Name = L"comboBox2";
-			this->comboBox2->Size = System::Drawing::Size(148, 33);
-			this->comboBox2->TabIndex = 16;
+			this->cmbYear->FormattingEnabled = true;
+			this->cmbYear->Location = System::Drawing::Point(678, 147);
+			this->cmbYear->Name = L"cmbYear";
+			this->cmbYear->Size = System::Drawing::Size(148, 33);
+			this->cmbYear->TabIndex = 16;
 			// 
 			// button1
 			// 
@@ -224,6 +260,7 @@ namespace CAss2 {
 			this->button1->TabIndex = 17;
 			this->button1->Text = L"Show";
 			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &AdminShowMarks::button1_Click);
 			// 
 			// button2
 			// 
@@ -247,8 +284,8 @@ namespace CAss2 {
 			this->ClientSize = System::Drawing::Size(1002, 539);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->button1);
-			this->Controls->Add(this->comboBox2);
-			this->Controls->Add(this->comboBox1);
+			this->Controls->Add(this->cmbYear);
+			this->Controls->Add(this->cmbDepartment);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->dataGridViewMarks);
 			this->Name = L"AdminShowMarks";
@@ -264,5 +301,71 @@ namespace CAss2 {
 private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 }
 private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	String^ query =
+		"SELECT "
+		"s.code AS [Student Code], "
+		"s.name AS [Student Name], "
+		"d.name AS [Department], "
+		"CASE s.year "
+		" WHEN 1 THEN 'First' "
+		" WHEN 2 THEN 'Second' "
+		" WHEN 3 THEN 'Third' "
+		" WHEN 4 THEN 'Fourth' "
+		"END AS [Year], "
+		"c.course_name AS [Course], "
+		"g.assignment1 AS [Assignment 1], "
+		"g.assignment2 AS [Assignment 2], "
+		"g.cw AS [CW], "
+		"g.final AS [Final], "
+		"g.total AS [Total] "
+		"FROM Grades g "
+		"INNER JOIN Students s ON g.student_id = s.id "
+		"INNER JOIN Courses c ON g.course_id = c.id "
+		"INNER JOIN Departments d ON s.department_id = d.id "
+		"WHERE 1 = 1 ";
+
+	// فلترة السنة
+	if (cmbYear->SelectedItem != nullptr && cmbYear->Text != "All")
+	{
+		query += " AND s.year = @year ";
+	}
+
+	// فلترة القسم
+	if (cmbDepartment->SelectedValue != nullptr)
+	{
+		query += " AND d.id = @deptId ";
+	}
+
+	query += " ORDER BY d.name, s.year, s.code";
+
+	SqlCommand^ cmd = gcnew SqlCommand(query, conn);
+
+	// باراميتر السنة
+	if (cmbYear->Text == "First") cmd->Parameters->AddWithValue("@year", 1);
+	if (cmbYear->Text == "Second") cmd->Parameters->AddWithValue("@year", 2);
+	if (cmbYear->Text == "Third") cmd->Parameters->AddWithValue("@year", 3);
+	if (cmbYear->Text == "Fourth") cmd->Parameters->AddWithValue("@year", 4);
+
+	// باراميتر القسم
+	if (cmbDepartment->SelectedValue != nullptr)
+	{
+		cmd->Parameters->AddWithValue("@deptId", cmbDepartment->SelectedValue);
+	}
+
+	SqlDataAdapter^ da = gcnew SqlDataAdapter(cmd);
+	DataTable^ dt = gcnew DataTable();
+	da->Fill(dt);
+
+	dataGridViewMarks->DataSource = dt;
+}
 };
 }
