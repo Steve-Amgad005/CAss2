@@ -1,8 +1,10 @@
-#pragma once
+﻿#pragma once
 #include "Forgot1.h"
 #include "StudetMainPage.h"
 #include "AdminPage.h"
 #include "ProfessorPage.h"
+using namespace System;
+using namespace System::Data::SqlClient;
 namespace CAss2 {
 
 	using namespace System;
@@ -12,6 +14,8 @@ namespace CAss2 {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace CAss2;
+	using namespace System;
+	using namespace System::Data::SqlClient;
 
 
 	/// <summary>
@@ -220,24 +224,96 @@ private: System::Void Login_Load(System::Object^ sender, System::EventArgs^ e) {
 	comboBox1->SelectedIndex = 0;
 }
 private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-	String^ code = this->textBox1->Text->Trim();
-	if (code->Equals("123") && comboBox1->SelectedItem->Equals("Student")) {
-		CAss2::StudetMainPage^ studentPage = gcnew CAss2::StudetMainPage();
-		studentPage->Show();
-		this->Hide();
+
+	String^ role = comboBox1->SelectedItem->ToString();
+	String^ v1 = textBox1->Text->Trim();
+	String^ v2 = textBox2->Text->Trim();
+
+	if (v1 == "" || v2 == "") {
+		MessageBox::Show("Please enter all fields");
+		return;
 	}
-	else if (code->Equals("000")&&comboBox1->SelectedItem->Equals("Admin")) {
-		CAss2::AdminPage^ adminPage = gcnew CAss2::AdminPage();
-		adminPage->Show();
-		this->Hide();
+
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	try {
+		conn->Open();
+		SqlCommand^ cmd = gcnew SqlCommand();
+		cmd->Connection = conn;
+
+		// ================= STUDENT =================
+		if (role == "Student") {
+
+			cmd->CommandText =
+				"SELECT 1 FROM Students "
+				"WHERE code = @v1 AND NationalNumber = @v2";
+
+			cmd->Parameters->AddWithValue("@v1", Int32::Parse(v1));
+			cmd->Parameters->AddWithValue("@v2", Int64::Parse(v2));
+
+			if (cmd->ExecuteScalar() != nullptr) {
+				MessageBox::Show("Login successful!", "Success", MessageBoxButtons::OK, MessageBoxIcon::Information);
+				StudetMainPage^ f = gcnew StudetMainPage();
+				f->Show();
+				this->Hide();
+			}
+			else {
+				MessageBox::Show("Invalid Code or NationalNumber", "Login failed", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+			}
+		}
+
+		// ================= PROFESSOR =================
+		else if (role == "Professor") {
+
+			cmd->CommandText =
+				"SELECT 1 FROM Professors "
+				"WHERE code = @v1 AND NationalNumber = @v2;";
+
+			cmd->Parameters->AddWithValue("@v1", Int32::Parse(v1));
+			cmd->Parameters->AddWithValue("@v2", Int64::Parse(v2));
+
+			if (cmd->ExecuteScalar() != nullptr) {
+				MessageBox::Show("Login successful!", "Success", MessageBoxButtons::OK, MessageBoxIcon::Information);
+				ProfessorPage^ f = gcnew ProfessorPage();
+				f->Show();
+				this->Hide();
+			}
+			else {
+				MessageBox::Show("Invalid Code or NationalNumber", "Login failed", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+			}
+		}
+
+		// ================= ADMIN =================
+		else if (role == "Admin") {
+
+			cmd->CommandText =
+				"SELECT 1 FROM Admins "
+				"WHERE code = @v1 AND NationalNumber = @v2;";
+
+			cmd->Parameters->AddWithValue("@v1", Int32::Parse(v1));
+			cmd->Parameters->AddWithValue("@v2", Int64::Parse(v2));
+
+			if (cmd->ExecuteScalar() != nullptr) {
+				MessageBox::Show("Login successful!", "Success", MessageBoxButtons::OK, MessageBoxIcon::Information);
+				AdminPage^ f = gcnew AdminPage();
+				f->Show();
+				this->Hide();
+			}
+			else {
+				MessageBox::Show("Invalid Code or NationalNumber", "Login failed", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+			}
+		}
+
+		conn->Close();
 	}
-	else if (code->Equals("kmr") && comboBox1->SelectedItem->Equals("Professor")) {
-		CAss2::ProfessorPage^ prof = gcnew CAss2::ProfessorPage();
-		prof->Show();
-		this->Hide();
-	}
-	else {
-		MessageBox::Show("Invalid student code", "Login failed", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message);
 	}
 }
 private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
