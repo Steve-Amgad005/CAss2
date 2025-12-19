@@ -259,7 +259,8 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 
 			if (cmd->ExecuteScalar() != nullptr) {
 				MessageBox::Show("Login successful!", "Success", MessageBoxButtons::OK, MessageBoxIcon::Information);
-				StudetMainPage^ f = gcnew StudetMainPage();
+				int codeInt = Int32::Parse(v1);
+				StudetMainPage^ f = gcnew StudetMainPage(codeInt);
 				f->Show();
 				this->Hide();
 			}

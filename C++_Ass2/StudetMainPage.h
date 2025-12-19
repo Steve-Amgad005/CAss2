@@ -12,6 +12,9 @@ namespace CAss2 {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace System::Diagnostics;
+	using namespace System::Data::SqlClient;
+
+	
 
 
 	/// <summary>
@@ -19,10 +22,53 @@ namespace CAss2 {
 	/// </summary>
 	public ref class StudetMainPage : public System::Windows::Forms::Form
 	{
+		void LoadStudentData() {
+
+			String^ connStr =
+				"Server=localhost\\SQLEXPRESS;"
+				"Database=MyDB;"
+				"Trusted_Connection=True;"
+				"TrustServerCertificate=True;";
+
+			SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+			try {
+				conn->Open();
+
+				String^ query =
+					"SELECT s.name, s.code, s.NationalNumber, d.name AS DepartmentName "
+					"FROM Students s "
+					"INNER JOIN Departments d ON s.department_id = d.id "
+					"WHERE s.code = @code";
+
+				SqlCommand^ cmd = gcnew SqlCommand(query, conn);
+				cmd->Parameters->AddWithValue("@code", StdCode);
+
+				SqlDataReader^ reader = cmd->ExecuteReader();
+
+				if (reader->Read()) {
+					LableStdName->Text = reader["name"]->ToString();
+					LableStdCode->Text = reader["code"]->ToString();
+					LableStdNID->Text = reader["NationalNumber"]->ToString();
+					LableStdDept->Text = reader["DepartmentName"]->ToString();
+				}
+
+				reader->Close();
+				conn->Close();
+			}
+			catch (Exception^ ex) {
+				MessageBox::Show(ex->Message);
+			}
+		}
+
+	private:
+		int StdCode;
 	public:
-		StudetMainPage(void)
+		StudetMainPage(int code)
 		{
 			InitializeComponent();
+			StdCode=code;
+			this->Load += gcnew System::EventHandler(this, &StudetMainPage::StudetMainPage_Load);
 			//
 			//TODO: Add the constructor code here
 			//
@@ -43,10 +89,14 @@ namespace CAss2 {
 	protected:
 
 	private: System::Windows::Forms::Panel^ panel2;
-	private: System::Windows::Forms::Label^ label2;
+	private: System::Windows::Forms::Label^ LableStdName;
+
+
 	private: System::Windows::Forms::PictureBox^ pictureBox2;
-	private: System::Windows::Forms::Label^ label4;
-	private: System::Windows::Forms::Label^ label3;
+	private: System::Windows::Forms::Label^ LableStdNID;
+
+	private: System::Windows::Forms::Label^ LableStdCode;
+
 	private: System::Windows::Forms::Label^ label8;
 	private: System::Windows::Forms::Panel^ panel3;
 	private: System::Windows::Forms::Label^ label7;
@@ -54,7 +104,8 @@ namespace CAss2 {
 	private: System::Windows::Forms::Label^ label5;
 	private: System::Windows::Forms::Label^ label12;
 	private: System::Windows::Forms::Label^ label11;
-	private: System::Windows::Forms::Label^ label10;
+	private: System::Windows::Forms::Label^ LableStdDept;
+
 	private: System::Windows::Forms::Label^ label9;
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::Button^ button1;
@@ -93,11 +144,11 @@ namespace CAss2 {
 			this->label11 = (gcnew System::Windows::Forms::Label());
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->label5 = (gcnew System::Windows::Forms::Label());
-			this->label10 = (gcnew System::Windows::Forms::Label());
-			this->label4 = (gcnew System::Windows::Forms::Label());
-			this->label3 = (gcnew System::Windows::Forms::Label());
+			this->LableStdDept = (gcnew System::Windows::Forms::Label());
+			this->LableStdNID = (gcnew System::Windows::Forms::Label());
+			this->LableStdCode = (gcnew System::Windows::Forms::Label());
 			this->label9 = (gcnew System::Windows::Forms::Label());
-			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->LableStdName = (gcnew System::Windows::Forms::Label());
 			this->label8 = (gcnew System::Windows::Forms::Label());
 			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
 			this->button2 = (gcnew System::Windows::Forms::Button());
@@ -158,17 +209,18 @@ namespace CAss2 {
 			this->panel2->Controls->Add(this->label11);
 			this->panel2->Controls->Add(this->label6);
 			this->panel2->Controls->Add(this->label5);
-			this->panel2->Controls->Add(this->label10);
-			this->panel2->Controls->Add(this->label4);
-			this->panel2->Controls->Add(this->label3);
+			this->panel2->Controls->Add(this->LableStdDept);
+			this->panel2->Controls->Add(this->LableStdNID);
+			this->panel2->Controls->Add(this->LableStdCode);
 			this->panel2->Controls->Add(this->label9);
-			this->panel2->Controls->Add(this->label2);
+			this->panel2->Controls->Add(this->LableStdName);
 			this->panel2->Controls->Add(this->label8);
 			this->panel2->Controls->Add(this->pictureBox2);
 			this->panel2->Location = System::Drawing::Point(22, 142);
 			this->panel2->Name = L"panel2";
 			this->panel2->Size = System::Drawing::Size(1122, 157);
 			this->panel2->TabIndex = 2;
+			this->panel2->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &StudetMainPage::panel2_Paint);
 			// 
 			// label12
 			// 
@@ -240,41 +292,41 @@ namespace CAss2 {
 			this->label5->Text = L"Name:";
 			this->label5->Click += gcnew System::EventHandler(this, &StudetMainPage::label5_Click);
 			// 
-			// label10
+			// LableStdDept
 			// 
-			this->label10->AutoSize = true;
-			this->label10->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->LableStdDept->AutoSize = true;
+			this->LableStdDept->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label10->ForeColor = System::Drawing::Color::White;
-			this->label10->Location = System::Drawing::Point(822, 104);
-			this->label10->Name = L"label10";
-			this->label10->Size = System::Drawing::Size(41, 16);
-			this->label10->TabIndex = 11;
-			this->label10->Text = L":القسم";
+			this->LableStdDept->ForeColor = System::Drawing::Color::White;
+			this->LableStdDept->Location = System::Drawing::Point(822, 104);
+			this->LableStdDept->Name = L"LableStdDept";
+			this->LableStdDept->Size = System::Drawing::Size(41, 16);
+			this->LableStdDept->TabIndex = 11;
+			this->LableStdDept->Text = L":القسم";
 			// 
-			// label4
+			// LableStdNID
 			// 
-			this->label4->AutoSize = true;
-			this->label4->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->LableStdNID->AutoSize = true;
+			this->LableStdNID->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label4->ForeColor = System::Drawing::Color::White;
-			this->label4->Location = System::Drawing::Point(202, 104);
-			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(82, 16);
-			this->label4->TabIndex = 5;
-			this->label4->Text = L":الرقم القومي";
+			this->LableStdNID->ForeColor = System::Drawing::Color::White;
+			this->LableStdNID->Location = System::Drawing::Point(202, 104);
+			this->LableStdNID->Name = L"LableStdNID";
+			this->LableStdNID->Size = System::Drawing::Size(82, 16);
+			this->LableStdNID->TabIndex = 5;
+			this->LableStdNID->Text = L":الرقم القومي";
 			// 
-			// label3
+			// LableStdCode
 			// 
-			this->label3->AutoSize = true;
-			this->label3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->LableStdCode->AutoSize = true;
+			this->LableStdCode->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label3->ForeColor = System::Drawing::Color::White;
-			this->label3->Location = System::Drawing::Point(269, 72);
-			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(73, 16);
-			this->label3->TabIndex = 4;
-			this->label3->Text = L":كود الطالب";
+			this->LableStdCode->ForeColor = System::Drawing::Color::White;
+			this->LableStdCode->Location = System::Drawing::Point(269, 72);
+			this->LableStdCode->Name = L"LableStdCode";
+			this->LableStdCode->Size = System::Drawing::Size(73, 16);
+			this->LableStdCode->TabIndex = 4;
+			this->LableStdCode->Text = L":كود الطالب";
 			// 
 			// label9
 			// 
@@ -284,22 +336,23 @@ namespace CAss2 {
 			this->label9->ForeColor = System::Drawing::Color::White;
 			this->label9->Location = System::Drawing::Point(852, 72);
 			this->label9->Name = L"label9";
-			this->label9->Size = System::Drawing::Size(98, 16);
+			this->label9->RightToLeft = System::Windows::Forms::RightToLeft::Yes;
+			this->label9->Size = System::Drawing::Size(76, 16);
 			this->label9->TabIndex = 10;
-			this->label9->Text = L":العام الأكاديمي";
+			this->label9->Text = L"2025-2026";
 			// 
-			// label2
+			// LableStdName
 			// 
-			this->label2->AutoSize = true;
-			this->label2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->LableStdName->AutoSize = true;
+			this->LableStdName->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label2->ForeColor = System::Drawing::Color::White;
-			this->label2->Location = System::Drawing::Point(217, 40);
-			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(39, 16);
-			this->label2->TabIndex = 3;
-			this->label2->Text = L":الأسم";
-			this->label2->Click += gcnew System::EventHandler(this, &StudetMainPage::label2_Click);
+			this->LableStdName->ForeColor = System::Drawing::Color::White;
+			this->LableStdName->Location = System::Drawing::Point(217, 40);
+			this->LableStdName->Name = L"LableStdName";
+			this->LableStdName->Size = System::Drawing::Size(39, 16);
+			this->LableStdName->TabIndex = 3;
+			this->LableStdName->Text = L":الأسم";
+			this->LableStdName->Click += gcnew System::EventHandler(this, &StudetMainPage::label2_Click);
 			// 
 			// label8
 			// 
@@ -517,12 +570,49 @@ namespace CAss2 {
 	private: System::Void label11_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
 	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
-		MessageBox::Show(
-			"Your seat number is: " + 20241397,
-			"Student Seat Number",
-			MessageBoxButtons::OK,
-			MessageBoxIcon::Information
-		);
+		String^ connStr =
+			"Server=localhost\\SQLEXPRESS;"
+			"Database=MyDB;"
+			"Trusted_Connection=True;"
+			"TrustServerCertificate=True;";
+
+		SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+		try {
+			conn->Open();
+
+			String^ query =
+				"SELECT seatnumber "
+				"FROM Students "
+				"WHERE code = @code";
+
+			SqlCommand^ cmd = gcnew SqlCommand(query, conn);
+			cmd->Parameters->AddWithValue("@code", StdCode);
+
+			Object^ result = cmd->ExecuteScalar();
+
+			if (result != nullptr) {
+				MessageBox::Show(
+					"Your seat number is: " + result,
+					"Student Seat Number",
+					MessageBoxButtons::OK,
+					MessageBoxIcon::Information
+				);
+			}
+			else {
+				MessageBox::Show(
+					"Your seat number is: " + result,
+					"Student Seat Number",
+					MessageBoxButtons::OK,
+					MessageBoxIcon::Error
+				);
+			}
+
+			conn->Close();
+		}
+		catch (Exception^ ex) {
+			MessageBox::Show(ex->Message);
+		}
 	}
 	private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
 		StudentGrades^ gradesForm = gcnew StudentGrades();
@@ -573,6 +663,11 @@ private: System::Void button8_Click(System::Object^ sender, System::EventArgs^ e
 	psi->FileName = "https://drive.google.com/drive/folders/1K6CMYRDOvsRMaM32yJVu8EelwJBnJeNv?usp=sharing";
 	psi->UseShellExecute = true;
 	Process::Start(psi);
+}
+private: System::Void panel2_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
+}
+private: System::Void StudetMainPage_Load(System::Object^ sender, System::EventArgs^ e) {
+	LoadStudentData();
 }
 };
 }
