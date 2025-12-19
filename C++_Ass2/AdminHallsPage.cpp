@@ -5,7 +5,7 @@ using namespace System::Windows::Forms;
 
 namespace CAss2 {
 	System::Void AdminHallsPage::button1_Click(System::Object^ sender, System::EventArgs^ e) {
-		AdminPage^ admin = gcnew AdminPage();
+		AdminPage^ admin = gcnew AdminPage(AdminCode);
 		admin->Show();
 		this->Close();
 	}

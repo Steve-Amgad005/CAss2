@@ -16,10 +16,13 @@ namespace CAss2 {
 	/// </summary>
 	public ref class AdminPage : public System::Windows::Forms::Form
 	{
+	private:
+		int AdminCode;
 	public:
-		AdminPage(void)
+		AdminPage(int code)
 		{
 			InitializeComponent();
+			AdminCode = code;
 			//
 			//TODO: Add the constructor code here
 			//

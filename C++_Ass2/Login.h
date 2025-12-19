@@ -302,7 +302,8 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 
 			if (cmd->ExecuteScalar() != nullptr) {
 				MessageBox::Show("Login successful!", "Success", MessageBoxButtons::OK, MessageBoxIcon::Information);
-				AdminPage^ f = gcnew AdminPage();
+				int codeInt = Int32::Parse(v1);
+				AdminPage^ f = gcnew AdminPage(codeInt);
 				f->Show();
 				this->Hide();
 			}

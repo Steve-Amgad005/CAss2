@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "AdminAddDepartment.h"
 #include "AdminModifyDepartment.h"
 #include "AdminDeleteDepartment.h"
@@ -11,16 +11,70 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
 
 	/// <summary>
 	/// Summary for AdminDepartmentPage
 	/// </summary>
 	public ref class AdminDepartmentPage : public System::Windows::Forms::Form
 	{
+	
+		void LoadDepartmentsData()
+		{
+			String^ connStr =
+				"Server=localhost\\SQLEXPRESS;"
+				"Database=MyDB;"
+				"Trusted_Connection=True;"
+				"TrustServerCertificate=True;";
+
+			SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+			try
+			{
+				String^ query =
+					"SELECT "
+					"d.name AS [Department], "
+					"c.name AS [College], "
+
+					"(SELECT COUNT(*) FROM Students s "
+					" WHERE s.department_id = d.id) AS [Students Count], "
+
+					"(SELECT COUNT(*) FROM Courses co "
+					" WHERE co.department_id = d.id) AS [Courses Count], "
+
+					"(SELECT COUNT(*) FROM Professors p "
+					" WHERE p.department_id = d.id) AS [Professors Count] "
+
+					"FROM Departments d "
+					"INNER JOIN Colleges c ON d.college_id = c.id";
+
+
+				SqlDataAdapter^ da = gcnew SqlDataAdapter(query, conn);
+				DataTable^ dt = gcnew DataTable();
+				da->Fill(dt);
+
+				dataGridViewDepartments->DataSource = dt;
+
+				dataGridViewDepartments->AutoSizeColumnsMode =
+					DataGridViewAutoSizeColumnsMode::Fill;
+				dataGridViewDepartments->ReadOnly = true;
+				dataGridViewDepartments->SelectionMode =
+					DataGridViewSelectionMode::FullRowSelect;
+			}
+			catch (Exception^ ex)
+			{
+				MessageBox::Show(ex->Message, "Error");
+			}
+		}
+
+	private:
+		int AdminCode;
 	public:
-		AdminDepartmentPage(void)
+		AdminDepartmentPage(int code)
 		{
 			InitializeComponent();
+			AdminCode = code;
+			LoadDepartmentsData();
 			//
 			//TODO: Add the constructor code here
 			//
@@ -37,12 +91,14 @@ namespace CAss2 {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::DataGridView^ dataGridView1;
+	private: System::Windows::Forms::DataGridView^ dataGridViewDepartments;
 	protected:
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ DepartmentName;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ DepartmentCode;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ StudentsCount;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ DoctorsCount;
+
+	protected:
+
+
+
+
 	private: System::Windows::Forms::Button^ button5;
 	private: System::Windows::Forms::Button^ button4;
 	private: System::Windows::Forms::Button^ button3;
@@ -69,11 +125,7 @@ namespace CAss2 {
 			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(AdminDepartmentPage::typeid));
-			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
-			this->DepartmentName = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->DepartmentCode = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->StudentsCount = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->DoctorsCount = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->dataGridViewDepartments = (gcnew System::Windows::Forms::DataGridView());
 			this->button5 = (gcnew System::Windows::Forms::Button());
 			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
@@ -82,17 +134,17 @@ namespace CAss2 {
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewDepartments))->BeginInit();
 			this->panel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
 			// 
-			// dataGridView1
+			// dataGridViewDepartments
 			// 
 			dataGridViewCellStyle1->BackColor = System::Drawing::Color::White;
-			this->dataGridView1->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-			this->dataGridView1->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
-			this->dataGridView1->AutoSizeRowsMode = System::Windows::Forms::DataGridViewAutoSizeRowsMode::AllCells;
+			this->dataGridViewDepartments->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+			this->dataGridViewDepartments->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
+			this->dataGridViewDepartments->AutoSizeRowsMode = System::Windows::Forms::DataGridViewAutoSizeRowsMode::AllCells;
 			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
 			dataGridViewCellStyle2->BackColor = System::Drawing::Color::DarkGray;
 			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
@@ -101,38 +153,14 @@ namespace CAss2 {
 			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
 			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
 			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dataGridView1->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {
-				this->DepartmentName,
-					this->DepartmentCode, this->StudentsCount, this->DoctorsCount
-			});
-			this->dataGridView1->Location = System::Drawing::Point(183, 267);
-			this->dataGridView1->Name = L"dataGridView1";
+			this->dataGridViewDepartments->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+			this->dataGridViewDepartments->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridViewDepartments->Location = System::Drawing::Point(183, 267);
+			this->dataGridViewDepartments->Name = L"dataGridViewDepartments";
 			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
-			this->dataGridView1->RowsDefaultCellStyle = dataGridViewCellStyle3;
-			this->dataGridView1->Size = System::Drawing::Size(838, 302);
-			this->dataGridView1->TabIndex = 11;
-			// 
-			// DepartmentName
-			// 
-			this->DepartmentName->HeaderText = L"Department Name";
-			this->DepartmentName->Name = L"DepartmentName";
-			// 
-			// DepartmentCode
-			// 
-			this->DepartmentCode->HeaderText = L"Department Code";
-			this->DepartmentCode->Name = L"DepartmentCode";
-			// 
-			// StudentsCount
-			// 
-			this->StudentsCount->HeaderText = L"Students Count";
-			this->StudentsCount->Name = L"StudentsCount";
-			// 
-			// DoctorsCount
-			// 
-			this->DoctorsCount->HeaderText = L"Doctors Count";
-			this->DoctorsCount->Name = L"DoctorsCount";
+			this->dataGridViewDepartments->RowsDefaultCellStyle = dataGridViewCellStyle3;
+			this->dataGridViewDepartments->Size = System::Drawing::Size(838, 302);
+			this->dataGridViewDepartments->TabIndex = 11;
 			// 
 			// button5
 			// 
@@ -256,7 +284,7 @@ namespace CAss2 {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::Purple;
 			this->ClientSize = System::Drawing::Size(1242, 599);
-			this->Controls->Add(this->dataGridView1);
+			this->Controls->Add(this->dataGridViewDepartments);
 			this->Controls->Add(this->button5);
 			this->Controls->Add(this->button4);
 			this->Controls->Add(this->button3);
@@ -266,7 +294,7 @@ namespace CAss2 {
 			this->Name = L"AdminDepartmentPage";
 			this->Text = L"AdminDepartmentPage";
 			this->Load += gcnew System::EventHandler(this, &AdminDepartmentPage::AdminDepartmentPage_Load);
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewDepartments))->EndInit();
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();

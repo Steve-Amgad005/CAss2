@@ -19,29 +19,29 @@ namespace CAss2 {
 
 	// implement Students button handler: open AdminStudentsPage
 	System::Void AdminPage::button4_Click(System::Object^ sender, System::EventArgs^ e) {
-		CAss2::AdminStudentsPage^ studentsPage = gcnew CAss2::AdminStudentsPage();
+		CAss2::AdminStudentsPage^ studentsPage = gcnew CAss2::AdminStudentsPage(AdminCode);
 		studentsPage->Show();
 		this->Hide();
 	}
 
 	// implement Departments button handler: open AdminDepartmentPage
 	System::Void AdminPage::button3_Click(System::Object^ sender, System::EventArgs^ e) {
-		CAss2::AdminDepartmentPage^ deptPage = gcnew CAss2::AdminDepartmentPage();
+		CAss2::AdminDepartmentPage^ deptPage = gcnew CAss2::AdminDepartmentPage(AdminCode);
 		deptPage->Show();
 		this->Hide();
 	}
 System::Void AdminPage::button5_Click(System::Object^ sender, System::EventArgs^ e) {
-	AdminBuildingsPage^ buildingsPage = gcnew AdminBuildingsPage();
+	AdminBuildingsPage^ buildingsPage = gcnew AdminBuildingsPage(AdminCode);
 	buildingsPage->Show();
 	this->Close();
 }
 System::Void AdminPage::button6_Click(System::Object^ sender, System::EventArgs^ e) {
-	AdminLapsPage^ lapsPage = gcnew AdminLapsPage();
+	AdminLapsPage^ lapsPage = gcnew AdminLapsPage(AdminCode);
 	lapsPage->Show();
 	this->Close();
 }
 System::Void AdminPage::button7_Click(System::Object^ sender, System::EventArgs^ e) {
-	AdminHallsPage^ hallsPage = gcnew AdminHallsPage();
+	AdminHallsPage^ hallsPage = gcnew AdminHallsPage(AdminCode);
 	hallsPage->Show();
 	this->Close();
 }
