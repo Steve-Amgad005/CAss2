@@ -36,7 +36,7 @@ namespace CAss2 {
 				conn->Open();
 
 				String^ query =
-					"SELECT s.name, s.code, s.NationalNumber, d.name AS DepartmentName "
+					"SELECT s.name, s.code, s.NationalNumber, s.year, d.name AS DepartmentName "
 					"FROM Students s "
 					"INNER JOIN Departments d ON s.department_id = d.id "
 					"WHERE s.code = @code";
@@ -51,6 +51,28 @@ namespace CAss2 {
 					LableStdCode->Text = reader["code"]->ToString();
 					LableStdNID->Text = reader["NationalNumber"]->ToString();
 					LableStdDept->Text = reader["DepartmentName"]->ToString();
+					int year = Convert::ToInt32(reader["year"]);
+					String^ yearText;
+
+					switch (year) {
+					case 1:
+						yearText = "First Year";
+						break;
+					case 2:
+						yearText = "Second Year";
+						break;
+					case 3:
+						yearText = "Third Year";
+						break;
+					case 4:
+						yearText = "Fourth Year";
+						break;
+					default:
+						yearText = "Unknown";
+						break;
+					}
+
+					LableStdYear->Text = yearText;
 				}
 
 				reader->Close();
@@ -96,8 +118,9 @@ namespace CAss2 {
 	private: System::Windows::Forms::Label^ LableStdNID;
 
 	private: System::Windows::Forms::Label^ LableStdCode;
+	private: System::Windows::Forms::Label^ LableStdYear;
 
-	private: System::Windows::Forms::Label^ label8;
+
 	private: System::Windows::Forms::Panel^ panel3;
 	private: System::Windows::Forms::Label^ label7;
 	private: System::Windows::Forms::Label^ label6;
@@ -149,7 +172,7 @@ namespace CAss2 {
 			this->LableStdCode = (gcnew System::Windows::Forms::Label());
 			this->label9 = (gcnew System::Windows::Forms::Label());
 			this->LableStdName = (gcnew System::Windows::Forms::Label());
-			this->label8 = (gcnew System::Windows::Forms::Label());
+			this->LableStdYear = (gcnew System::Windows::Forms::Label());
 			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button1 = (gcnew System::Windows::Forms::Button());
@@ -214,7 +237,7 @@ namespace CAss2 {
 			this->panel2->Controls->Add(this->LableStdCode);
 			this->panel2->Controls->Add(this->label9);
 			this->panel2->Controls->Add(this->LableStdName);
-			this->panel2->Controls->Add(this->label8);
+			this->panel2->Controls->Add(this->LableStdYear);
 			this->panel2->Controls->Add(this->pictureBox2);
 			this->panel2->Location = System::Drawing::Point(22, 142);
 			this->panel2->Name = L"panel2";
@@ -230,9 +253,9 @@ namespace CAss2 {
 			this->label12->ForeColor = System::Drawing::Color::White;
 			this->label12->Location = System::Drawing::Point(729, 104);
 			this->label12->Name = L"label12";
-			this->label12->Size = System::Drawing::Size(87, 16);
+			this->label12->Size = System::Drawing::Size(91, 16);
 			this->label12->TabIndex = 13;
-			this->label12->Text = L"Department";
+			this->label12->Text = L"Department:";
 			// 
 			// panel3
 			// 
@@ -354,18 +377,18 @@ namespace CAss2 {
 			this->LableStdName->Text = L":الأسم";
 			this->LableStdName->Click += gcnew System::EventHandler(this, &StudetMainPage::label2_Click);
 			// 
-			// label8
+			// LableStdYear
 			// 
-			this->label8->AutoSize = true;
-			this->label8->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->LableStdYear->AutoSize = true;
+			this->LableStdYear->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label8->ForeColor = System::Drawing::Color::White;
-			this->label8->Location = System::Drawing::Point(729, 40);
-			this->label8->Name = L"label8";
-			this->label8->Size = System::Drawing::Size(97, 16);
-			this->label8->TabIndex = 7;
-			this->label8->Text = L"Second Year";
-			this->label8->Click += gcnew System::EventHandler(this, &StudetMainPage::label8_Click);
+			this->LableStdYear->ForeColor = System::Drawing::Color::White;
+			this->LableStdYear->Location = System::Drawing::Point(729, 40);
+			this->LableStdYear->Name = L"LableStdYear";
+			this->LableStdYear->Size = System::Drawing::Size(97, 16);
+			this->LableStdYear->TabIndex = 7;
+			this->LableStdYear->Text = L"Second Year";
+			this->LableStdYear->Click += gcnew System::EventHandler(this, &StudetMainPage::label8_Click);
 			// 
 			// pictureBox2
 			// 
@@ -566,7 +589,6 @@ namespace CAss2 {
 	}
 	private: System::Void label5_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
-
 	private: System::Void label11_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
 	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -615,7 +637,7 @@ namespace CAss2 {
 		}
 	}
 	private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
-		StudentGrades^ gradesForm = gcnew StudentGrades();
+		StudentGrades^ gradesForm = gcnew StudentGrades(StdCode);
 		gradesForm->Show();
 	}
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
