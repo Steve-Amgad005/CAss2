@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include "AdminBuildingsPage.h";
+#include "AdminShowMarks.h"
+
 
 namespace CAss2 {
 
@@ -149,6 +151,7 @@ namespace CAss2 {
 			this->button2->TabIndex = 2;
 			this->button2->Text = L"Year\'s Marks";
 			this->button2->UseVisualStyleBackColor = false;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminPage::button2_Click);
 			// 
 			// button3
 			// 
@@ -275,5 +278,6 @@ namespace CAss2 {
 	private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e);
 private: System::Void button6_Click(System::Object^ sender, System::EventArgs^ e);
 private: System::Void button7_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }

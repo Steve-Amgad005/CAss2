@@ -1,5 +1,7 @@
 #pragma once
 
+#include "AdminPage.h"
+
 namespace CAss2 {
 
 	using namespace System;
@@ -8,16 +10,73 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
+
 
 	/// <summary>
 	/// Summary for AdminShowMarks
 	/// </summary>
 	public ref class AdminShowMarks : public System::Windows::Forms::Form
 	{
+		void LoadAllStudentsMarks()
+		{
+			String^ connStr =
+				"Server=localhost\\SQLEXPRESS;"
+				"Database=MyDB;"
+				"Trusted_Connection=True;"
+				"TrustServerCertificate=True;";
+
+			SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+			try
+			{
+				String^ query =
+					"SELECT "
+					"s.code AS [Student Code], "
+					"s.name AS [Student Name], "
+					"d.name AS [Department], "
+
+					"CASE s.year "
+					" WHEN 1 THEN 'First' "
+					" WHEN 2 THEN 'Second' "
+					" WHEN 3 THEN 'Third' "
+					" WHEN 4 THEN 'Fourth' "
+					" ELSE 'Unknown' "
+					"END AS [Year], "
+
+					"c.course_name AS [Course], "
+					"g.assignment1 AS [Assignment 1], "
+					"g.assignment2 AS [Assignment 2], "
+					"g.cw AS [CW], "
+					"g.final AS [Final], "
+					"g.total AS [Total] "
+
+					"FROM Grades g "
+					"INNER JOIN Students s ON g.student_id = s.id "
+					"INNER JOIN Courses c ON g.course_id = c.id "
+					"INNER JOIN Departments d ON s.department_id = d.id "
+
+					"ORDER BY d.name, s.year, s.code, c.course_name";
+
+				SqlDataAdapter^ da = gcnew SqlDataAdapter(query, conn);
+				DataTable^ dt = gcnew DataTable();
+
+				da->Fill(dt);
+				dataGridViewMarks->DataSource = dt;
+			}
+			catch (Exception^ ex)
+			{
+				MessageBox::Show(ex->Message, "Error");
+			}
+		}
+	private:
+		int AdminCode;
 	public:
-		AdminShowMarks(void)
+		AdminShowMarks(int code)
 		{
 			InitializeComponent();
+			AdminCode = code;
+			LoadAllStudentsMarks();
 			//
 			//TODO: Add the constructor code here
 			//
@@ -34,15 +93,17 @@ namespace CAss2 {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::DataGridView^ dataGridView1;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ StudentCode;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ StudentName;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Course;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Ass1;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Ass2;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ CW;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Final;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Total;
+	private: System::Windows::Forms::DataGridView^ dataGridViewMarks;
+	protected:
+
+
+
+
+
+
+
+
+
 
 
 	private: System::Windows::Forms::Label^ label1;
@@ -76,29 +137,21 @@ namespace CAss2 {
 			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(AdminShowMarks::typeid));
-			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
-			this->StudentCode = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->StudentName = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Course = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Ass1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Ass2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->CW = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Final = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Total = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->dataGridViewMarks = (gcnew System::Windows::Forms::DataGridView());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			this->comboBox2 = (gcnew System::Windows::Forms::ComboBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewMarks))->BeginInit();
 			this->SuspendLayout();
 			// 
-			// dataGridView1
+			// dataGridViewMarks
 			// 
-			this->dataGridView1->AllowUserToDeleteRows = false;
+			this->dataGridViewMarks->AllowUserToDeleteRows = false;
 			dataGridViewCellStyle1->BackColor = System::Drawing::Color::White;
-			this->dataGridView1->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-			this->dataGridView1->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
+			this->dataGridViewMarks->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+			this->dataGridViewMarks->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
 			dataGridViewCellStyle2->BackColor = System::Drawing::Color::DarkGray;
 			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
@@ -107,60 +160,15 @@ namespace CAss2 {
 			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
 			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
 			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dataGridView1->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(8) {
-				this->StudentCode,
-					this->StudentName, this->Course, this->Ass1, this->Ass2, this->CW, this->Final, this->Total
-			});
-			this->dataGridView1->Location = System::Drawing::Point(95, 235);
-			this->dataGridView1->Name = L"dataGridView1";
+			this->dataGridViewMarks->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+			this->dataGridViewMarks->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridViewMarks->Location = System::Drawing::Point(95, 235);
+			this->dataGridViewMarks->Name = L"dataGridViewMarks";
 			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
-			this->dataGridView1->RowsDefaultCellStyle = dataGridViewCellStyle3;
-			this->dataGridView1->Size = System::Drawing::Size(837, 292);
-			this->dataGridView1->TabIndex = 11;
-			this->dataGridView1->CellContentClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &AdminShowMarks::dataGridView1_CellContentClick);
-			// 
-			// StudentCode
-			// 
-			this->StudentCode->HeaderText = L"Student Code";
-			this->StudentCode->Name = L"StudentCode";
-			// 
-			// StudentName
-			// 
-			this->StudentName->HeaderText = L"Sudent Name";
-			this->StudentName->Name = L"StudentName";
-			// 
-			// Course
-			// 
-			this->Course->HeaderText = L"Course";
-			this->Course->Name = L"Course";
-			this->Course->ReadOnly = true;
-			// 
-			// Ass1
-			// 
-			this->Ass1->HeaderText = L"Assignment 1";
-			this->Ass1->Name = L"Ass1";
-			// 
-			// Ass2
-			// 
-			this->Ass2->HeaderText = L"Assignment 2";
-			this->Ass2->Name = L"Ass2";
-			// 
-			// CW
-			// 
-			this->CW->HeaderText = L"CW";
-			this->CW->Name = L"CW";
-			// 
-			// Final
-			// 
-			this->Final->HeaderText = L"Final";
-			this->Final->Name = L"Final";
-			// 
-			// Total
-			// 
-			this->Total->HeaderText = L"Total";
-			this->Total->Name = L"Total";
+			this->dataGridViewMarks->RowsDefaultCellStyle = dataGridViewCellStyle3;
+			this->dataGridViewMarks->Size = System::Drawing::Size(837, 292);
+			this->dataGridViewMarks->TabIndex = 11;
+			this->dataGridViewMarks->CellContentClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &AdminShowMarks::dataGridView1_CellContentClick);
 			// 
 			// label1
 			// 
@@ -229,6 +237,7 @@ namespace CAss2 {
 			this->button2->Size = System::Drawing::Size(59, 56);
 			this->button2->TabIndex = 18;
 			this->button2->UseVisualStyleBackColor = false;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminShowMarks::button2_Click);
 			// 
 			// AdminShowMarks
 			// 
@@ -241,10 +250,10 @@ namespace CAss2 {
 			this->Controls->Add(this->comboBox2);
 			this->Controls->Add(this->comboBox1);
 			this->Controls->Add(this->label1);
-			this->Controls->Add(this->dataGridView1);
+			this->Controls->Add(this->dataGridViewMarks);
 			this->Name = L"AdminShowMarks";
 			this->Text = L"AdminShowMarks";
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewMarks))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -254,5 +263,6 @@ namespace CAss2 {
 	}
 private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 }
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }

@@ -45,5 +45,11 @@ System::Void AdminPage::button7_Click(System::Object^ sender, System::EventArgs^
 	hallsPage->Show();
 	this->Close();
 }
+
+System::Void AdminPage::button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	AdminShowMarks^ adminShowMarksForm = gcnew AdminShowMarks(AdminCode);
+	adminShowMarksForm->Show();
+	this->Hide();
+}
 }
 
