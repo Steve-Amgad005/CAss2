@@ -11,12 +11,50 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
 
 	/// <summary>
 	/// Summary for AdminLapsPage
 	/// </summary>
 	public ref class AdminLapsPage : public System::Windows::Forms::Form
 	{
+
+		void LoadAllLabs()
+		{
+			String^ connStr =
+				"Server=localhost\\SQLEXPRESS;"
+				"Database=MyDB;"
+				"Trusted_Connection=True;"
+				"TrustServerCertificate=True;";
+
+			SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+			try
+			{
+				String^ query =
+					"SELECT "
+					"l.name AS [Lab Name], "
+					"b.name AS [Building], "
+					"f.floor_number AS [Floor], "
+					"l.capacity AS [Capacity], "
+					"l.computers_count AS [Computers], "
+					"CASE WHEN l.has_air_condition = 1 "
+					"     THEN 'Yes' ELSE 'No' END AS [Air Condition] "
+					"FROM Labs l "
+					"INNER JOIN Floors f ON l.floor_id = f.id "
+					"INNER JOIN Buildings b ON f.building_id = b.id";
+
+				SqlDataAdapter^ da = gcnew SqlDataAdapter(query, conn);
+				DataTable^ dt = gcnew DataTable();
+
+				da->Fill(dt);
+				dataGridViewLabs->DataSource = dt;
+			}
+			catch (Exception^ ex)
+			{
+				MessageBox::Show(ex->Message, "Error");
+			}
+		}
 	private:
 		int AdminCode;
 	public:
@@ -24,6 +62,7 @@ namespace CAss2 {
 		{
 			InitializeComponent();
 			AdminCode = code;
+			LoadAllLabs();
 			//
 			//TODO: Add the constructor code here
 			//
@@ -40,14 +79,16 @@ namespace CAss2 {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::DataGridView^ dataGridView1;
+	private: System::Windows::Forms::DataGridView^ dataGridViewLabs;
 	protected:
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ StudentName;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ LapName;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ NID;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Department;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Year;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Capacity;
+
+	protected:
+
+
+
+
+
+
 	private: System::Windows::Forms::Button^ button4;
 	private: System::Windows::Forms::Button^ button3;
 	private: System::Windows::Forms::Button^ button2;
@@ -74,13 +115,7 @@ namespace CAss2 {
 			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(AdminLapsPage::typeid));
-			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
-			this->StudentName = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->LapName = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->NID = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Department = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Year = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Capacity = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->dataGridViewLabs = (gcnew System::Windows::Forms::DataGridView());
 			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
@@ -89,16 +124,16 @@ namespace CAss2 {
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			this->button5 = (gcnew System::Windows::Forms::Button());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewLabs))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->panel1->SuspendLayout();
 			this->SuspendLayout();
 			// 
-			// dataGridView1
+			// dataGridViewLabs
 			// 
 			dataGridViewCellStyle1->BackColor = System::Drawing::Color::White;
-			this->dataGridView1->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-			this->dataGridView1->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
+			this->dataGridViewLabs->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+			this->dataGridViewLabs->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
 			dataGridViewCellStyle2->BackColor = System::Drawing::Color::DarkGray;
 			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
@@ -107,48 +142,14 @@ namespace CAss2 {
 			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
 			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
 			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dataGridView1->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(6) {
-				this->StudentName,
-					this->LapName, this->NID, this->Department, this->Year, this->Capacity
-			});
-			this->dataGridView1->Location = System::Drawing::Point(179, 270);
-			this->dataGridView1->Name = L"dataGridView1";
+			this->dataGridViewLabs->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+			this->dataGridViewLabs->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridViewLabs->Location = System::Drawing::Point(179, 270);
+			this->dataGridViewLabs->Name = L"dataGridViewLabs";
 			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
-			this->dataGridView1->RowsDefaultCellStyle = dataGridViewCellStyle3;
-			this->dataGridView1->Size = System::Drawing::Size(838, 302);
-			this->dataGridView1->TabIndex = 18;
-			// 
-			// StudentName
-			// 
-			this->StudentName->HeaderText = L"Lap ID";
-			this->StudentName->Name = L"StudentName";
-			// 
-			// LapName
-			// 
-			this->LapName->HeaderText = L"Lap Name";
-			this->LapName->Name = L"LapName";
-			// 
-			// NID
-			// 
-			this->NID->HeaderText = L"No. of Computers";
-			this->NID->Name = L"NID";
-			// 
-			// Department
-			// 
-			this->Department->HeaderText = L"No. of ACs";
-			this->Department->Name = L"Department";
-			// 
-			// Year
-			// 
-			this->Year->HeaderText = L"No. of Projectors";
-			this->Year->Name = L"Year";
-			// 
-			// Capacity
-			// 
-			this->Capacity->HeaderText = L"Capacity";
-			this->Capacity->Name = L"Capacity";
+			this->dataGridViewLabs->RowsDefaultCellStyle = dataGridViewCellStyle3;
+			this->dataGridViewLabs->Size = System::Drawing::Size(838, 302);
+			this->dataGridViewLabs->TabIndex = 18;
 			// 
 			// button4
 			// 
@@ -272,7 +273,7 @@ namespace CAss2 {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::Purple;
 			this->ClientSize = System::Drawing::Size(1242, 599);
-			this->Controls->Add(this->dataGridView1);
+			this->Controls->Add(this->dataGridViewLabs);
 			this->Controls->Add(this->button4);
 			this->Controls->Add(this->button3);
 			this->Controls->Add(this->button2);
@@ -281,7 +282,7 @@ namespace CAss2 {
 			this->Controls->Add(this->panel1);
 			this->Name = L"AdminLapsPage";
 			this->Text = L"AdminLapsPage";
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewLabs))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
