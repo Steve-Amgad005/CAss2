@@ -632,32 +632,68 @@ private: System::Void button6_Click(System::Object^ sender, System::EventArgs^ e
 	Process::Start(psi);
 }
 private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
-	StudentAcademicCourses^ coursesForm = gcnew StudentAcademicCourses();
+	StudentAcademicCourses^ coursesForm = gcnew StudentAcademicCourses(StdCode);
 	coursesForm->Show();
 }
-private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e) {
-	bool isPaid = true;
+private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e)
+{
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
 
-	int totalFees = 15500;
-	int paidAmount = 15500;
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
 
-	int remaining = totalFees - paidAmount;
+	String^ query =
+		"SELECT s.name, s.code, s.seatnumber, "
+		"ISNULL(p.amount, 0) AS amount, "
+		"ISNULL(p.status, 'Not Paid') AS status "
+		"FROM Students s "
+		"LEFT JOIN Payments p ON p.student_id = s.id "
+		"WHERE s.code = @code";
 
-	String^ status = isPaid ? "Paid" : "Not Paid";
+	SqlCommand^ cmd = gcnew SqlCommand(query, conn);
 
-	String^ message =
-		"Student Fees Status\n\n"
-		"Status: " + status + "\n"
-		"Amount Paid: " + paidAmount.ToString() + " EGP\n"
-		"Remaining: " + remaining.ToString() + " EGP";
+	// ✅ تأكد إن StdCode int
+	cmd->Parameters->Add("@code", SqlDbType::Int)->Value = StdCode;
 
-	MessageBox::Show(
-		message,
-		"Student Fees",
-		MessageBoxButtons::OK,
-		MessageBoxIcon::Information
-	);
+	try
+	{
+		conn->Open();
+		SqlDataReader^ dr = cmd->ExecuteReader();
+
+		if (dr->Read())
+		{
+			String^ message =
+				"Student Fees Status\n\n"
+				"Name: " + dr["name"]->ToString() + "\n"
+				"Code: " + dr["code"]->ToString() + "\n"
+				"Seat Number: " + dr["seatnumber"]->ToString() + "\n\n"
+				"Status: " + dr["status"]->ToString() + "\n"
+				"Amount Paid: " + dr["amount"]->ToString() + " EGP";
+
+			MessageBox::Show(
+				message,
+				"Student Fees",
+				MessageBoxButtons::OK,
+				MessageBoxIcon::Information
+			);
+		}
+		else
+		{
+			MessageBox::Show("Student not found");
+		}
+
+		dr->Close();
+		conn->Close();
+	}
+	catch (Exception^ ex)
+	{
+		MessageBox::Show(ex->Message);
+	}
 }
+
 private: System::Void button8_Click(System::Object^ sender, System::EventArgs^ e) {
 	ProcessStartInfo^ psi = gcnew ProcessStartInfo();
 	psi->FileName = "https://drive.google.com/drive/folders/1K6CMYRDOvsRMaM32yJVu8EelwJBnJeNv?usp=sharing";
