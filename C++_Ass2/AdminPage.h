@@ -54,6 +54,7 @@ namespace CAss2 {
 	private: System::Windows::Forms::Button^ button7;
 	private: System::Windows::Forms::Button^ button8;
 	private: System::Windows::Forms::Button^ button9;
+	private: System::Windows::Forms::Button^ button10;
 
 	private:
 		/// <summary>
@@ -81,6 +82,7 @@ namespace CAss2 {
 			this->button7 = (gcnew System::Windows::Forms::Button());
 			this->button8 = (gcnew System::Windows::Forms::Button());
 			this->button9 = (gcnew System::Windows::Forms::Button());
+			this->button10 = (gcnew System::Windows::Forms::Button());
 			this->panel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
@@ -149,7 +151,7 @@ namespace CAss2 {
 			this->button2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button2->ForeColor = System::Drawing::Color::White;
-			this->button2->Location = System::Drawing::Point(928, 303);
+			this->button2->Location = System::Drawing::Point(914, 259);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(240, 60);
 			this->button2->TabIndex = 2;
@@ -166,7 +168,7 @@ namespace CAss2 {
 			this->button3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button3->ForeColor = System::Drawing::Color::White;
-			this->button3->Location = System::Drawing::Point(653, 303);
+			this->button3->Location = System::Drawing::Point(639, 259);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(240, 60);
 			this->button3->TabIndex = 4;
@@ -183,7 +185,7 @@ namespace CAss2 {
 			this->button4->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button4->ForeColor = System::Drawing::Color::White;
-			this->button4->Location = System::Drawing::Point(94, 303);
+			this->button4->Location = System::Drawing::Point(80, 259);
 			this->button4->Name = L"button4";
 			this->button4->Size = System::Drawing::Size(240, 60);
 			this->button4->TabIndex = 2;
@@ -200,7 +202,7 @@ namespace CAss2 {
 			this->button5->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button5->ForeColor = System::Drawing::Color::White;
-			this->button5->Location = System::Drawing::Point(384, 303);
+			this->button5->Location = System::Drawing::Point(370, 259);
 			this->button5->Name = L"button5";
 			this->button5->Size = System::Drawing::Size(240, 60);
 			this->button5->TabIndex = 5;
@@ -217,7 +219,7 @@ namespace CAss2 {
 			this->button6->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button6->ForeColor = System::Drawing::Color::White;
-			this->button6->Location = System::Drawing::Point(94, 409);
+			this->button6->Location = System::Drawing::Point(80, 365);
 			this->button6->Name = L"button6";
 			this->button6->Size = System::Drawing::Size(240, 60);
 			this->button6->TabIndex = 6;
@@ -234,7 +236,7 @@ namespace CAss2 {
 			this->button7->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button7->ForeColor = System::Drawing::Color::White;
-			this->button7->Location = System::Drawing::Point(384, 409);
+			this->button7->Location = System::Drawing::Point(370, 365);
 			this->button7->Name = L"button7";
 			this->button7->Size = System::Drawing::Size(240, 60);
 			this->button7->TabIndex = 7;
@@ -251,7 +253,7 @@ namespace CAss2 {
 			this->button8->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button8->ForeColor = System::Drawing::Color::White;
-			this->button8->Location = System::Drawing::Point(653, 409);
+			this->button8->Location = System::Drawing::Point(639, 365);
 			this->button8->Name = L"button8";
 			this->button8->Size = System::Drawing::Size(240, 60);
 			this->button8->TabIndex = 8;
@@ -267,7 +269,7 @@ namespace CAss2 {
 			this->button9->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button9->ForeColor = System::Drawing::Color::White;
-			this->button9->Location = System::Drawing::Point(928, 409);
+			this->button9->Location = System::Drawing::Point(914, 365);
 			this->button9->Name = L"button9";
 			this->button9->Size = System::Drawing::Size(240, 60);
 			this->button9->TabIndex = 9;
@@ -275,12 +277,29 @@ namespace CAss2 {
 			this->button9->UseVisualStyleBackColor = false;
 			this->button9->Click += gcnew System::EventHandler(this, &AdminPage::button9_Click);
 			// 
+			// button10
+			// 
+			this->button10->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
+				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->button10->FlatAppearance->BorderSize = 0;
+			this->button10->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button10->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->button10->ForeColor = System::Drawing::Color::White;
+			this->button10->Location = System::Drawing::Point(508, 469);
+			this->button10->Name = L"button10";
+			this->button10->Size = System::Drawing::Size(240, 60);
+			this->button10->TabIndex = 10;
+			this->button10->Text = L"Courses";
+			this->button10->UseVisualStyleBackColor = false;
+			// 
 			// AdminPage
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::Purple;
 			this->ClientSize = System::Drawing::Size(1242, 599);
+			this->Controls->Add(this->button10);
 			this->Controls->Add(this->button9);
 			this->Controls->Add(this->button8);
 			this->Controls->Add(this->button7);
