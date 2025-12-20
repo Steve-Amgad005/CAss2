@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "AdminAddProfessor.h"
 #include "AdminModifyProfessor.h"
 #include "AdminDeleteProfessors.h"
@@ -11,16 +11,84 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
 
 	/// <summary>
 	/// Summary for AdminProfessorsPage
 	/// </summary>
 	public ref class AdminProfessorsPage : public System::Windows::Forms::Form
 	{
+		void LoadProfessors()
+		{
+			String^ connStr =
+				"Server=localhost\\SQLEXPRESS;"
+				"Database=MyDB;"
+				"Trusted_Connection=True;"
+				"TrustServerCertificate=True;";
+
+			SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+			try
+			{
+				String^ query =
+					"SELECT DISTINCT "
+					"p.id, "
+					"p.code AS [Code], "
+					"p.NationalNumber AS [National Number], "
+					"p.name AS [Professor Name], "
+					"d.name AS [Department] "
+					"FROM Professors p "
+					"INNER JOIN ProfessorDepartments pd ON p.id = pd.professor_id "
+					"INNER JOIN Departments d ON pd.department_id = d.id "
+					"ORDER BY d.name, p.name";
+
+
+				SqlDataAdapter^ da = gcnew SqlDataAdapter(query, conn);
+				DataTable^ dt = gcnew DataTable();
+
+				da->Fill(dt);
+
+				dataGridViewProfessors->DataSource = dt;
+
+				// تحسين الشكل
+				dataGridViewProfessors->AutoSizeColumnsMode =
+					DataGridViewAutoSizeColumnsMode::Fill;
+
+				dataGridViewProfessors->ReadOnly = true;
+				dataGridViewProfessors->SelectionMode =
+					DataGridViewSelectionMode::FullRowSelect;
+				dataGridViewProfessors->MultiSelect = false;
+			}
+			catch (Exception^ ex)
+			{
+				MessageBox::Show(ex->Message, "Error loading professors");
+			}
+			finally
+			{
+				conn->Close();
+			}
+		}
+
+	private:
+		int AdminCode;
+
+		Form^ currentPopup = nullptr;
+
+		void CloseCurrentPopup()
+		{
+			if (currentPopup != nullptr)
+			{
+				currentPopup->Close();
+				currentPopup = nullptr;
+			}
+		}
+
 	public:
-		AdminProfessorsPage(void)
+		AdminProfessorsPage(int code)
 		{
 			InitializeComponent();
+			AdminCode = code;
+			LoadProfessors();
 			//
 			//TODO: Add the constructor code here
 			//
@@ -47,7 +115,8 @@ namespace CAss2 {
 	private: System::Windows::Forms::Button^ button3;
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::Button^ button1;
-	private: System::Windows::Forms::DataGridView^ dataGridViewStudents;
+	private: System::Windows::Forms::DataGridView^ dataGridViewProfessors;
+
 
 	private:
 		/// <summary>
@@ -74,10 +143,10 @@ namespace CAss2 {
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->dataGridViewStudents = (gcnew System::Windows::Forms::DataGridView());
+			this->dataGridViewProfessors = (gcnew System::Windows::Forms::DataGridView());
 			this->panel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewStudents))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewProfessors))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// panel1
@@ -181,6 +250,7 @@ namespace CAss2 {
 			this->button2->TabIndex = 10;
 			this->button2->Text = L"Refresh";
 			this->button2->UseVisualStyleBackColor = false;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminProfessorsPage::button2_Click);
 			// 
 			// button1
 			// 
@@ -194,12 +264,13 @@ namespace CAss2 {
 			this->button1->Size = System::Drawing::Size(71, 65);
 			this->button1->TabIndex = 6;
 			this->button1->UseVisualStyleBackColor = false;
+			this->button1->Click += gcnew System::EventHandler(this, &AdminProfessorsPage::button1_Click);
 			// 
-			// dataGridViewStudents
+			// dataGridViewProfessors
 			// 
 			dataGridViewCellStyle1->BackColor = System::Drawing::Color::White;
-			this->dataGridViewStudents->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-			this->dataGridViewStudents->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
+			this->dataGridViewProfessors->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+			this->dataGridViewProfessors->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
 			dataGridViewCellStyle2->BackColor = System::Drawing::Color::DarkGray;
 			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
@@ -208,14 +279,14 @@ namespace CAss2 {
 			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
 			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
 			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dataGridViewStudents->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-			this->dataGridViewStudents->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridViewStudents->Location = System::Drawing::Point(187, 266);
-			this->dataGridViewStudents->Name = L"dataGridViewStudents";
+			this->dataGridViewProfessors->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+			this->dataGridViewProfessors->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridViewProfessors->Location = System::Drawing::Point(187, 266);
+			this->dataGridViewProfessors->Name = L"dataGridViewProfessors";
 			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
-			this->dataGridViewStudents->RowsDefaultCellStyle = dataGridViewCellStyle3;
-			this->dataGridViewStudents->Size = System::Drawing::Size(838, 302);
-			this->dataGridViewStudents->TabIndex = 11;
+			this->dataGridViewProfessors->RowsDefaultCellStyle = dataGridViewCellStyle3;
+			this->dataGridViewProfessors->Size = System::Drawing::Size(838, 302);
+			this->dataGridViewProfessors->TabIndex = 11;
 			// 
 			// AdminProfessorsPage
 			// 
@@ -224,7 +295,7 @@ namespace CAss2 {
 			this->BackColor = System::Drawing::Color::Purple;
 			this->ClientSize = System::Drawing::Size(1242, 599);
 			this->Controls->Add(this->panel1);
-			this->Controls->Add(this->dataGridViewStudents);
+			this->Controls->Add(this->dataGridViewProfessors);
 			this->Controls->Add(this->button5);
 			this->Controls->Add(this->button4);
 			this->Controls->Add(this->button3);
@@ -236,7 +307,7 @@ namespace CAss2 {
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewStudents))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewProfessors))->EndInit();
 			this->ResumeLayout(false);
 
 		}
@@ -244,16 +315,33 @@ namespace CAss2 {
 	private: System::Void AdminProfessorsPage_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
 private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e) {
+	CloseCurrentPopup();
 	AdminAddProfessor^ addProfForm = gcnew AdminAddProfessor();
-	addProfForm->ShowDialog();
+	currentPopup = addProfForm;
+	addProfForm->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &AdminProfessorsPage::PopupClosed);
+	addProfForm->Show();
 }
 private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
+	CloseCurrentPopup();
 	AdminModifyProfessor^ modifyProfForm = gcnew AdminModifyProfessor();
-	modifyProfForm->ShowDialog();
+	currentPopup = modifyProfForm;
+	modifyProfForm->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &AdminProfessorsPage::PopupClosed);
+	modifyProfForm->Show();
 }
 private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+	CloseCurrentPopup();
 	AdminDeleteProfessors^ deleteProfForm = gcnew AdminDeleteProfessors();
-	deleteProfForm->ShowDialog();
+	currentPopup = deleteProfForm;
+	deleteProfForm->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &AdminProfessorsPage::PopupClosed);
+	deleteProfForm->Show();
+}
+private: System::Void PopupClosed(System::Object^ sender, System::Windows::Forms::FormClosedEventArgs^ e) {
+	currentPopup = nullptr;
+}
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	// Refresh the professors Data
+	LoadProfessors();
 }
 };
 }

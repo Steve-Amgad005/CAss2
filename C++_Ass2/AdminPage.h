@@ -259,6 +259,7 @@ namespace CAss2 {
 			this->button8->TabIndex = 8;
 			this->button8->Text = L"Professors";
 			this->button8->UseVisualStyleBackColor = false;
+			this->button8->Click += gcnew System::EventHandler(this, &AdminPage::button8_Click);
 			// 
 			// button9
 			// 
@@ -292,6 +293,7 @@ namespace CAss2 {
 			this->button10->TabIndex = 10;
 			this->button10->Text = L"Courses";
 			this->button10->UseVisualStyleBackColor = false;
+			this->button10->Click += gcnew System::EventHandler(this, &AdminPage::button10_Click);
 			// 
 			// AdminPage
 			// 
@@ -337,7 +339,8 @@ namespace CAss2 {
 private: System::Void button6_Click(System::Object^ sender, System::EventArgs^ e);
 private: System::Void button7_Click(System::Object^ sender, System::EventArgs^ e);
 private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e);
-private: System::Void button9_Click(System::Object^ sender, System::EventArgs^ e) {
-}
+private: System::Void button9_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void button8_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void button10_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }

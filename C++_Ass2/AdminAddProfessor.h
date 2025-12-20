@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace CAss2 {
 
@@ -8,16 +8,52 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
+	using namespace System::Collections::Generic;
+
 
 	/// <summary>
 	/// Summary for AdminAddProfessor
 	/// </summary>
 	public ref class AdminAddProfessor : public System::Windows::Forms::Form
 	{
+		void LoadDepartments()
+		{
+			String^ connStr =
+				"Server=localhost\\SQLEXPRESS;"
+				"Database=MyDB;"
+				"Trusted_Connection=True;"
+				"TrustServerCertificate=True;";
+
+			SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+			try
+			{
+				String^ query = "SELECT id, name FROM Departments ORDER BY name";
+
+				SqlDataAdapter^ da = gcnew SqlDataAdapter(query, conn);
+				DataTable^ dt = gcnew DataTable();
+				da->Fill(dt);
+
+				checkedListBoxDepartments->DataSource = dt;
+				checkedListBoxDepartments->DisplayMember = "name"; //  اللي يظهر
+				checkedListBoxDepartments->ValueMember = "id";     //  القيمة الحقيقية
+			}
+			catch (Exception^ ex)
+			{
+				MessageBox::Show(ex->Message, "Error loading departments");
+			}
+			finally
+			{
+				conn->Close();
+			}
+		}
+
 	public:
 		AdminAddProfessor(void)
 		{
 			InitializeComponent();
+			LoadDepartments();
 			//
 			//TODO: Add the constructor code here
 			//
@@ -52,9 +88,11 @@ namespace CAss2 {
 
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Panel^ panel1;
-	private: System::Windows::Forms::CheckedListBox^ checkedListBox1;
+	private: System::Windows::Forms::CheckedListBox^ checkedListBoxDepartments;
+
 	private: System::Windows::Forms::Button^ ChoosePicture;
-	private: System::Windows::Forms::CheckedListBox^ checkedListBox2;
+	private: System::Windows::Forms::CheckedListBox^ checkedListBoxCourses;
+
 	private: System::Windows::Forms::Label^ label6;
 	private: System::Windows::Forms::Button^ button3;
 
@@ -81,11 +119,11 @@ namespace CAss2 {
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->checkedListBox1 = (gcnew System::Windows::Forms::CheckedListBox());
-			this->ChoosePicture = (gcnew System::Windows::Forms::Button());
-			this->button3 = (gcnew System::Windows::Forms::Button());
-			this->checkedListBox2 = (gcnew System::Windows::Forms::CheckedListBox());
+			this->checkedListBoxCourses = (gcnew System::Windows::Forms::CheckedListBox());
 			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->checkedListBoxDepartments = (gcnew System::Windows::Forms::CheckedListBox());
+			this->ChoosePicture = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picStudent))->BeginInit();
 			this->panel1->SuspendLayout();
 			this->SuspendLayout();
@@ -174,6 +212,7 @@ namespace CAss2 {
 			this->button2->TabIndex = 18;
 			this->button2->Text = L"Add";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminAddProfessor::button2_Click);
 			// 
 			// label2
 			// 
@@ -192,10 +231,10 @@ namespace CAss2 {
 			// 
 			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->panel1->Controls->Add(this->checkedListBox2);
+			this->panel1->Controls->Add(this->checkedListBoxCourses);
 			this->panel1->Controls->Add(this->label6);
 			this->panel1->Controls->Add(this->button3);
-			this->panel1->Controls->Add(this->checkedListBox1);
+			this->panel1->Controls->Add(this->checkedListBoxDepartments);
 			this->panel1->Controls->Add(this->ChoosePicture);
 			this->panel1->Controls->Add(this->label1);
 			this->panel1->Controls->Add(this->label3);
@@ -210,46 +249,13 @@ namespace CAss2 {
 			this->panel1->TabIndex = 3;
 			this->panel1->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &AdminAddProfessor::panel1_Paint);
 			// 
-			// checkedListBox1
+			// checkedListBoxCourses
 			// 
-			this->checkedListBox1->FormattingEnabled = true;
-			this->checkedListBox1->Location = System::Drawing::Point(188, 136);
-			this->checkedListBox1->Name = L"checkedListBox1";
-			this->checkedListBox1->Size = System::Drawing::Size(214, 49);
-			this->checkedListBox1->TabIndex = 6;
-			this->checkedListBox1->SelectedIndexChanged += gcnew System::EventHandler(this, &AdminAddProfessor::checkedListBox1_SelectedIndexChanged);
-			// 
-			// ChoosePicture
-			// 
-			this->ChoosePicture->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->ChoosePicture->ForeColor = System::Drawing::Color::Purple;
-			this->ChoosePicture->Location = System::Drawing::Point(188, 356);
-			this->ChoosePicture->Name = L"ChoosePicture";
-			this->ChoosePicture->Size = System::Drawing::Size(214, 33);
-			this->ChoosePicture->TabIndex = 27;
-			this->ChoosePicture->Text = L"Choose Picture";
-			this->ChoosePicture->UseVisualStyleBackColor = true;
-			// 
-			// button3
-			// 
-			this->button3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->button3->ForeColor = System::Drawing::Color::Purple;
-			this->button3->Location = System::Drawing::Point(139, 202);
-			this->button3->Name = L"button3";
-			this->button3->Size = System::Drawing::Size(123, 33);
-			this->button3->TabIndex = 33;
-			this->button3->Text = L"Show";
-			this->button3->UseVisualStyleBackColor = true;
-			// 
-			// checkedListBox2
-			// 
-			this->checkedListBox2->FormattingEnabled = true;
-			this->checkedListBox2->Location = System::Drawing::Point(188, 265);
-			this->checkedListBox2->Name = L"checkedListBox2";
-			this->checkedListBox2->Size = System::Drawing::Size(214, 49);
-			this->checkedListBox2->TabIndex = 34;
+			this->checkedListBoxCourses->FormattingEnabled = true;
+			this->checkedListBoxCourses->Location = System::Drawing::Point(188, 265);
+			this->checkedListBoxCourses->Name = L"checkedListBoxCourses";
+			this->checkedListBoxCourses->Size = System::Drawing::Size(214, 49);
+			this->checkedListBoxCourses->TabIndex = 34;
 			// 
 			// label6
 			// 
@@ -262,6 +268,40 @@ namespace CAss2 {
 			this->label6->Size = System::Drawing::Size(80, 24);
 			this->label6->TabIndex = 35;
 			this->label6->Text = L"Courses";
+			// 
+			// button3
+			// 
+			this->button3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->button3->ForeColor = System::Drawing::Color::Purple;
+			this->button3->Location = System::Drawing::Point(234, 206);
+			this->button3->Name = L"button3";
+			this->button3->Size = System::Drawing::Size(123, 33);
+			this->button3->TabIndex = 33;
+			this->button3->Text = L"Show";
+			this->button3->UseVisualStyleBackColor = true;
+			this->button3->Click += gcnew System::EventHandler(this, &AdminAddProfessor::button3_Click);
+			// 
+			// checkedListBoxDepartments
+			// 
+			this->checkedListBoxDepartments->FormattingEnabled = true;
+			this->checkedListBoxDepartments->Location = System::Drawing::Point(188, 136);
+			this->checkedListBoxDepartments->Name = L"checkedListBoxDepartments";
+			this->checkedListBoxDepartments->Size = System::Drawing::Size(214, 49);
+			this->checkedListBoxDepartments->TabIndex = 6;
+			this->checkedListBoxDepartments->SelectedIndexChanged += gcnew System::EventHandler(this, &AdminAddProfessor::checkedListBox1_SelectedIndexChanged);
+			// 
+			// ChoosePicture
+			// 
+			this->ChoosePicture->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->ChoosePicture->ForeColor = System::Drawing::Color::Purple;
+			this->ChoosePicture->Location = System::Drawing::Point(188, 356);
+			this->ChoosePicture->Name = L"ChoosePicture";
+			this->ChoosePicture->Size = System::Drawing::Size(214, 33);
+			this->ChoosePicture->TabIndex = 27;
+			this->ChoosePicture->Text = L"Choose Picture";
+			this->ChoosePicture->UseVisualStyleBackColor = true;
 			// 
 			// AdminAddProfessor
 			// 
@@ -289,6 +329,151 @@ private: System::Void picStudent_Click(System::Object^ sender, System::EventArgs
 private: System::Void panel1_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
 	}
 private: System::Void checkedListBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	// ================= Validation =================
+	if (String::IsNullOrWhiteSpace(txtName->Text))
+	{
+		MessageBox::Show("Enter professor name");
+		return;
+	}
+
+	if (String::IsNullOrWhiteSpace(txtNID->Text) || txtNID->Text->Length != 14)
+	{
+		MessageBox::Show("Enter valid National ID (14 digits)");
+		return;
+	}
+
+	if (checkedListBoxDepartments->CheckedItems->Count == 0)
+	{
+		MessageBox::Show("Select at least one department");
+		return;
+	}
+
+	if (checkedListBoxCourses->CheckedItems->Count == 0)
+	{
+		MessageBox::Show("Select at least one course");
+		return;
+	}
+
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	try
+	{
+		conn->Open();
+
+		// ================= Generate Code =================
+		SqlCommand^ cmdCode = gcnew SqlCommand(
+			"SELECT ISNULL(MAX(code),9000)+1 FROM Professors", conn);
+
+		int code = Convert::ToInt32(cmdCode->ExecuteScalar());
+
+		// ================= Insert Professor =================
+		String^ insertProf =
+			"INSERT INTO Professors (code, nationalnumber, name) "
+			"OUTPUT INSERTED.id "
+			"VALUES (@code, @nid, @name)";
+
+		SqlCommand^ cmdProf = gcnew SqlCommand(insertProf, conn);
+		cmdProf->Parameters->AddWithValue("@code", code);
+		cmdProf->Parameters->AddWithValue("@nid", txtNID->Text);
+		cmdProf->Parameters->AddWithValue("@name", txtName->Text);
+
+		int professorId = Convert::ToInt32(cmdProf->ExecuteScalar());
+
+		// ================= Insert Departments =================
+		for each (DataRowView ^ item in checkedListBoxDepartments->CheckedItems)
+		{
+			SqlCommand^ cmdDept = gcnew SqlCommand(
+				"INSERT INTO ProfessorDepartments (professor_id, department_id) VALUES (@pid, @did)",
+				conn);
+
+			cmdDept->Parameters->AddWithValue("@pid", professorId);
+			cmdDept->Parameters->AddWithValue("@did", item["id"]);
+			cmdDept->ExecuteNonQuery();
+		}
+
+		// ================= Insert Courses =================
+		for each (DataRowView ^ item in checkedListBoxCourses->CheckedItems)
+		{
+			SqlCommand^ cmdCourse = gcnew SqlCommand(
+				"INSERT INTO ProfessorCourses (professor_id, course_id) VALUES (@pid, @cid)",
+				conn);
+
+			cmdCourse->Parameters->AddWithValue("@pid", professorId);
+			cmdCourse->Parameters->AddWithValue("@cid", item["id"]);
+			cmdCourse->ExecuteNonQuery();
+		}
+
+		MessageBox::Show("Professor added successfully!", "Success", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	}
+	catch (Exception^ ex)
+	{
+		MessageBox::Show(ex->Message, "Error");
+	}
+	finally
+	{
+		conn->Close();
+	}
+}
+private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+	if (checkedListBoxDepartments->CheckedItems->Count == 0)
+	{
+		MessageBox::Show("Please select at least one department");
+		return;
+	}
+
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	try
+	{
+		// 1️⃣ تجميع department ids
+		List<String^>^ deptIds = gcnew List<String^>();
+
+		for each (DataRowView ^ item in checkedListBoxDepartments->CheckedItems)
+		{
+			deptIds->Add(item["id"]->ToString());
+		}
+
+		String^ inClause = String::Join(",", deptIds);
+
+		// 2️⃣ Query
+		String^ query =
+			"SELECT DISTINCT c.id, c.course_name "
+			"FROM Courses c "
+			"INNER JOIN CourseDepartments cd ON c.id = cd.course_id "
+			"WHERE cd.department_id IN (" + inClause + ") "
+			"ORDER BY c.course_name";
+
+		SqlDataAdapter^ da = gcnew SqlDataAdapter(query, conn);
+		DataTable^ dt = gcnew DataTable();
+		da->Fill(dt);
+
+		// 3️⃣ تحميل المواد
+		checkedListBoxCourses->DataSource = dt;
+		checkedListBoxCourses->DisplayMember = "course_name";
+		checkedListBoxCourses->ValueMember = "id";
+	}
+	catch (Exception^ ex)
+	{
+		MessageBox::Show(ex->Message, "Error");
+	}
+	finally
+	{
+		conn->Close();
+	}
 }
 };
 }

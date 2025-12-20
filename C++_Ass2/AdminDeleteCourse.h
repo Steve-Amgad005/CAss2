@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace CAss2 {
 
@@ -8,6 +8,7 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
 
 	/// <summary>
 	/// Summary for AdminDeleteCourse
@@ -38,7 +39,8 @@ namespace CAss2 {
 	protected:
 	private: System::Windows::Forms::Panel^ panel1;
 	private: System::Windows::Forms::Label^ label8;
-	private: System::Windows::Forms::TextBox^ txtCode;
+	private: System::Windows::Forms::TextBox^ txtCourseId;
+
 	private: System::Windows::Forms::Button^ button2;
 
 	private:
@@ -57,7 +59,7 @@ namespace CAss2 {
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->label8 = (gcnew System::Windows::Forms::Label());
-			this->txtCode = (gcnew System::Windows::Forms::TextBox());
+			this->txtCourseId = (gcnew System::Windows::Forms::TextBox());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->panel1->SuspendLayout();
 			this->SuspendLayout();
@@ -79,7 +81,7 @@ namespace CAss2 {
 			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
 			this->panel1->Controls->Add(this->label8);
-			this->panel1->Controls->Add(this->txtCode);
+			this->panel1->Controls->Add(this->txtCourseId);
 			this->panel1->Controls->Add(this->button2);
 			this->panel1->Location = System::Drawing::Point(31, 84);
 			this->panel1->Name = L"panel1";
@@ -98,13 +100,13 @@ namespace CAss2 {
 			this->label8->TabIndex = 29;
 			this->label8->Text = L"Course ID";
 			// 
-			// txtCode
+			// txtCourseId
 			// 
-			this->txtCode->Location = System::Drawing::Point(192, 26);
-			this->txtCode->Multiline = true;
-			this->txtCode->Name = L"txtCode";
-			this->txtCode->Size = System::Drawing::Size(214, 33);
-			this->txtCode->TabIndex = 30;
+			this->txtCourseId->Location = System::Drawing::Point(192, 26);
+			this->txtCourseId->Multiline = true;
+			this->txtCourseId->Name = L"txtCourseId";
+			this->txtCourseId->Size = System::Drawing::Size(214, 33);
+			this->txtCourseId->TabIndex = 30;
 			// 
 			// button2
 			// 
@@ -117,6 +119,7 @@ namespace CAss2 {
 			this->button2->TabIndex = 18;
 			this->button2->Text = L"Delete";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminDeleteCourse::button2_Click);
 			// 
 			// AdminDeleteCourse
 			// 
@@ -135,5 +138,99 @@ namespace CAss2 {
 
 		}
 #pragma endregion
-	};
+	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+		if (String::IsNullOrWhiteSpace(txtCourseId->Text))
+		{
+			MessageBox::Show("Please enter Course ID");
+			return;
+		}
+
+		int courseId = Convert::ToInt32(txtCourseId->Text);
+
+		if (MessageBox::Show(
+			"Are you sure you want to delete this course?",
+			"Confirm Delete",
+			MessageBoxButtons::YesNo,
+			MessageBoxIcon::Warning) == System::Windows::Forms::DialogResult::No)
+		{
+			return;
+		}
+
+		String^ connStr =
+			"Server=localhost\\SQLEXPRESS;"
+			"Database=MyDB;"
+			"Trusted_Connection=True;"
+			"TrustServerCertificate=True;";
+
+		SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+		try
+		{
+			conn->Open();
+
+			// ============================
+			// 1️⃣ Check Course Exists
+			// ============================
+			SqlCommand^ cmdCheck = gcnew SqlCommand(
+				"SELECT COUNT(*) FROM Courses WHERE id = @id",
+				conn);
+
+			cmdCheck->Parameters->AddWithValue("@id", courseId);
+
+			int exists = Convert::ToInt32(cmdCheck->ExecuteScalar());
+
+			if (exists == 0)
+			{
+				MessageBox::Show("Course not found");
+				return;
+			}
+
+			// ============================
+			// Delete Professor - Course relations
+			// ============================
+			SqlCommand^ cmdDeleteProfCourses = gcnew SqlCommand(
+				"DELETE FROM ProfessorCourses WHERE course_id = @id",
+				conn);
+
+			cmdDeleteProfCourses->Parameters->AddWithValue("@id", courseId);
+			cmdDeleteProfCourses->ExecuteNonQuery();
+
+
+			// ============================
+			// 2️⃣ Delete Course Departments
+			// ============================
+			SqlCommand^ cmdDeleteDepts = gcnew SqlCommand(
+				"DELETE FROM CourseDepartments WHERE course_id = @id",
+				conn);
+
+			cmdDeleteDepts->Parameters->AddWithValue("@id", courseId);
+			cmdDeleteDepts->ExecuteNonQuery();
+
+			// ============================
+			// 3️⃣ Delete Course
+			// ============================
+			SqlCommand^ cmdDeleteCourse = gcnew SqlCommand(
+				"DELETE FROM Courses WHERE id = @id",
+				conn);
+
+			cmdDeleteCourse->Parameters->AddWithValue("@id", courseId);
+			cmdDeleteCourse->ExecuteNonQuery();
+
+			MessageBox::Show("Course deleted successfully!", "Success", MessageBoxButtons::OK, MessageBoxIcon::Information);
+
+			// ============================
+			// 4️⃣ Clear Fields
+			// ============================
+			txtCourseId->Clear();
+		}
+		catch (Exception^ ex)
+		{
+			MessageBox::Show(ex->Message, "Error");
+		}
+		finally
+		{
+			conn->Close();
+		}
+	}
+};
 }

@@ -17,10 +17,24 @@ namespace CAss2 {
 	/// </summary>
 	public ref class AdminAssistantsPage : public System::Windows::Forms::Form
 	{
+
+		Form^ currentPopup = nullptr;
+
+		void CloseCurrentPopup()
+		{
+			if (currentPopup != nullptr)
+			{
+				currentPopup->Close();
+				currentPopup = nullptr;
+			}
+		}
+	private:
+		int AdminCode;
 	public:
-		AdminAssistantsPage(void)
+		AdminAssistantsPage(int code)
 		{
 			InitializeComponent();
+			AdminCode = code;
 			//
 			//TODO: Add the constructor code here
 			//
@@ -215,6 +229,7 @@ namespace CAss2 {
 			this->button1->Size = System::Drawing::Size(71, 65);
 			this->button1->TabIndex = 13;
 			this->button1->UseVisualStyleBackColor = false;
+			this->button1->Click += gcnew System::EventHandler(this, &AdminAssistantsPage::button1_Click);
 			// 
 			// AdminAssistantsPage
 			// 
@@ -251,5 +266,9 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 	AdminDeleteAssistants^ deleteAssistantForm = gcnew AdminDeleteAssistants();
 	deleteAssistantForm->ShowDialog();
 }
+	   private: System::Void PopupClosed(System::Object^ sender, System::Windows::Forms::FormClosedEventArgs^ e) {
+		   currentPopup = nullptr;
+	   }
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
 };
 }

@@ -5,6 +5,9 @@
 #include "AdminBuildingsPage.h"
 #include "AdminLapsPage.h"
 #include "AdminHallsPage.h"
+#include "AdminProfessorsPage.h"
+#include "AdminAssistantsPage.h"
+#include "AdminCoursesPage.h"
 
 using namespace System;
 using namespace System::Windows::Forms;
@@ -45,7 +48,21 @@ System::Void AdminPage::button7_Click(System::Object^ sender, System::EventArgs^
 	hallsPage->Show();
 	this->Close();
 }
-
+System::Void AdminPage::button8_Click(System::Object^ sender, System::EventArgs^ e) {
+	AdminProfessorsPage^ profPage = gcnew AdminProfessorsPage(AdminCode);
+	profPage->Show();
+	this->Close();
+}
+System::Void AdminPage::button9_Click(System::Object^ sender, System::EventArgs^ e) {
+	AdminAssistantsPage^ assPage = gcnew AdminAssistantsPage(AdminCode);
+	assPage->Show();
+	this->Close();
+}
+System::Void AdminPage::button10_Click(System::Object^ sender, System::EventArgs^ e) {
+	AdminCoursesPage^ assPage = gcnew AdminCoursesPage(AdminCode);
+	assPage->Show();
+	this->Close();
+}
 System::Void AdminPage::button2_Click(System::Object^ sender, System::EventArgs^ e) {
 	AdminShowMarks^ adminShowMarksForm = gcnew AdminShowMarks(AdminCode);
 	adminShowMarksForm->Show();

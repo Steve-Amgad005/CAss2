@@ -4,6 +4,7 @@
 #include "AdminDeleteCourse.h"
 
 
+
 namespace CAss2 {
 
 	using namespace System;
@@ -12,16 +13,74 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
 
 	/// <summary>
 	/// Summary for AdminCoursesPage
 	/// </summary>
 	public ref class AdminCoursesPage : public System::Windows::Forms::Form
 	{
+	private: void LoadCourses()
+	{
+		String^ connStr =
+			"Server=localhost\\SQLEXPRESS;"
+			"Database=MyDB;"
+			"Trusted_Connection=True;"
+			"TrustServerCertificate=True;";
+
+		SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+		try
+		{
+			conn->Open();
+
+			String^ query =
+				"SELECT "
+				"c.id, "
+				"c.course_name AS [Course Name], "
+				"c.year, "
+				"c.term, "
+				"d.name AS [Department] "
+				"FROM Courses c "
+				"INNER JOIN CourseDepartments cd ON c.id = cd.course_id "
+				"INNER JOIN Departments d ON cd.department_id = d.id "
+				"ORDER BY d.name, c.year, c.term";
+
+
+			SqlDataAdapter^ da = gcnew SqlDataAdapter(query, conn);
+			DataTable^ dt = gcnew DataTable();
+			da->Fill(dt);
+
+			dgvCourses->DataSource = dt;
+			dgvCourses->AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode::Fill;
+
+			conn->Close();
+		}
+		catch (Exception^ ex)
+		{
+			MessageBox::Show(ex->Message, "Error");
+		}
+	}
+
+
+		Form^ currentPopup = nullptr;
+
+		void CloseCurrentPopup()
+		{
+			if (currentPopup != nullptr)
+			{
+				currentPopup->Close();
+				currentPopup = nullptr;
+			}
+		}
+		private:
+			int AdminCode;
 	public:
-		AdminCoursesPage(void)
+		AdminCoursesPage(int code)
 		{
 			InitializeComponent();
+			AdminCode = code;
+			LoadCourses();
 			//
 			//TODO: Add the constructor code here
 			//
@@ -42,7 +101,9 @@ namespace CAss2 {
 	protected:
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::PictureBox^ pictureBox1;
-	private: System::Windows::Forms::DataGridView^ dataGridViewStudents;
+	private: System::Windows::Forms::DataGridView^ dgvCourses;
+
+
 	private: System::Windows::Forms::Button^ button5;
 	private: System::Windows::Forms::Button^ button4;
 	private: System::Windows::Forms::Button^ button3;
@@ -69,7 +130,7 @@ namespace CAss2 {
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
-			this->dataGridViewStudents = (gcnew System::Windows::Forms::DataGridView());
+			this->dgvCourses = (gcnew System::Windows::Forms::DataGridView());
 			this->button5 = (gcnew System::Windows::Forms::Button());
 			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
@@ -77,7 +138,7 @@ namespace CAss2 {
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->panel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewStudents))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvCourses))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// panel1
@@ -115,11 +176,11 @@ namespace CAss2 {
 			this->pictureBox1->TabIndex = 0;
 			this->pictureBox1->TabStop = false;
 			// 
-			// dataGridViewStudents
+			// dgvCourses
 			// 
 			dataGridViewCellStyle1->BackColor = System::Drawing::Color::White;
-			this->dataGridViewStudents->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-			this->dataGridViewStudents->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
+			this->dgvCourses->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+			this->dgvCourses->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
 			dataGridViewCellStyle2->BackColor = System::Drawing::Color::DarkGray;
 			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
@@ -128,14 +189,14 @@ namespace CAss2 {
 			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
 			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
 			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dataGridViewStudents->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-			this->dataGridViewStudents->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridViewStudents->Location = System::Drawing::Point(179, 270);
-			this->dataGridViewStudents->Name = L"dataGridViewStudents";
+			this->dgvCourses->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+			this->dgvCourses->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dgvCourses->Location = System::Drawing::Point(179, 270);
+			this->dgvCourses->Name = L"dgvCourses";
 			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
-			this->dataGridViewStudents->RowsDefaultCellStyle = dataGridViewCellStyle3;
-			this->dataGridViewStudents->Size = System::Drawing::Size(838, 302);
-			this->dataGridViewStudents->TabIndex = 25;
+			this->dgvCourses->RowsDefaultCellStyle = dataGridViewCellStyle3;
+			this->dgvCourses->Size = System::Drawing::Size(838, 302);
+			this->dgvCourses->TabIndex = 25;
 			// 
 			// button5
 			// 
@@ -203,6 +264,7 @@ namespace CAss2 {
 			this->button2->TabIndex = 24;
 			this->button2->Text = L"Refresh";
 			this->button2->UseVisualStyleBackColor = false;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminCoursesPage::button2_Click);
 			// 
 			// button1
 			// 
@@ -216,6 +278,7 @@ namespace CAss2 {
 			this->button1->Size = System::Drawing::Size(71, 65);
 			this->button1->TabIndex = 20;
 			this->button1->UseVisualStyleBackColor = false;
+			this->button1->Click += gcnew System::EventHandler(this, &AdminCoursesPage::button1_Click);
 			// 
 			// AdminCoursesPage
 			// 
@@ -224,7 +287,7 @@ namespace CAss2 {
 			this->BackColor = System::Drawing::Color::Purple;
 			this->ClientSize = System::Drawing::Size(1242, 599);
 			this->Controls->Add(this->panel1);
-			this->Controls->Add(this->dataGridViewStudents);
+			this->Controls->Add(this->dgvCourses);
 			this->Controls->Add(this->button5);
 			this->Controls->Add(this->button4);
 			this->Controls->Add(this->button3);
@@ -235,22 +298,38 @@ namespace CAss2 {
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewStudents))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvCourses))->EndInit();
 			this->ResumeLayout(false);
 
 		}
 #pragma endregion
 	private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e) {
+		CloseCurrentPopup();
 		AdminAddCourse^ addCourseForm = gcnew AdminAddCourse();
-		addCourseForm->ShowDialog();	
+		currentPopup = addCourseForm;
+		addCourseForm->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &AdminCoursesPage::PopupClosed);
+		addCourseForm->Show();	
 	}
 private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
+	CloseCurrentPopup();
 	AdminModifyCourse^ modifyCourseForm = gcnew AdminModifyCourse();
-	modifyCourseForm->ShowDialog();	
+	currentPopup = modifyCourseForm;
+	modifyCourseForm->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &AdminCoursesPage::PopupClosed);
+	modifyCourseForm->Show();	
 }
 private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+	CloseCurrentPopup();
 	AdminDeleteCourse^ deleteCourseForm = gcnew AdminDeleteCourse();
-	deleteCourseForm->ShowDialog();	
+	currentPopup = deleteCourseForm;
+	deleteCourseForm->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &AdminCoursesPage::PopupClosed);
+	deleteCourseForm->Show();	
+}
+	   private: System::Void PopupClosed(System::Object^ sender, System::Windows::Forms::FormClosedEventArgs^ e) {
+		   currentPopup = nullptr;
+	   }
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	LoadCourses();
 }
 };
 }
