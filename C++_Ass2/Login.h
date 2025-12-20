@@ -270,25 +270,29 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 		}
 
 		// ================= PROFESSOR =================
+		// ================= PROFESSOR =================
 		else if (role == "Professor") {
 
 			cmd->CommandText =
 				"SELECT 1 FROM Professors "
-				"WHERE code = @v1 AND NationalNumber = @v2;";
+				"WHERE code = @v1 AND NationalNumber = @v2";
 
 			cmd->Parameters->AddWithValue("@v1", Int32::Parse(v1));
 			cmd->Parameters->AddWithValue("@v2", Int64::Parse(v2));
 
 			if (cmd->ExecuteScalar() != nullptr) {
-				MessageBox::Show("Login successful!", "Success", MessageBoxButtons::OK, MessageBoxIcon::Information);
-				ProfessorPage^ f = gcnew ProfessorPage();
+				MessageBox::Show("Login successful!", "Success",MessageBoxButtons::OK, MessageBoxIcon::Information);
+				int codeInt = Int32::Parse(v1);
+				ProfessorPage^ f = gcnew ProfessorPage(codeInt);
 				f->Show();
 				this->Hide();
 			}
 			else {
-				MessageBox::Show("Invalid Code or NationalNumber", "Login failed", MessageBoxButtons::OK, MessageBoxIcon::Warning);
+				MessageBox::Show("Invalid Code or NationalNumber",
+					"Login failed", MessageBoxButtons::OK, MessageBoxIcon::Warning);
 			}
 		}
+
 
 		// ================= ADMIN =================
 		else if (role == "Admin") {

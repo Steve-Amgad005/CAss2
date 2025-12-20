@@ -15,7 +15,8 @@ namespace CAss2 {
 	}
 
 	System::Void ProfessorPage::button2_Click(System::Object^ sender, System::EventArgs^ e) {
-		CAss2::ProfessorEnterGrades^ gradesForm = gcnew CAss2::ProfessorEnterGrades();
+		int codeInt = this->ProfID;
+		CAss2::ProfessorEnterGrades^ gradesForm = gcnew CAss2::ProfessorEnterGrades(codeInt);
 		gradesForm->Show();
 		this->Hide();
 	}

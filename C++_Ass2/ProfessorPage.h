@@ -9,6 +9,7 @@ namespace CAss2 {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace System::Diagnostics;
+using namespace System::Data::SqlClient;
 
 
 	/// <summary>
@@ -16,10 +17,103 @@ namespace CAss2 {
 	/// </summary>
 	public ref class ProfessorPage : public System::Windows::Forms::Form
 	{
+		void LoadProfessorData()
+		{
+			if (ProfID <= 0) return;
+			String^ connStr =
+				"Server=localhost\\SQLEXPRESS;"
+				"Database=MyDB;"
+				"Trusted_Connection=True;"
+				"TrustServerCertificate=True;";
+
+			SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+			try
+			{
+				conn->Open();
+
+				String^ query =
+					"SELECT p.name, p.code, p.NationalNumber, "
+					"STRING_AGG(d.name, ' , ') AS Departments "
+					"FROM Professors p "
+					"INNER JOIN ProfessorDepartments pd ON p.id = pd.professor_id "
+					"INNER JOIN Departments d ON pd.department_id = d.id "
+					"WHERE p.code = @code "
+					"GROUP BY p.name, p.code, p.NationalNumber";
+
+				SqlCommand^ cmd = gcnew SqlCommand(query, conn);
+				cmd->Parameters->AddWithValue("@code", ProfID); // passed from login
+
+				SqlDataReader^ reader = cmd->ExecuteReader();
+
+				if (reader->Read())
+				{
+					label2->Text = reader["name"]->ToString();
+					label10->Text = reader["Departments"]->ToString();
+				}
+
+				reader->Close();
+				conn->Close();
+			}
+			catch (Exception^ ex)
+			{
+				MessageBox::Show(ex->Message);
+			}
+		}
+		void LoadProfessorCourses()
+		{
+			String^ connStr =
+				"Server=localhost\\SQLEXPRESS;"
+				"Database=MyDB;"
+				"Trusted_Connection=True;"
+				"TrustServerCertificate=True;";
+
+			try
+			{
+				SqlConnection^ conn = gcnew SqlConnection(connStr);
+				conn->Open();
+
+				String^ query =
+					"SELECT c.year AS [Year], "
+					"d.name AS [Department], "
+					"c.course_name AS [Course], "
+					"COUNT(sc.student_id) AS StudentCount "
+					"FROM Courses c "
+					"INNER JOIN CourseDepartments cd ON c.id = cd.course_id "
+					"INNER JOIN Departments d ON cd.department_id = d.id "
+					"LEFT JOIN StudentCourses sc ON c.id = sc.course_id "
+					"GROUP BY c.year, d.name, c.course_name "
+					"ORDER BY c.year, d.name, c.course_name;";
+
+				SqlDataAdapter^ da = gcnew SqlDataAdapter(query, conn);
+				DataTable^ dt = gcnew DataTable();
+				da->Fill(dt);
+
+				ProfT->DataSource = dt;
+
+				conn->Close();
+			}
+			catch (Exception^ ex)
+			{
+				MessageBox::Show(ex->Message);
+			}
+		}
+
+
+
+	private:
+		int ProfID;
 	public:
-		ProfessorPage(void)
+		ProfessorPage()
 		{
 			InitializeComponent();
+		}
+		ProfessorPage(int code)
+		{
+			ProfID = code;
+			InitializeComponent();
+			this->Load += gcnew System::EventHandler(this, &ProfessorPage::ProfessorPage_Load);
+
 			//
 			//TODO: Add the constructor code here
 			//
@@ -58,11 +152,12 @@ namespace CAss2 {
 	private: System::Windows::Forms::Button^ button7;
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::Button^ button3;
-	private: System::Windows::Forms::DataGridView^ dataGridView1;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ FirstYear;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ SecondYear;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ ThirdYear;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ FourthYear;
+	private: System::Windows::Forms::DataGridView^ ProfT;
+
+
+
+
+
 
 	private:
 		/// <summary>
@@ -78,9 +173,9 @@ namespace CAss2 {
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(ProfessorPage::typeid));
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle4 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle5 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle6 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			this->panel2 = (gcnew System::Windows::Forms::Panel());
 			this->label12 = (gcnew System::Windows::Forms::Label());
 			this->label5 = (gcnew System::Windows::Forms::Label());
@@ -94,17 +189,15 @@ namespace CAss2 {
 			this->button7 = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
-			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
-			this->FirstYear = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->SecondYear = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->ThirdYear = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->FourthYear = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->ProfT = (gcnew System::Windows::Forms::DataGridView());
 			this->panel2->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->BeginInit();
 			this->panel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->ProfT))->BeginInit();
 			this->SuspendLayout();
+			///table 
+
 			// 
 			// panel2
 			// 
@@ -155,6 +248,7 @@ namespace CAss2 {
 			this->label10->Size = System::Drawing::Size(41, 16);
 			this->label10->TabIndex = 11;
 			this->label10->Text = L":القسم";
+			this->label10->Click += gcnew System::EventHandler(this, &ProfessorPage::label10_Click);
 			// 
 			// label2
 			// 
@@ -287,57 +381,29 @@ namespace CAss2 {
 			this->button3->UseVisualStyleBackColor = false;
 			this->button3->Click += gcnew System::EventHandler(this, &ProfessorPage::button3_Click);
 			// 
-			// dataGridView1
+			// ProfT
 			// 
-			this->dataGridView1->AllowUserToAddRows = false;
-			this->dataGridView1->AllowUserToDeleteRows = false;
-			dataGridViewCellStyle4->BackColor = System::Drawing::Color::White;
-			this->dataGridView1->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
-			dataGridViewCellStyle5->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle5->BackColor = System::Drawing::Color::DarkGray;
-			dataGridViewCellStyle5->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
+			this->ProfT->AllowUserToAddRows = false;
+			this->ProfT->AllowUserToDeleteRows = false;
+			dataGridViewCellStyle1->BackColor = System::Drawing::Color::White;
+			this->ProfT->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle2->BackColor = System::Drawing::Color::DarkGray;
+			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			dataGridViewCellStyle5->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle5->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle5->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle5->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dataGridView1->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
-			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {
-				this->FirstYear,
-					this->SecondYear, this->ThirdYear, this->FourthYear
-			});
-			this->dataGridView1->Location = System::Drawing::Point(743, 140);
-			this->dataGridView1->Name = L"dataGridView1";
-			this->dataGridView1->ReadOnly = true;
-			dataGridViewCellStyle6->BackColor = System::Drawing::Color::White;
-			this->dataGridView1->RowsDefaultCellStyle = dataGridViewCellStyle6;
-			this->dataGridView1->Size = System::Drawing::Size(442, 424);
-			this->dataGridView1->TabIndex = 9;
-			// 
-			// FirstYear
-			// 
-			this->FirstYear->HeaderText = L"First Year";
-			this->FirstYear->Name = L"FirstYear";
-			this->FirstYear->ReadOnly = true;
-			// 
-			// SecondYear
-			// 
-			this->SecondYear->HeaderText = L"Second Year";
-			this->SecondYear->Name = L"SecondYear";
-			this->SecondYear->ReadOnly = true;
-			// 
-			// ThirdYear
-			// 
-			this->ThirdYear->HeaderText = L"Third Year";
-			this->ThirdYear->Name = L"ThirdYear";
-			this->ThirdYear->ReadOnly = true;
-			// 
-			// FourthYear
-			// 
-			this->FourthYear->HeaderText = L"Fourth Year";
-			this->FourthYear->Name = L"FourthYear";
-			this->FourthYear->ReadOnly = true;
+			dataGridViewCellStyle2->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->ProfT->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+			this->ProfT->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->ProfT->Location = System::Drawing::Point(743, 140);
+			this->ProfT->Name = L"ProfT";
+			this->ProfT->ReadOnly = true;
+			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
+			this->ProfT->RowsDefaultCellStyle = dataGridViewCellStyle3;
+			this->ProfT->Size = System::Drawing::Size(442, 424);
+			this->ProfT->TabIndex = 9;
 			// 
 			// ProfessorPage
 			// 
@@ -345,7 +411,7 @@ namespace CAss2 {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::Purple;
 			this->ClientSize = System::Drawing::Size(1242, 599);
-			this->Controls->Add(this->dataGridView1);
+			this->Controls->Add(this->ProfT);
 			this->Controls->Add(this->button3);
 			this->Controls->Add(this->button7);
 			this->Controls->Add(this->button2);
@@ -354,13 +420,14 @@ namespace CAss2 {
 			this->Controls->Add(this->panel1);
 			this->Name = L"ProfessorPage";
 			this->Text = L"ProfessorPage";
+			this->Load += gcnew System::EventHandler(this, &ProfessorPage::ProfessorPage_Load);
 			this->panel2->ResumeLayout(false);
 			this->panel2->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->EndInit();
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->ProfT))->EndInit();
 			this->ResumeLayout(false);
 
 		}
@@ -379,5 +446,12 @@ namespace CAss2 {
 
 	// declaration for Attendance Management button handler
 	private: System::Void button7_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void ProfessorPage_Load(System::Object^ sender, System::EventArgs^ e) {
+	MessageBox::Show("Professor ID = " + ProfID.ToString());
+	LoadProfessorData();
+	LoadProfessorCourses();
+}
+private: System::Void label10_Click(System::Object^ sender, System::EventArgs^ e) {
+}
 };
 }
