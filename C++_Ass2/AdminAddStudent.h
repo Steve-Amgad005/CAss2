@@ -381,12 +381,22 @@ private: System::Void textBox3_TextChanged(System::Object^ sender, System::Event
 private: System::Void label2_Click(System::Object^ sender, System::EventArgs^ e) {
 }
 private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-	OpenFileDialog^ openFileDialog = gcnew OpenFileDialog();
-	openFileDialog->Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
+	OpenFileDialog^ ofd = gcnew OpenFileDialog();
 
-	if (openFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+	// Allow only PNG & JPG
+	ofd->Filter = "Image Files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg";
+	ofd->Title = "Select Student Image";
+
+	if (ofd->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 	{
-		picStudent->Image = Image::FromFile(openFileDialog->FileName);
+		// Free old image (important)
+		if (picStudent->Image != nullptr)
+		{
+			delete picStudent->Image;
+			picStudent->Image = nullptr;
+		}
+
+		picStudent->Image = Image::FromFile(ofd->FileName);
 		picStudent->SizeMode = PictureBoxSizeMode::StretchImage;
 	}
 
@@ -404,109 +414,101 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 	SqlConnection^ conn = gcnew SqlConnection(connStr);
 
 	// ==========================
-// 🔍 Validation
-// ==========================
+	// Validation
+	// ==========================
 
-// الاسم
 	if (String::IsNullOrWhiteSpace(txtName->Text))
 	{
-		MessageBox::Show("Please enter student name", "Validation Error");
+		MessageBox::Show("Please enter student name");
 		return;
 	}
 
-	// الرقم القومي
 	if (String::IsNullOrWhiteSpace(txtNID->Text) || txtNID->Text->Length != 14)
 	{
-		MessageBox::Show("Please enter valid National ID (14 digits)", "Validation Error");
+		MessageBox::Show("National ID must be 14 digits");
 		return;
 	}
 
-	// السنة
 	int year = 0;
-
 	if (cmbYear->Text == "First Year") year = 1;
 	else if (cmbYear->Text == "Second Year") year = 2;
 	else if (cmbYear->Text == "Third Year") year = 3;
 	else if (cmbYear->Text == "Fourth Year") year = 4;
 	else
 	{
-		MessageBox::Show("Please select valid year", "Validation Error");
+		MessageBox::Show("Select valid year");
 		return;
 	}
 
-
-	// القسم
 	if (cmbDepartment->SelectedIndex == -1)
 	{
-		MessageBox::Show("Please select department", "Validation Error");
+		MessageBox::Show("Select department");
 		return;
 	}
 
-	// حالة المصاريف
 	if (cmbFeesStatus->SelectedIndex == -1)
 	{
-		MessageBox::Show("Please select fees status", "Validation Error");
+		MessageBox::Show("Select fees status");
 		return;
 	}
 
 	int fees = 0;
-
-	// قيمة المصاريف
-	if (cmbFeesStatus->Text == "Paid" || cmbFeesStatus->Text == "Partial")
+	if (cmbFeesStatus->Text != "Not Paid")
 	{
 		if (String::IsNullOrWhiteSpace(txtFees->Text))
 		{
-			MessageBox::Show("Please enter fees amount", "Validation Error");
+			MessageBox::Show("Enter fees amount");
 			return;
 		}
 
 		fees = Convert::ToInt32(txtFees->Text);
-
 		if (fees <= 0 || fees > 155000)
 		{
-			MessageBox::Show("Fees must be between 1 and 155000", "Validation Error");
+			MessageBox::Show("Invalid fees amount");
 			return;
 		}
 	}
-	else if (cmbFeesStatus->Text == "Not Paid")
+
+	// ==========================
+	// Convert Image to byte[]
+	// ==========================
+
+	array<Byte>^ imageBytes = nullptr;
+
+	if (picStudent->Image != nullptr)
 	{
-		// لازم المصاريف تكون فاضية أو صفر
-		if (!String::IsNullOrWhiteSpace(txtFees->Text) && Convert::ToInt32(txtFees->Text) != 0)
-		{
-			MessageBox::Show("Fees must be 0 when status is Not Paid", "Validation Error");
-			return;
-		}
-
-		fees = 0;
+		System::IO::MemoryStream^ ms = gcnew System::IO::MemoryStream();
+		picStudent->Image->Save(ms, System::Drawing::Imaging::ImageFormat::Png);
+		imageBytes = ms->ToArray();
 	}
-
 
 	try
 	{
 		conn->Open();
 
 		// ==========================
-		// 1️⃣ توليد Code و SeatNumber
+		// Generate Code & Seat
 		// ==========================
+
 		SqlCommand^ cmdGen = gcnew SqlCommand(
 			"SELECT ISNULL(MAX(code),20240000)+1, ISNULL(MAX(seatnumber),1000)+1 FROM Students",
 			conn);
 
-		SqlDataReader^ genReader = cmdGen->ExecuteReader();
-		genReader->Read();
-
-		int code = Convert::ToInt32(genReader[0]);
-		int seat = Convert::ToInt32(genReader[1]);
-		genReader->Close();
+		SqlDataReader^ r = cmdGen->ExecuteReader();
+		r->Read();
+		int code = Convert::ToInt32(r[0]);
+		int seat = Convert::ToInt32(r[1]);
+		r->Close();
 
 		// ==========================
-		// 2️⃣ Insert Student (بدون صورة)
+		// Insert Student WITH Image
 		// ==========================
+
 		String^ insertStudent =
 			"INSERT INTO Students "
-			"(code, seatnumber, NationalNumber, name, year, current_term, department_id) "
+			"(code, seatnumber, NationalNumber, name, year, current_term, department_id, ProfileImage) "
 			"OUTPUT INSERTED.id "
-			"VALUES (@code, @seat, @nid, @name, @year, 1, @dept)";
+			"VALUES (@code,@seat,@nid,@name,@year,1,@dept,@img)";
 
 		SqlCommand^ cmdStudent = gcnew SqlCommand(insertStudent, conn);
 
@@ -516,37 +518,39 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 		cmdStudent->Parameters->AddWithValue("@name", txtName->Text);
 		cmdStudent->Parameters->AddWithValue("@year", year);
 		cmdStudent->Parameters->AddWithValue("@dept", cmbDepartment->SelectedValue);
+		cmdStudent->Parameters->AddWithValue("@img",
+			imageBytes != nullptr ? (Object^)imageBytes : DBNull::Value);
 
-		int NewStudentId = Convert::ToInt32(cmdStudent->ExecuteScalar());
+		int studentId = Convert::ToInt32(cmdStudent->ExecuteScalar());
 
 		// ==========================
-		// 3️⃣ تسجيل مواد القسم تلقائي
+		// Insert Courses
 		// ==========================
-		String^ insertCourses =
+
+		SqlCommand^ cmdCourses = gcnew SqlCommand(
 			"INSERT INTO StudentCourses (student_id, course_id) "
-			"SELECT @sid, id FROM Courses "
-			"WHERE department_id = @dept AND year = @year";
+			"SELECT @sid, id FROM Courses WHERE department_id=@dept AND year=@year",
+			conn);
 
-		SqlCommand^ cmdCourses = gcnew SqlCommand(insertCourses, conn);
-		cmdCourses->Parameters->AddWithValue("@sid", NewStudentId);
+		cmdCourses->Parameters->AddWithValue("@sid", studentId);
 		cmdCourses->Parameters->AddWithValue("@dept", cmbDepartment->SelectedValue);
 		cmdCourses->Parameters->AddWithValue("@year", year);
 		cmdCourses->ExecuteNonQuery();
 
 		// ==========================
-		// 4️⃣ Insert Fees
+		// Insert Fees
 		// ==========================
-		String^ insertFees =
-			"INSERT INTO Payments (student_id, amount, status) "
-			"VALUES (@sid, @amount, @status)";
 
-		SqlCommand^ cmdFees = gcnew SqlCommand(insertFees, conn);
-		cmdFees->Parameters->AddWithValue("@sid", NewStudentId);
+		SqlCommand^ cmdFees = gcnew SqlCommand(
+			"INSERT INTO Payments (student_id, amount, status) "
+			"VALUES (@sid,@amount,@status)", conn);
+
+		cmdFees->Parameters->AddWithValue("@sid", studentId);
 		cmdFees->Parameters->AddWithValue("@amount", fees);
 		cmdFees->Parameters->AddWithValue("@status", cmbFeesStatus->Text);
 		cmdFees->ExecuteNonQuery();
 
-		MessageBox::Show("Student added successfully!", "Success", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		MessageBox::Show("Student added successfully ✔");
 
 		conn->Close();
 	}

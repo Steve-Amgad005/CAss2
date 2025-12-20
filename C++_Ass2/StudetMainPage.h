@@ -22,8 +22,8 @@ namespace CAss2 {
 	/// </summary>
 	public ref class StudetMainPage : public System::Windows::Forms::Form
 	{
-		void LoadStudentData() {
-
+		void LoadStudentData()
+		{
 			String^ connStr =
 				"Server=localhost\\SQLEXPRESS;"
 				"Database=MyDB;"
@@ -32,11 +32,13 @@ namespace CAss2 {
 
 			SqlConnection^ conn = gcnew SqlConnection(connStr);
 
-			try {
+			try
+			{
 				conn->Open();
 
 				String^ query =
-					"SELECT s.name, s.code, s.NationalNumber, s.year, d.name AS DepartmentName "
+					"SELECT s.name, s.code, s.NationalNumber, s.year, "
+					"d.name AS DepartmentName, s.ProfileImage "
 					"FROM Students s "
 					"INNER JOIN Departments d ON s.department_id = d.id "
 					"WHERE s.code = @code";
@@ -46,42 +48,62 @@ namespace CAss2 {
 
 				SqlDataReader^ reader = cmd->ExecuteReader();
 
-				if (reader->Read()) {
+				if (reader->Read())
+				{
+					// =========================
+					// Text data
+					// =========================
 					LableStdName->Text = reader["name"]->ToString();
 					LableStdCode->Text = reader["code"]->ToString();
 					LableStdNID->Text = reader["NationalNumber"]->ToString();
 					LableStdDept->Text = reader["DepartmentName"]->ToString();
-					int year = Convert::ToInt32(reader["year"]);
-					String^ yearText;
 
-					switch (year) {
-					case 1:
-						yearText = "First Year";
-						break;
-					case 2:
-						yearText = "Second Year";
-						break;
-					case 3:
-						yearText = "Third Year";
-						break;
-					case 4:
-						yearText = "Fourth Year";
-						break;
-					default:
-						yearText = "Unknown";
-						break;
+					int year = Convert::ToInt32(reader["year"]);
+					switch (year)
+					{
+					case 1: LableStdYear->Text = "First Year"; break;
+					case 2: LableStdYear->Text = "Second Year"; break;
+					case 3: LableStdYear->Text = "Third Year"; break;
+					case 4: LableStdYear->Text = "Fourth Year"; break;
+					default: LableStdYear->Text = "Unknown"; break;
 					}
 
-					LableStdYear->Text = yearText;
+					// =========================
+					// Image handling
+					// =========================
+					pictureBox2->SizeMode = PictureBoxSizeMode::Zoom;
+
+					if (reader["ProfileImage"] != DBNull::Value)
+					{
+						array<Byte>^ imgBytes = (array<Byte>^)reader["ProfileImage"];
+						System::IO::MemoryStream^ ms = gcnew System::IO::MemoryStream(imgBytes);
+
+						// Free old image (important)
+						if (pictureBox2->Image != nullptr)
+						{
+							delete pictureBox2->Image;
+							pictureBox2->Image = nullptr;
+						}
+
+						pictureBox2->Image = Image::FromStream(ms);
+					}
+					else
+					{
+						// Default image
+						pictureBox2->Image = Image::FromFile("default.png");
+						pictureBox2->SizeMode = PictureBoxSizeMode::Zoom;
+					}
 				}
 
 				reader->Close();
 				conn->Close();
 			}
-			catch (Exception^ ex) {
+			catch (Exception^ ex)
+			{
 				MessageBox::Show(ex->Message);
 			}
 		}
+
 
 	private:
 		int StdCode;
@@ -571,6 +593,7 @@ namespace CAss2 {
 			this->ForeColor = System::Drawing::SystemColors::ControlText;
 			this->Name = L"StudetMainPage";
 			this->Text = L"StudetMainPage";
+			this->Load += gcnew System::EventHandler(this, &StudetMainPage::StudetMainPage_Load_1);
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
@@ -726,6 +749,8 @@ private: System::Void panel2_Paint(System::Object^ sender, System::Windows::Form
 }
 private: System::Void StudetMainPage_Load(System::Object^ sender, System::EventArgs^ e) {
 	LoadStudentData();
+}
+private: System::Void StudetMainPage_Load_1(System::Object^ sender, System::EventArgs^ e) {
 }
 };
 }
