@@ -562,7 +562,7 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 		cmdFees->Parameters->AddWithValue("@status", cmbFeesStatus->Text);
 		cmdFees->ExecuteNonQuery();
 
-		MessageBox::Show("Student data updated successfully ✅", "Success");
+		MessageBox::Show("Student updated successfully!", "Success", MessageBoxButtons::OK, MessageBoxIcon::Information);
 		conn->Close();
 	}
 	catch (Exception^ ex)

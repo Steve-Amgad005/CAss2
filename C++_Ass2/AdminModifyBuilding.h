@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace CAss2 {
 
@@ -8,6 +8,7 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
 
 	/// <summary>
 	/// Summary for AdminModifyBuilding
@@ -35,15 +36,19 @@ namespace CAss2 {
 			}
 		}
 	private: System::Windows::Forms::Panel^ panel1;
+	private: System::Windows::Forms::TextBox^ txtNewFloors;
 	protected:
-	private: System::Windows::Forms::TextBox^ textBox3;
+
 	private: System::Windows::Forms::Label^ label3;
-	private: System::Windows::Forms::TextBox^ textBox2;
+	private: System::Windows::Forms::TextBox^ txtBuildingName;
+
 	private: System::Windows::Forms::Label^ label5;
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Label^ label1;
-	private: System::Windows::Forms::TextBox^ textBox1;
+	private: System::Windows::Forms::TextBox^ txtBuildingId;
+
+	private: System::Windows::Forms::Button^ button1;
 
 	private:
 		/// <summary>
@@ -59,14 +64,15 @@ namespace CAss2 {
 		void InitializeComponent(void)
 		{
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
+			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->txtBuildingId = (gcnew System::Windows::Forms::TextBox());
+			this->txtNewFloors = (gcnew System::Windows::Forms::TextBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
+			this->txtBuildingName = (gcnew System::Windows::Forms::TextBox());
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->label2 = (gcnew System::Windows::Forms::Label());
-			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->panel1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -74,11 +80,12 @@ namespace CAss2 {
 			// 
 			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->panel1->Controls->Add(this->button1);
 			this->panel1->Controls->Add(this->label1);
-			this->panel1->Controls->Add(this->textBox1);
-			this->panel1->Controls->Add(this->textBox3);
+			this->panel1->Controls->Add(this->txtBuildingId);
+			this->panel1->Controls->Add(this->txtNewFloors);
 			this->panel1->Controls->Add(this->label3);
-			this->panel1->Controls->Add(this->textBox2);
+			this->panel1->Controls->Add(this->txtBuildingName);
 			this->panel1->Controls->Add(this->label5);
 			this->panel1->Controls->Add(this->button2);
 			this->panel1->Location = System::Drawing::Point(40, 172);
@@ -86,14 +93,47 @@ namespace CAss2 {
 			this->panel1->Size = System::Drawing::Size(429, 309);
 			this->panel1->TabIndex = 4;
 			// 
-			// textBox3
+			// button1
 			// 
-			this->textBox3->Location = System::Drawing::Point(191, 161);
-			this->textBox3->Multiline = true;
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(214, 33);
-			this->textBox3->TabIndex = 29;
-			this->textBox3->TextChanged += gcnew System::EventHandler(this, &AdminModifyBuilding::textBox3_TextChanged);
+			this->button1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->button1->ForeColor = System::Drawing::Color::Purple;
+			this->button1->Location = System::Drawing::Point(248, 66);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(105, 31);
+			this->button1->TabIndex = 32;
+			this->button1->Text = L"Show";
+			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &AdminModifyBuilding::button1_Click);
+			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label1->ForeColor = System::Drawing::Color::White;
+			this->label1->Location = System::Drawing::Point(24, 36);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(100, 24);
+			this->label1->TabIndex = 30;
+			this->label1->Text = L"Building ID";
+			// 
+			// txtBuildingId
+			// 
+			this->txtBuildingId->Location = System::Drawing::Point(191, 27);
+			this->txtBuildingId->Multiline = true;
+			this->txtBuildingId->Name = L"txtBuildingId";
+			this->txtBuildingId->Size = System::Drawing::Size(214, 33);
+			this->txtBuildingId->TabIndex = 31;
+			// 
+			// txtNewFloors
+			// 
+			this->txtNewFloors->Location = System::Drawing::Point(191, 161);
+			this->txtNewFloors->Multiline = true;
+			this->txtNewFloors->Name = L"txtNewFloors";
+			this->txtNewFloors->Size = System::Drawing::Size(214, 33);
+			this->txtNewFloors->TabIndex = 29;
+			this->txtNewFloors->TextChanged += gcnew System::EventHandler(this, &AdminModifyBuilding::textBox3_TextChanged);
 			// 
 			// label3
 			// 
@@ -108,14 +148,14 @@ namespace CAss2 {
 			this->label3->Text = L"Building Name";
 			this->label3->Click += gcnew System::EventHandler(this, &AdminModifyBuilding::label3_Click);
 			// 
-			// textBox2
+			// txtBuildingName
 			// 
-			this->textBox2->Location = System::Drawing::Point(191, 116);
-			this->textBox2->Multiline = true;
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(214, 33);
-			this->textBox2->TabIndex = 22;
-			this->textBox2->TextChanged += gcnew System::EventHandler(this, &AdminModifyBuilding::textBox2_TextChanged);
+			this->txtBuildingName->Location = System::Drawing::Point(191, 116);
+			this->txtBuildingName->Multiline = true;
+			this->txtBuildingName->Name = L"txtBuildingName";
+			this->txtBuildingName->Size = System::Drawing::Size(214, 33);
+			this->txtBuildingName->TabIndex = 22;
+			this->txtBuildingName->TextChanged += gcnew System::EventHandler(this, &AdminModifyBuilding::textBox2_TextChanged);
 			// 
 			// label5
 			// 
@@ -155,26 +195,6 @@ namespace CAss2 {
 			this->label2->TabIndex = 5;
 			this->label2->Text = L"Add Building";
 			// 
-			// label1
-			// 
-			this->label1->AutoSize = true;
-			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label1->ForeColor = System::Drawing::Color::White;
-			this->label1->Location = System::Drawing::Point(24, 36);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(100, 24);
-			this->label1->TabIndex = 30;
-			this->label1->Text = L"Building ID";
-			// 
-			// textBox1
-			// 
-			this->textBox1->Location = System::Drawing::Point(191, 27);
-			this->textBox1->Multiline = true;
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(214, 33);
-			this->textBox1->TabIndex = 31;
-			// 
 			// AdminModifyBuilding
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -196,7 +216,96 @@ namespace CAss2 {
 	private: System::Void AdminModifyBuilding_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
 private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	// ==========================
+	   // 🔍 Validation
+	   // ==========================
+	int buildingId = 0;
+	if (!Int32::TryParse(txtBuildingId->Text, buildingId))
+	{
+		MessageBox::Show("Please enter valid Building ID", "Validation Error");
+		return;
 	}
+
+	if (String::IsNullOrWhiteSpace(txtBuildingName->Text))
+	{
+		MessageBox::Show("Please enter building name", "Validation Error");
+		return;
+	}
+
+	int newFloors = 0;
+	if (!Int32::TryParse(txtNewFloors->Text, newFloors) || newFloors <= 0)
+	{
+		MessageBox::Show("Please enter valid number of floors", "Validation Error");
+		return;
+	}
+
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	try
+	{
+		conn->Open();
+
+		// ==========================
+		// 1️⃣ Get current floors count
+		// ==========================
+		SqlCommand^ cmdGetFloors = gcnew SqlCommand(
+			"SELECT COUNT(*) FROM Floors WHERE building_id = @id",
+			conn);
+
+		cmdGetFloors->Parameters->AddWithValue("@id", buildingId);
+
+		int currentFloors = Convert::ToInt32(cmdGetFloors->ExecuteScalar());
+
+		// ==========================
+		// ❌ ممنوع تقليل الأدوار
+		// ==========================
+		if (newFloors < currentFloors)
+		{
+			MessageBox::Show(
+				"You cannot reduce number of floors.\nCurrent floors: " + currentFloors.ToString(),
+				"Validation Error");
+			return;
+		}
+
+		// ==========================
+		// 2️⃣ Update building name
+		// ==========================
+		SqlCommand^ cmdUpdateBuilding = gcnew SqlCommand(
+			"UPDATE Buildings SET name = @name WHERE id = @id",
+			conn);
+
+		cmdUpdateBuilding->Parameters->AddWithValue("@name", txtBuildingName->Text);
+		cmdUpdateBuilding->Parameters->AddWithValue("@id", buildingId);
+		cmdUpdateBuilding->ExecuteNonQuery();
+
+		// ==========================
+		// 3️⃣ Add new floors (لو زاد)
+		// ==========================
+		for (int i = currentFloors + 1; i <= newFloors; i++)
+		{
+			SqlCommand^ cmdAddFloor = gcnew SqlCommand(
+				"INSERT INTO Floors (floor_number, building_id) VALUES (@floor, @bid)",
+				conn);
+
+			cmdAddFloor->Parameters->AddWithValue("@floor", i);
+			cmdAddFloor->Parameters->AddWithValue("@bid", buildingId);
+			cmdAddFloor->ExecuteNonQuery();
+		}
+
+		MessageBox::Show("Building updated successfully!", "Success", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		conn->Close();
+	}
+	catch (Exception^ ex)
+	{
+		MessageBox::Show(ex->Message, "Error");
+	}
+}
 private: System::Void label5_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
 private: System::Void label3_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -205,5 +314,68 @@ private: System::Void textBox2_TextChanged(System::Object^ sender, System::Event
 	}
 private: System::Void textBox3_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 	}
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+	int buildingId = 0;
+
+	// ==========================
+	// 🔍 Validation
+	// ==========================
+	if (!Int32::TryParse(txtBuildingId->Text, buildingId))
+	{
+		MessageBox::Show("Please enter valid Building ID", "Validation Error");
+		return;
+	}
+
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	try
+	{
+		conn->Open();
+
+		// ==========================
+		// 1️⃣ Get Building Name
+		// ==========================
+		SqlCommand^ cmdBuilding = gcnew SqlCommand(
+			"SELECT name FROM Buildings WHERE id = @id",
+			conn);
+
+		cmdBuilding->Parameters->AddWithValue("@id", buildingId);
+
+		Object^ nameResult = cmdBuilding->ExecuteScalar();
+
+		if (nameResult == nullptr)
+		{
+			MessageBox::Show("Building not found", "Error");
+			return;
+		}
+
+		txtBuildingName->Text = nameResult->ToString();
+
+		// ==========================
+		// 2️⃣ Get Floors Count
+		// ==========================
+		SqlCommand^ cmdFloors = gcnew SqlCommand(
+			"SELECT COUNT(*) FROM Floors WHERE building_id = @id",
+			conn);
+
+		cmdFloors->Parameters->AddWithValue("@id", buildingId);
+
+		int floorsCount = Convert::ToInt32(cmdFloors->ExecuteScalar());
+
+		txtNewFloors->Text = floorsCount.ToString();
+
+		conn->Close();
+	}
+	catch (Exception^ ex)
+	{
+		MessageBox::Show(ex->Message, "Error");
+	}
+}
 };
 }

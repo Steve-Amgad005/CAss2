@@ -221,7 +221,7 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 		cmdDeleteStudent->Parameters->AddWithValue("@sid", studentId);
 		cmdDeleteStudent->ExecuteNonQuery();
 
-		MessageBox::Show("Student deleted successfully ✅", "Success");
+		MessageBox::Show("Student deleted successfully!", "Success", MessageBoxButtons::OK, MessageBoxIcon::Information);
 
 		// 4️⃣ تفريغ الفورم
 		txtCode->Clear();

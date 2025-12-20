@@ -19,6 +19,17 @@ namespace CAss2 {
 	/// </summary>
 	public ref class AdminStudentsPage : public System::Windows::Forms::Form
 	{
+		Form^ currentPopup = nullptr;
+
+		void CloseCurrentPopup()
+		{
+			if (currentPopup != nullptr)
+			{
+				currentPopup->Close();
+				currentPopup = nullptr;
+			}
+		}
+
 		void LoadAllStudents()
 		{
 			String^ connStr =
@@ -304,7 +315,10 @@ namespace CAss2 {
 		}
 #pragma endregion
 	private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e) {
+		CloseCurrentPopup();
 		CAss2::AdminAddStudent^ addStudentForm = gcnew CAss2::AdminAddStudent();
+		currentPopup = addStudentForm;
+		addStudentForm->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &AdminStudentsPage::PopupClosed);
 		addStudentForm->Show();
 	}
 private: System::Void AdminStudentsPage_Load(System::Object^ sender, System::EventArgs^ e) {
@@ -313,18 +327,25 @@ private: System::Void AdminStudentsPage_Load(System::Object^ sender, System::Eve
 	// declaration of back handler
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
 private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
+	CloseCurrentPopup();
 	AdminModifyStudent^ AMS = gcnew AdminModifyStudent();
+	currentPopup = AMS;
+	AMS->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &AdminStudentsPage::PopupClosed);
 	AMS->Show();
 }
 private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+	CloseCurrentPopup();
 	AdminDeleteStudent^ AMS = gcnew AdminDeleteStudent();
+	currentPopup = AMS;
+	AMS->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &AdminStudentsPage::PopupClosed);
 	AMS->Show();
 }
 private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
 	//here to refresh the data grid view
 	LoadAllStudents();
-
-
+}
+private: System::Void PopupClosed(System::Object^ sender, System::Windows::Forms::FormClosedEventArgs^ e) {
+	currentPopup = nullptr;
 }
 };
 }

@@ -21,6 +21,17 @@ namespace CAss2 {
 	/// </summary>
 	public ref class AdminBuildingsPage : public System::Windows::Forms::Form
 	{
+	private:
+		Form^ currentPopup = nullptr;
+
+		void CloseCurrentPopup()
+		{
+			if (currentPopup != nullptr)
+			{
+				currentPopup->Close();
+				currentPopup = nullptr;
+			}
+		}
 
 		void LoadBuildingsData()
 		{
@@ -36,7 +47,7 @@ namespace CAss2 {
 			{
 				String^ query =
 					"SELECT "
-					"b.name AS [Building], "
+					"b.id, b.name AS [Building], "
 
 					"(SELECT COUNT(*) FROM Floors f "
 					" WHERE f.building_id = b.id) AS [Floors], "
@@ -221,6 +232,7 @@ namespace CAss2 {
 			this->button2->TabIndex = 9;
 			this->button2->Text = L"Refresh";
 			this->button2->UseVisualStyleBackColor = false;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminBuildingsPage::button2_Click);
 			// 
 			// button1
 			// 
@@ -312,17 +324,33 @@ namespace CAss2 {
 		}
 #pragma endregion
 	private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e) {
+		CloseCurrentPopup();
 		AdminAddBuilding^ addBuildingForm = gcnew AdminAddBuilding();
+		currentPopup = addBuildingForm;
+		addBuildingForm->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &AdminBuildingsPage::PopupClosed);
 		addBuildingForm->Show();
 	}
 private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+	CloseCurrentPopup();
 	AdminDeleteBuilding^ deleteBuildingForm = gcnew AdminDeleteBuilding();
+	currentPopup = deleteBuildingForm;
+	deleteBuildingForm->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &AdminBuildingsPage::PopupClosed);
 	deleteBuildingForm->Show();
 }
 private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
+	CloseCurrentPopup();
 	AdminModifyBuilding^ modifyBuildingForm = gcnew AdminModifyBuilding();
+	currentPopup = modifyBuildingForm;
+	modifyBuildingForm->FormClosed += gcnew System::Windows::Forms::FormClosedEventHandler(this, &AdminBuildingsPage::PopupClosed);
 	modifyBuildingForm->Show();
 }
 private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	LoadBuildingsData();
+}
+private: System::Void PopupClosed(System::Object^ sender, System::Windows::Forms::FormClosedEventArgs^ e){
+		   currentPopup = nullptr;
+}
+
 };
 }

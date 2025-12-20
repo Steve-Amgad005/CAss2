@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace CAss2 {
 
@@ -8,6 +8,7 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
 
 	/// <summary>
 	/// Summary for AdminDeleteBuilding
@@ -38,7 +39,8 @@ namespace CAss2 {
 	protected:
 	private: System::Windows::Forms::Panel^ panel1;
 	private: System::Windows::Forms::Label^ label8;
-	private: System::Windows::Forms::TextBox^ textBox3;
+	private: System::Windows::Forms::TextBox^ txtBuildingId;
+
 	private: System::Windows::Forms::Button^ button2;
 
 	private:
@@ -57,7 +59,7 @@ namespace CAss2 {
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->label8 = (gcnew System::Windows::Forms::Label());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
+			this->txtBuildingId = (gcnew System::Windows::Forms::TextBox());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->panel1->SuspendLayout();
 			this->SuspendLayout();
@@ -79,7 +81,7 @@ namespace CAss2 {
 			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
 			this->panel1->Controls->Add(this->label8);
-			this->panel1->Controls->Add(this->textBox3);
+			this->panel1->Controls->Add(this->txtBuildingId);
 			this->panel1->Controls->Add(this->button2);
 			this->panel1->Location = System::Drawing::Point(46, 109);
 			this->panel1->Name = L"panel1";
@@ -99,13 +101,13 @@ namespace CAss2 {
 			this->label8->Text = L"Building ID";
 			this->label8->Click += gcnew System::EventHandler(this, &AdminDeleteBuilding::label8_Click);
 			// 
-			// textBox3
+			// txtBuildingId
 			// 
-			this->textBox3->Location = System::Drawing::Point(192, 26);
-			this->textBox3->Multiline = true;
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(214, 33);
-			this->textBox3->TabIndex = 30;
+			this->txtBuildingId->Location = System::Drawing::Point(192, 26);
+			this->txtBuildingId->Multiline = true;
+			this->txtBuildingId->Name = L"txtBuildingId";
+			this->txtBuildingId->Size = System::Drawing::Size(214, 33);
+			this->txtBuildingId->TabIndex = 30;
 			// 
 			// button2
 			// 
@@ -118,6 +120,7 @@ namespace CAss2 {
 			this->button2->TabIndex = 18;
 			this->button2->Text = L"Delete";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminDeleteBuilding::button2_Click);
 			// 
 			// AdminDeleteBuilding
 			// 
@@ -138,5 +141,95 @@ namespace CAss2 {
 #pragma endregion
 	private: System::Void label8_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	int buildingId = 0;
+
+	// ==========================
+	// 🔍 Validation
+	// ==========================
+	if (!Int32::TryParse(txtBuildingId->Text, buildingId))
+	{
+		MessageBox::Show("Please enter valid Building ID", "Validation Error");
+		return;
+	}
+
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	try
+	{
+		conn->Open();
+
+		// ==========================
+		// 1️⃣ Check if building exists
+		// ==========================
+		SqlCommand^ cmdCheck = gcnew SqlCommand(
+			"SELECT COUNT(*) FROM Buildings WHERE id = @id",
+			conn);
+
+		cmdCheck->Parameters->AddWithValue("@id", buildingId);
+
+		int exists = Convert::ToInt32(cmdCheck->ExecuteScalar());
+
+		if (exists == 0)
+		{
+			MessageBox::Show("Building not found", "Error");
+			conn->Close();
+			return;
+		}
+
+		// ==========================
+		// 2️⃣ Confirm delete
+		// ==========================
+	
+
+		if (MessageBox::Show(
+			"Are you sure you want to delete this building?",
+			"Confirm Delete",
+			MessageBoxButtons::YesNo,
+			MessageBoxIcon::Warning) != System::Windows::Forms::DialogResult::Yes)
+		{
+			conn->Close();
+			return;
+		}
+
+		// ==========================
+		// 3️⃣ Delete Floors first
+		// ==========================
+		SqlCommand^ cmdDeleteFloors = gcnew SqlCommand(
+			"DELETE FROM Floors WHERE building_id = @id",
+			conn);
+
+		cmdDeleteFloors->Parameters->AddWithValue("@id", buildingId);
+		cmdDeleteFloors->ExecuteNonQuery();
+
+		// ==========================
+		// 4️⃣ Delete Building
+		// ==========================
+		SqlCommand^ cmdDeleteBuilding = gcnew SqlCommand(
+			"DELETE FROM Buildings WHERE id = @id",
+			conn);
+
+		cmdDeleteBuilding->Parameters->AddWithValue("@id", buildingId);
+		cmdDeleteBuilding->ExecuteNonQuery();
+
+		MessageBox::Show("Building deleted successfully!", "Success", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		// ==========================
+		// 5️⃣ Clear fields
+		// ==========================
+		txtBuildingId->Clear();
+
+		conn->Close();
+	}
+	catch (Exception^ ex)
+	{
+		MessageBox::Show(ex->Message, "Error");
+	}
+}
 };
 }

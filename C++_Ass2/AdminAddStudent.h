@@ -546,7 +546,7 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 		cmdFees->Parameters->AddWithValue("@status", cmbFeesStatus->Text);
 		cmdFees->ExecuteNonQuery();
 
-		MessageBox::Show("Student added successfully ✅", "Success");
+		MessageBox::Show("Student added successfully!", "Success", MessageBoxButtons::OK, MessageBoxIcon::Information);
 
 		conn->Close();
 	}

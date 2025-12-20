@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace CAss2 {
 
@@ -8,6 +8,8 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
+
 
 	/// <summary>
 	/// Summary for AdminAddBuilding
@@ -42,15 +44,17 @@ namespace CAss2 {
 
 
 	private: System::Windows::Forms::Label^ label3;
+	private: System::Windows::Forms::TextBox^ txtBuildingName;
 
-	private: System::Windows::Forms::TextBox^ textBox2;
+
 	private: System::Windows::Forms::Label^ label5;
 
 
 	private: System::Windows::Forms::Button^ button2;
 
 	private: System::Windows::Forms::Label^ label2;
-	private: System::Windows::Forms::TextBox^ textBox3;
+	private: System::Windows::Forms::TextBox^ txtFloors;
+
 
 	private:
 		/// <summary>
@@ -66,9 +70,9 @@ namespace CAss2 {
 		void InitializeComponent(void)
 		{
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
+			this->txtFloors = (gcnew System::Windows::Forms::TextBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
+			this->txtBuildingName = (gcnew System::Windows::Forms::TextBox());
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->label2 = (gcnew System::Windows::Forms::Label());
@@ -79,9 +83,9 @@ namespace CAss2 {
 			// 
 			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->panel1->Controls->Add(this->textBox3);
+			this->panel1->Controls->Add(this->txtFloors);
 			this->panel1->Controls->Add(this->label3);
-			this->panel1->Controls->Add(this->textBox2);
+			this->panel1->Controls->Add(this->txtBuildingName);
 			this->panel1->Controls->Add(this->label5);
 			this->panel1->Controls->Add(this->button2);
 			this->panel1->Location = System::Drawing::Point(40, 147);
@@ -89,13 +93,13 @@ namespace CAss2 {
 			this->panel1->Size = System::Drawing::Size(429, 265);
 			this->panel1->TabIndex = 2;
 			// 
-			// textBox3
+			// txtFloors
 			// 
-			this->textBox3->Location = System::Drawing::Point(191, 83);
-			this->textBox3->Multiline = true;
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(214, 33);
-			this->textBox3->TabIndex = 29;
+			this->txtFloors->Location = System::Drawing::Point(191, 83);
+			this->txtFloors->Multiline = true;
+			this->txtFloors->Name = L"txtFloors";
+			this->txtFloors->Size = System::Drawing::Size(214, 33);
+			this->txtFloors->TabIndex = 29;
 			// 
 			// label3
 			// 
@@ -110,13 +114,13 @@ namespace CAss2 {
 			this->label3->Text = L"Building Name";
 			this->label3->Click += gcnew System::EventHandler(this, &AdminAddBuilding::label3_Click);
 			// 
-			// textBox2
+			// txtBuildingName
 			// 
-			this->textBox2->Location = System::Drawing::Point(191, 38);
-			this->textBox2->Multiline = true;
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(214, 33);
-			this->textBox2->TabIndex = 22;
+			this->txtBuildingName->Location = System::Drawing::Point(191, 38);
+			this->txtBuildingName->Multiline = true;
+			this->txtBuildingName->Name = L"txtBuildingName";
+			this->txtBuildingName->Size = System::Drawing::Size(214, 33);
+			this->txtBuildingName->TabIndex = 22;
 			// 
 			// label5
 			// 
@@ -141,6 +145,7 @@ namespace CAss2 {
 			this->button2->TabIndex = 18;
 			this->button2->Text = L"Add";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminAddBuilding::button2_Click);
 			// 
 			// label2
 			// 
@@ -173,5 +178,75 @@ namespace CAss2 {
 #pragma endregion
 	private: System::Void label3_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	// ==========================
+	// 🔍 Validation
+	// ==========================
+	if (String::IsNullOrWhiteSpace(txtBuildingName->Text))
+	{
+		MessageBox::Show("Please enter building name", "Validation Error");
+		return;
+	}
+
+	int floorsCount = 0;
+	if (!Int32::TryParse(txtFloors->Text, floorsCount) || floorsCount <= 0 || floorsCount > 50)
+	{
+		MessageBox::Show("Please enter valid number of floors (1 - 50)", "Validation Error");
+		return;
+	}
+
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	try
+	{
+		conn->Open();
+
+		// ==========================
+		// 1️⃣ Insert Building
+		// ==========================
+		String^ insertBuilding =
+			"INSERT INTO Buildings (name) "
+			"OUTPUT INSERTED.id "
+			"VALUES (@name)";
+
+		SqlCommand^ cmdBuilding = gcnew SqlCommand(insertBuilding, conn);
+		cmdBuilding->Parameters->AddWithValue("@name", txtBuildingName->Text);
+
+		int buildingId = Convert::ToInt32(cmdBuilding->ExecuteScalar());
+
+		// ==========================
+		// 2️⃣ Insert Floors
+		// ==========================
+		for (int i = 1; i <= floorsCount; i++)
+		{
+			SqlCommand^ cmdFloor = gcnew SqlCommand(
+				"INSERT INTO Floors (floor_number, building_id) VALUES (@floor, @bid)",
+				conn);
+
+			cmdFloor->Parameters->AddWithValue("@floor", i);
+			cmdFloor->Parameters->AddWithValue("@bid", buildingId);
+			cmdFloor->ExecuteNonQuery();
+		}
+
+		MessageBox::Show("Building added successfully!", "Success", MessageBoxButtons::OK, MessageBoxIcon::Information);
+
+
+		// تنظيف الفورم
+		txtBuildingName->Clear();
+		txtFloors->Clear();
+
+		conn->Close();
+	}
+	catch (Exception^ ex)
+	{
+		MessageBox::Show(ex->Message, "Error");
+	}
+}
 };
 }
