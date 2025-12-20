@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace CAss2 {
 
@@ -8,6 +8,7 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
 
 	/// <summary>
 	/// Summary for AdminDeleteStudent
@@ -38,7 +39,8 @@ namespace CAss2 {
 	protected:
 	private: System::Windows::Forms::Panel^ panel1;
 	private: System::Windows::Forms::Label^ label8;
-	private: System::Windows::Forms::TextBox^ textBox3;
+	private: System::Windows::Forms::TextBox^ txtCode;
+
 
 
 
@@ -69,7 +71,7 @@ namespace CAss2 {
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->label8 = (gcnew System::Windows::Forms::Label());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
+			this->txtCode = (gcnew System::Windows::Forms::TextBox());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->panel1->SuspendLayout();
 			this->SuspendLayout();
@@ -92,7 +94,7 @@ namespace CAss2 {
 			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
 			this->panel1->Controls->Add(this->label8);
-			this->panel1->Controls->Add(this->textBox3);
+			this->panel1->Controls->Add(this->txtCode);
 			this->panel1->Controls->Add(this->button2);
 			this->panel1->Location = System::Drawing::Point(53, 93);
 			this->panel1->Name = L"panel1";
@@ -111,13 +113,13 @@ namespace CAss2 {
 			this->label8->TabIndex = 29;
 			this->label8->Text = L"Student Code";
 			// 
-			// textBox3
+			// txtCode
 			// 
-			this->textBox3->Location = System::Drawing::Point(192, 26);
-			this->textBox3->Multiline = true;
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(214, 33);
-			this->textBox3->TabIndex = 30;
+			this->txtCode->Location = System::Drawing::Point(192, 26);
+			this->txtCode->Multiline = true;
+			this->txtCode->Name = L"txtCode";
+			this->txtCode->Size = System::Drawing::Size(214, 33);
+			this->txtCode->TabIndex = 30;
 			// 
 			// button2
 			// 
@@ -130,6 +132,7 @@ namespace CAss2 {
 			this->button2->TabIndex = 18;
 			this->button2->Text = L"Delete";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminDeleteStudent::button2_Click);
 			// 
 			// AdminDeleteStudent
 			// 
@@ -150,5 +153,85 @@ namespace CAss2 {
 #pragma endregion
 	private: System::Void label2_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	if (String::IsNullOrWhiteSpace(txtCode->Text))
+	{
+		MessageBox::Show("Please enter student code", "Validation Error");
+		return;
+	}
+
+	if (MessageBox::Show(
+		"Are you sure you want to delete this student?",
+		"Confirm Delete",
+		MessageBoxButtons::YesNo,
+		MessageBoxIcon::Warning) != System::Windows::Forms::DialogResult::Yes)
+	{
+		return;
+	}
+
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	try
+	{
+		conn->Open();
+
+		// 1️⃣ جلب student_id من الكود
+		SqlCommand^ cmdGetId = gcnew SqlCommand(
+			"SELECT id FROM Students WHERE code = @code", conn);
+
+		cmdGetId->Parameters->AddWithValue("@code", Convert::ToInt32(txtCode->Text));
+
+		Object^ result = cmdGetId->ExecuteScalar();
+
+		if (result == nullptr)
+		{
+			MessageBox::Show("Student not found", "Error");
+			conn->Close();
+			return;
+		}
+
+		int studentId = Convert::ToInt32(result);
+
+		// 2️⃣ مسح التبعيات
+		array<String^>^ deleteQueries = gcnew array<String^>
+		{
+			"DELETE FROM StudentCourses WHERE student_id = @sid",
+				"DELETE FROM Grades WHERE student_id = @sid",
+				"DELETE FROM Attendance WHERE student_id = @sid",
+				"DELETE FROM Payments WHERE student_id = @sid"
+		};
+
+		for each (String ^ q in deleteQueries)
+		{
+			SqlCommand^ cmd = gcnew SqlCommand(q, conn);
+			cmd->Parameters->AddWithValue("@sid", studentId);
+			cmd->ExecuteNonQuery();
+		}
+
+		// 3️⃣ مسح الطالب نفسه
+		SqlCommand^ cmdDeleteStudent = gcnew SqlCommand(
+			"DELETE FROM Students WHERE id = @sid", conn);
+
+		cmdDeleteStudent->Parameters->AddWithValue("@sid", studentId);
+		cmdDeleteStudent->ExecuteNonQuery();
+
+		MessageBox::Show("Student deleted successfully ✅", "Success");
+
+		// 4️⃣ تفريغ الفورم
+		txtCode->Clear();
+
+		conn->Close();
+	}
+	catch (Exception^ ex)
+	{
+		MessageBox::Show(ex->Message, "Error");
+	}
+}
 };
 }

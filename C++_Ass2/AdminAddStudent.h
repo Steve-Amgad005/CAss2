@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace CAss2 {
 
@@ -8,16 +8,54 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::IO;
+	using namespace System::Drawing::Imaging;
+	using namespace System::Data::SqlClient;
+
 
 	/// <summary>
 	/// Summary for AdminAddStudent
 	/// </summary>
 	public ref class AdminAddStudent : public System::Windows::Forms::Form
 	{
+		void LoadDeptsInCMB() {
+			String^ connStr =
+				"Server=localhost\\SQLEXPRESS;"
+				"Database=MyDB;"
+				"Trusted_Connection=True;"
+				"TrustServerCertificate=True;";
+
+			SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+			try
+			{
+				conn->Open();
+
+				SqlDataAdapter^ da = gcnew SqlDataAdapter(
+					"SELECT id, name FROM Departments",
+					conn);
+
+				DataTable^ dt = gcnew DataTable();
+				da->Fill(dt);
+
+				cmbDepartment->DataSource = dt;
+				cmbDepartment->DisplayMember = "name"; // اللي هيظهر
+				cmbDepartment->ValueMember = "id";     // اللي هيتخزن
+				cmbDepartment->SelectedIndex = -1;     // مفيش اختيار افتراضي
+
+				conn->Close();
+			}
+			catch (Exception^ ex)
+			{
+				MessageBox::Show(ex->Message, "Error");
+			}
+		}
+
 	public:
 		AdminAddStudent(void)
 		{
 			InitializeComponent();
+			LoadDeptsInCMB();
 			//
 			//TODO: Add the constructor code here
 			//
@@ -40,20 +78,31 @@ namespace CAss2 {
 	private: System::Windows::Forms::Label^ label3;
 
 	private: System::Windows::Forms::Label^ label4;
-	private: System::Windows::Forms::TextBox^ textBox2;
+	private: System::Windows::Forms::TextBox^ txtNID;
+
 	private: System::Windows::Forms::Label^ label5;
-	private: System::Windows::Forms::TextBox^ textBox1;
+	private: System::Windows::Forms::TextBox^ txtName;
+
 	private: System::Windows::Forms::Label^ label6;
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::Label^ label7;
-	private: System::Windows::Forms::ComboBox^ comboBox1;
-	private: System::Windows::Forms::ComboBox^ comboBox2;
+	private: System::Windows::Forms::ComboBox^ cmbDepartment;
+
+	private: System::Windows::Forms::ComboBox^ cmbYear;
+
 
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::Label^ label2;
-	private: System::Windows::Forms::Button^ button1;
+	private: System::Windows::Forms::Button^ ChoosePicture;
 
-	private: System::Windows::Forms::ComboBox^ comboBox3;
+
+	private: System::Windows::Forms::TextBox^ txtFees;
+	private: System::Windows::Forms::PictureBox^ picStudent;
+	private: System::Windows::Forms::ComboBox^ cmbFeesStatus;
+
+
+
+
 
 	protected:
 
@@ -71,37 +120,41 @@ namespace CAss2 {
 		void InitializeComponent(void)
 		{
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->comboBox3 = (gcnew System::Windows::Forms::ComboBox());
-			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->txtFees = (gcnew System::Windows::Forms::TextBox());
+			this->ChoosePicture = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->comboBox2 = (gcnew System::Windows::Forms::ComboBox());
-			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
+			this->cmbYear = (gcnew System::Windows::Forms::ComboBox());
+			this->cmbDepartment = (gcnew System::Windows::Forms::ComboBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label4 = (gcnew System::Windows::Forms::Label());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
+			this->txtNID = (gcnew System::Windows::Forms::TextBox());
 			this->label5 = (gcnew System::Windows::Forms::Label());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->txtName = (gcnew System::Windows::Forms::TextBox());
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->label7 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->picStudent = (gcnew System::Windows::Forms::PictureBox());
+			this->cmbFeesStatus = (gcnew System::Windows::Forms::ComboBox());
 			this->panel1->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picStudent))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// panel1
 			// 
 			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->panel1->Controls->Add(this->comboBox3);
-			this->panel1->Controls->Add(this->button1);
+			this->panel1->Controls->Add(this->cmbFeesStatus);
+			this->panel1->Controls->Add(this->txtFees);
+			this->panel1->Controls->Add(this->ChoosePicture);
 			this->panel1->Controls->Add(this->label1);
-			this->panel1->Controls->Add(this->comboBox2);
-			this->panel1->Controls->Add(this->comboBox1);
+			this->panel1->Controls->Add(this->cmbYear);
+			this->panel1->Controls->Add(this->cmbDepartment);
 			this->panel1->Controls->Add(this->label3);
 			this->panel1->Controls->Add(this->label4);
-			this->panel1->Controls->Add(this->textBox2);
+			this->panel1->Controls->Add(this->txtNID);
 			this->panel1->Controls->Add(this->label5);
-			this->panel1->Controls->Add(this->textBox1);
+			this->panel1->Controls->Add(this->txtName);
 			this->panel1->Controls->Add(this->label6);
 			this->panel1->Controls->Add(this->button2);
 			this->panel1->Controls->Add(this->label7);
@@ -110,30 +163,26 @@ namespace CAss2 {
 			this->panel1->Size = System::Drawing::Size(429, 451);
 			this->panel1->TabIndex = 0;
 			// 
-			// comboBox3
+			// txtFees
 			// 
-			this->comboBox3->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->comboBox3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->txtFees->Location = System::Drawing::Point(190, 300);
+			this->txtFees->Multiline = true;
+			this->txtFees->Name = L"txtFees";
+			this->txtFees->Size = System::Drawing::Size(214, 33);
+			this->txtFees->TabIndex = 28;
+			// 
+			// ChoosePicture
+			// 
+			this->ChoosePicture->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->comboBox3->FormattingEnabled = true;
-			this->comboBox3->Items->AddRange(gcnew cli::array< System::Object^  >(2) { L"Paid", L"Not Paid" });
-			this->comboBox3->Location = System::Drawing::Point(190, 305);
-			this->comboBox3->Name = L"comboBox3";
-			this->comboBox3->Size = System::Drawing::Size(214, 33);
-			this->comboBox3->TabIndex = 28;
-			// 
-			// button1
-			// 
-			this->button1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->button1->ForeColor = System::Drawing::Color::Purple;
-			this->button1->Location = System::Drawing::Point(190, 250);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(214, 33);
-			this->button1->TabIndex = 27;
-			this->button1->Text = L"Choose Picture";
-			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &AdminAddStudent::button1_Click);
+			this->ChoosePicture->ForeColor = System::Drawing::Color::Purple;
+			this->ChoosePicture->Location = System::Drawing::Point(190, 250);
+			this->ChoosePicture->Name = L"ChoosePicture";
+			this->ChoosePicture->Size = System::Drawing::Size(214, 33);
+			this->ChoosePicture->TabIndex = 27;
+			this->ChoosePicture->Text = L"Choose Picture";
+			this->ChoosePicture->UseVisualStyleBackColor = true;
+			this->ChoosePicture->Click += gcnew System::EventHandler(this, &AdminAddStudent::button1_Click);
 			// 
 			// label1
 			// 
@@ -148,32 +197,32 @@ namespace CAss2 {
 			this->label1->Text = L"Picture";
 			this->label1->Click += gcnew System::EventHandler(this, &AdminAddStudent::label1_Click);
 			// 
-			// comboBox2
+			// cmbYear
 			// 
-			this->comboBox2->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->comboBox2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->cmbYear->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->cmbYear->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->comboBox2->FormattingEnabled = true;
-			this->comboBox2->Items->AddRange(gcnew cli::array< System::Object^  >(4) { L"First Year", L"Second Year", L"Third Year", L"Fourth Year" });
-			this->comboBox2->Location = System::Drawing::Point(190, 192);
-			this->comboBox2->Name = L"comboBox2";
-			this->comboBox2->Size = System::Drawing::Size(214, 33);
-			this->comboBox2->TabIndex = 25;
+			this->cmbYear->FormattingEnabled = true;
+			this->cmbYear->Items->AddRange(gcnew cli::array< System::Object^  >(4) { L"First Year", L"Second Year", L"Third Year", L"Fourth Year" });
+			this->cmbYear->Location = System::Drawing::Point(190, 192);
+			this->cmbYear->Name = L"cmbYear";
+			this->cmbYear->Size = System::Drawing::Size(214, 33);
+			this->cmbYear->TabIndex = 25;
 			// 
-			// comboBox1
+			// cmbDepartment
 			// 
-			this->comboBox1->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->comboBox1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->cmbDepartment->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->cmbDepartment->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(5) {
+			this->cmbDepartment->FormattingEnabled = true;
+			this->cmbDepartment->Items->AddRange(gcnew cli::array< System::Object^  >(5) {
 				L"ICT", L"Petrol", L"Mechatronics", L"Autotronics",
 					L"Renewable Energy"
 			});
-			this->comboBox1->Location = System::Drawing::Point(190, 141);
-			this->comboBox1->Name = L"comboBox1";
-			this->comboBox1->Size = System::Drawing::Size(214, 33);
-			this->comboBox1->TabIndex = 24;
+			this->cmbDepartment->Location = System::Drawing::Point(190, 141);
+			this->cmbDepartment->Name = L"cmbDepartment";
+			this->cmbDepartment->Size = System::Drawing::Size(214, 33);
+			this->cmbDepartment->TabIndex = 24;
 			// 
 			// label3
 			// 
@@ -201,13 +250,13 @@ namespace CAss2 {
 			this->label4->Text = L"NID";
 			this->label4->Click += gcnew System::EventHandler(this, &AdminAddStudent::label4_Click);
 			// 
-			// textBox2
+			// txtNID
 			// 
-			this->textBox2->Location = System::Drawing::Point(190, 91);
-			this->textBox2->Multiline = true;
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(214, 33);
-			this->textBox2->TabIndex = 22;
+			this->txtNID->Location = System::Drawing::Point(190, 91);
+			this->txtNID->Multiline = true;
+			this->txtNID->Name = L"txtNID";
+			this->txtNID->Size = System::Drawing::Size(214, 33);
+			this->txtNID->TabIndex = 22;
 			// 
 			// label5
 			// 
@@ -221,13 +270,13 @@ namespace CAss2 {
 			this->label5->TabIndex = 15;
 			this->label5->Text = L"Department";
 			// 
-			// textBox1
+			// txtName
 			// 
-			this->textBox1->Location = System::Drawing::Point(190, 44);
-			this->textBox1->Multiline = true;
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(214, 33);
-			this->textBox1->TabIndex = 23;
+			this->txtName->Location = System::Drawing::Point(190, 44);
+			this->txtName->Multiline = true;
+			this->txtName->Name = L"txtName";
+			this->txtName->Size = System::Drawing::Size(214, 33);
+			this->txtName->TabIndex = 23;
 			// 
 			// label6
 			// 
@@ -280,18 +329,40 @@ namespace CAss2 {
 			this->label2->Text = L"Add Student";
 			this->label2->Click += gcnew System::EventHandler(this, &AdminAddStudent::label2_Click);
 			// 
+			// picStudent
+			// 
+			this->picStudent->Location = System::Drawing::Point(40, 23);
+			this->picStudent->Name = L"picStudent";
+			this->picStudent->Size = System::Drawing::Size(100, 104);
+			this->picStudent->TabIndex = 2;
+			this->picStudent->TabStop = false;
+			// 
+			// cmbFeesStatus
+			// 
+			this->cmbFeesStatus->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->cmbFeesStatus->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->cmbFeesStatus->FormattingEnabled = true;
+			this->cmbFeesStatus->Items->AddRange(gcnew cli::array< System::Object^  >(2) { L"Paid", L"Unpaid" });
+			this->cmbFeesStatus->Location = System::Drawing::Point(92, 300);
+			this->cmbFeesStatus->Name = L"cmbFeesStatus";
+			this->cmbFeesStatus->Size = System::Drawing::Size(82, 33);
+			this->cmbFeesStatus->TabIndex = 29;
+			// 
 			// AdminAddStudent
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::Purple;
 			this->ClientSize = System::Drawing::Size(508, 621);
+			this->Controls->Add(this->picStudent);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->panel1);
 			this->Name = L"AdminAddStudent";
 			this->Text = L"AdminAddStudent";
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picStudent))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -313,7 +384,10 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 	OpenFileDialog^ openFileDialog = gcnew OpenFileDialog();
 	openFileDialog->Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
 
-	if (openFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK) {
+	if (openFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+	{
+		picStudent->Image = Image::FromFile(openFileDialog->FileName);
+		picStudent->SizeMode = PictureBoxSizeMode::StretchImage;
 	}
 
 }
@@ -321,7 +395,166 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 
 }
 private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
-	MessageBox::Show("Student Added Succesfully", "Add Student", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	// ==========================
+// 🔍 Validation
+// ==========================
+
+// الاسم
+	if (String::IsNullOrWhiteSpace(txtName->Text))
+	{
+		MessageBox::Show("Please enter student name", "Validation Error");
+		return;
+	}
+
+	// الرقم القومي
+	if (String::IsNullOrWhiteSpace(txtNID->Text) || txtNID->Text->Length != 14)
+	{
+		MessageBox::Show("Please enter valid National ID (14 digits)", "Validation Error");
+		return;
+	}
+
+	// السنة
+	int year = 0;
+
+	if (cmbYear->Text == "First Year") year = 1;
+	else if (cmbYear->Text == "Second Year") year = 2;
+	else if (cmbYear->Text == "Third Year") year = 3;
+	else if (cmbYear->Text == "Fourth Year") year = 4;
+	else
+	{
+		MessageBox::Show("Please select valid year", "Validation Error");
+		return;
+	}
+
+
+	// القسم
+	if (cmbDepartment->SelectedIndex == -1)
+	{
+		MessageBox::Show("Please select department", "Validation Error");
+		return;
+	}
+
+	// حالة المصاريف
+	if (cmbFeesStatus->SelectedIndex == -1)
+	{
+		MessageBox::Show("Please select fees status", "Validation Error");
+		return;
+	}
+
+	int fees = 0;
+
+	// قيمة المصاريف
+	if (cmbFeesStatus->Text == "Paid" || cmbFeesStatus->Text == "Partial")
+	{
+		if (String::IsNullOrWhiteSpace(txtFees->Text))
+		{
+			MessageBox::Show("Please enter fees amount", "Validation Error");
+			return;
+		}
+
+		fees = Convert::ToInt32(txtFees->Text);
+
+		if (fees <= 0 || fees > 155000)
+		{
+			MessageBox::Show("Fees must be between 1 and 155000", "Validation Error");
+			return;
+		}
+	}
+	else if (cmbFeesStatus->Text == "Not Paid")
+	{
+		// لازم المصاريف تكون فاضية أو صفر
+		if (!String::IsNullOrWhiteSpace(txtFees->Text) && Convert::ToInt32(txtFees->Text) != 0)
+		{
+			MessageBox::Show("Fees must be 0 when status is Not Paid", "Validation Error");
+			return;
+		}
+
+		fees = 0;
+	}
+
+
+	try
+	{
+		conn->Open();
+
+		// ==========================
+		// 1️⃣ توليد Code و SeatNumber
+		// ==========================
+		SqlCommand^ cmdGen = gcnew SqlCommand(
+			"SELECT ISNULL(MAX(code),20240000)+1, ISNULL(MAX(seatnumber),1000)+1 FROM Students",
+			conn);
+
+		SqlDataReader^ genReader = cmdGen->ExecuteReader();
+		genReader->Read();
+
+		int code = Convert::ToInt32(genReader[0]);
+		int seat = Convert::ToInt32(genReader[1]);
+		genReader->Close();
+
+		// ==========================
+		// 2️⃣ Insert Student (بدون صورة)
+		// ==========================
+		String^ insertStudent =
+			"INSERT INTO Students "
+			"(code, seatnumber, NationalNumber, name, year, current_term, department_id) "
+			"OUTPUT INSERTED.id "
+			"VALUES (@code, @seat, @nid, @name, @year, 1, @dept)";
+
+		SqlCommand^ cmdStudent = gcnew SqlCommand(insertStudent, conn);
+
+		cmdStudent->Parameters->AddWithValue("@code", code);
+		cmdStudent->Parameters->AddWithValue("@seat", seat);
+		cmdStudent->Parameters->AddWithValue("@nid", txtNID->Text);
+		cmdStudent->Parameters->AddWithValue("@name", txtName->Text);
+		cmdStudent->Parameters->AddWithValue("@year", year);
+		cmdStudent->Parameters->AddWithValue("@dept", cmbDepartment->SelectedValue);
+
+		int NewStudentId = Convert::ToInt32(cmdStudent->ExecuteScalar());
+
+		// ==========================
+		// 3️⃣ تسجيل مواد القسم تلقائي
+		// ==========================
+		String^ insertCourses =
+			"INSERT INTO StudentCourses (student_id, course_id) "
+			"SELECT @sid, id FROM Courses "
+			"WHERE department_id = @dept AND year = @year";
+
+		SqlCommand^ cmdCourses = gcnew SqlCommand(insertCourses, conn);
+		cmdCourses->Parameters->AddWithValue("@sid", NewStudentId);
+		cmdCourses->Parameters->AddWithValue("@dept", cmbDepartment->SelectedValue);
+		cmdCourses->Parameters->AddWithValue("@year", year);
+		cmdCourses->ExecuteNonQuery();
+
+		// ==========================
+		// 4️⃣ Insert Fees
+		// ==========================
+		String^ insertFees =
+			"INSERT INTO Payments (student_id, amount, status) "
+			"VALUES (@sid, @amount, @status)";
+
+		SqlCommand^ cmdFees = gcnew SqlCommand(insertFees, conn);
+		cmdFees->Parameters->AddWithValue("@sid", NewStudentId);
+		cmdFees->Parameters->AddWithValue("@amount", fees);
+		cmdFees->Parameters->AddWithValue("@status", cmbFeesStatus->Text);
+		cmdFees->ExecuteNonQuery();
+
+		MessageBox::Show("Student added successfully ✅", "Success");
+
+		conn->Close();
+	}
+	catch (Exception^ ex)
+	{
+		MessageBox::Show(ex->Message, "Error");
+	}
+
 }
 };
 }

@@ -204,6 +204,7 @@ namespace CAss2 {
 			this->button2->TabIndex = 3;
 			this->button2->Text = L"Refresh";
 			this->button2->UseVisualStyleBackColor = false;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminStudentsPage::button2_Click);
 			// 
 			// button3
 			// 
@@ -318,6 +319,12 @@ private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e
 private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
 	AdminDeleteStudent^ AMS = gcnew AdminDeleteStudent();
 	AMS->Show();
+}
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	//here to refresh the data grid view
+	LoadAllStudents();
+
+
 }
 };
 }
