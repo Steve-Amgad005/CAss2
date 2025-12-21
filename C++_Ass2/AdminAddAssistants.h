@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace CAss2 {
 
@@ -8,16 +8,40 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
+	using namespace System::Collections::Generic;
+
+
+
 
 	/// <summary>
 	/// Summary for AdminAddAssistants
 	/// </summary>
 	public ref class AdminAddAssistants : public System::Windows::Forms::Form
 	{
+		void LoadDepartments()
+		{
+			String^ connStr =
+				"Server=localhost\\SQLEXPRESS;"
+				"Database=MyDB;"
+				"Trusted_Connection=True;"
+				"TrustServerCertificate=True;";
+
+			SqlConnection^ conn = gcnew SqlConnection(connStr);
+			SqlDataAdapter^ da = gcnew SqlDataAdapter("SELECT id, name FROM Departments", conn);
+
+			DataTable^ dt = gcnew DataTable();
+			da->Fill(dt);
+
+			checkedListBoxDepartments->DataSource = dt;
+			checkedListBoxDepartments->DisplayMember = "name";
+			checkedListBoxDepartments->ValueMember = "id";
+		}
 	public:
 		AdminAddAssistants(void)
 		{
 			InitializeComponent();
+			LoadDepartments();
 			//
 			//TODO: Add the constructor code here
 			//
@@ -45,11 +69,17 @@ namespace CAss2 {
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Panel^ panel1;
-	private: System::Windows::Forms::CheckedListBox^ checkedListBox2;
+	private: System::Windows::Forms::CheckedListBox^ checkedListBoxCourses;
+
 	private: System::Windows::Forms::Label^ label6;
 	private: System::Windows::Forms::Button^ button3;
-	private: System::Windows::Forms::CheckedListBox^ checkedListBox1;
+	private: System::Windows::Forms::CheckedListBox^ checkedListBoxDepartments;
+
 	private: System::Windows::Forms::Button^ ChoosePicture;
+	private: System::Windows::Forms::CheckedListBox^ checkedListBoxProfessors;
+
+	private: System::Windows::Forms::Label^ label7;
+	private: System::Windows::Forms::Button^ button1;
 
 	protected:
 
@@ -87,10 +117,13 @@ namespace CAss2 {
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->checkedListBox2 = (gcnew System::Windows::Forms::CheckedListBox());
+			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->checkedListBoxProfessors = (gcnew System::Windows::Forms::CheckedListBox());
+			this->label7 = (gcnew System::Windows::Forms::Label());
+			this->checkedListBoxCourses = (gcnew System::Windows::Forms::CheckedListBox());
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->button3 = (gcnew System::Windows::Forms::Button());
-			this->checkedListBox1 = (gcnew System::Windows::Forms::CheckedListBox());
+			this->checkedListBoxDepartments = (gcnew System::Windows::Forms::CheckedListBox());
 			this->ChoosePicture = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picStudent))->BeginInit();
 			this->panel1->SuspendLayout();
@@ -110,7 +143,7 @@ namespace CAss2 {
 			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->label1->ForeColor = System::Drawing::Color::White;
-			this->label1->Location = System::Drawing::Point(21, 359);
+			this->label1->Location = System::Drawing::Point(21, 450);
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(68, 24);
 			this->label1->TabIndex = 26;
@@ -173,12 +206,13 @@ namespace CAss2 {
 			this->button2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button2->ForeColor = System::Drawing::Color::Purple;
-			this->button2->Location = System::Drawing::Point(102, 434);
+			this->button2->Location = System::Drawing::Point(102, 486);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(226, 48);
 			this->button2->TabIndex = 18;
 			this->button2->Text = L"Add";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminAddAssistants::button2_Click);
 			// 
 			// label2
 			// 
@@ -196,10 +230,13 @@ namespace CAss2 {
 			// 
 			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->panel1->Controls->Add(this->checkedListBox2);
+			this->panel1->Controls->Add(this->button1);
+			this->panel1->Controls->Add(this->checkedListBoxProfessors);
+			this->panel1->Controls->Add(this->label7);
+			this->panel1->Controls->Add(this->checkedListBoxCourses);
 			this->panel1->Controls->Add(this->label6);
 			this->panel1->Controls->Add(this->button3);
-			this->panel1->Controls->Add(this->checkedListBox1);
+			this->panel1->Controls->Add(this->checkedListBoxDepartments);
 			this->panel1->Controls->Add(this->ChoosePicture);
 			this->panel1->Controls->Add(this->label1);
 			this->panel1->Controls->Add(this->label3);
@@ -208,18 +245,51 @@ namespace CAss2 {
 			this->panel1->Controls->Add(this->label5);
 			this->panel1->Controls->Add(this->txtName);
 			this->panel1->Controls->Add(this->button2);
-			this->panel1->Location = System::Drawing::Point(52, 157);
+			this->panel1->Location = System::Drawing::Point(52, 132);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(429, 525);
+			this->panel1->Size = System::Drawing::Size(429, 550);
 			this->panel1->TabIndex = 6;
 			// 
-			// checkedListBox2
+			// button1
 			// 
-			this->checkedListBox2->FormattingEnabled = true;
-			this->checkedListBox2->Location = System::Drawing::Point(188, 265);
-			this->checkedListBox2->Name = L"checkedListBox2";
-			this->checkedListBox2->Size = System::Drawing::Size(214, 49);
-			this->checkedListBox2->TabIndex = 34;
+			this->button1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->button1->ForeColor = System::Drawing::Color::Purple;
+			this->button1->Location = System::Drawing::Point(217, 324);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(156, 33);
+			this->button1->TabIndex = 38;
+			this->button1->Text = L"Show Professors";
+			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &AdminAddAssistants::button1_Click);
+			// 
+			// checkedListBoxProfessors
+			// 
+			this->checkedListBoxProfessors->FormattingEnabled = true;
+			this->checkedListBoxProfessors->Location = System::Drawing::Point(188, 374);
+			this->checkedListBoxProfessors->Name = L"checkedListBoxProfessors";
+			this->checkedListBoxProfessors->Size = System::Drawing::Size(214, 49);
+			this->checkedListBoxProfessors->TabIndex = 36;
+			// 
+			// label7
+			// 
+			this->label7->AutoSize = true;
+			this->label7->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label7->ForeColor = System::Drawing::Color::White;
+			this->label7->Location = System::Drawing::Point(21, 383);
+			this->label7->Name = L"label7";
+			this->label7->Size = System::Drawing::Size(65, 24);
+			this->label7->TabIndex = 37;
+			this->label7->Text = L"Doctor";
+			// 
+			// checkedListBoxCourses
+			// 
+			this->checkedListBoxCourses->FormattingEnabled = true;
+			this->checkedListBoxCourses->Location = System::Drawing::Point(188, 256);
+			this->checkedListBoxCourses->Name = L"checkedListBoxCourses";
+			this->checkedListBoxCourses->Size = System::Drawing::Size(214, 49);
+			this->checkedListBoxCourses->TabIndex = 34;
 			// 
 			// label6
 			// 
@@ -227,7 +297,7 @@ namespace CAss2 {
 			this->label6->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->label6->ForeColor = System::Drawing::Color::White;
-			this->label6->Location = System::Drawing::Point(21, 274);
+			this->label6->Location = System::Drawing::Point(21, 265);
 			this->label6->Name = L"label6";
 			this->label6->Size = System::Drawing::Size(80, 24);
 			this->label6->TabIndex = 35;
@@ -238,27 +308,28 @@ namespace CAss2 {
 			this->button3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button3->ForeColor = System::Drawing::Color::Purple;
-			this->button3->Location = System::Drawing::Point(139, 202);
+			this->button3->Location = System::Drawing::Point(217, 205);
 			this->button3->Name = L"button3";
-			this->button3->Size = System::Drawing::Size(123, 33);
+			this->button3->Size = System::Drawing::Size(148, 33);
 			this->button3->TabIndex = 33;
-			this->button3->Text = L"Show";
+			this->button3->Text = L"Show Courses";
 			this->button3->UseVisualStyleBackColor = true;
+			this->button3->Click += gcnew System::EventHandler(this, &AdminAddAssistants::button3_Click);
 			// 
-			// checkedListBox1
+			// checkedListBoxDepartments
 			// 
-			this->checkedListBox1->FormattingEnabled = true;
-			this->checkedListBox1->Location = System::Drawing::Point(188, 136);
-			this->checkedListBox1->Name = L"checkedListBox1";
-			this->checkedListBox1->Size = System::Drawing::Size(214, 49);
-			this->checkedListBox1->TabIndex = 6;
+			this->checkedListBoxDepartments->FormattingEnabled = true;
+			this->checkedListBoxDepartments->Location = System::Drawing::Point(188, 136);
+			this->checkedListBoxDepartments->Name = L"checkedListBoxDepartments";
+			this->checkedListBoxDepartments->Size = System::Drawing::Size(214, 49);
+			this->checkedListBoxDepartments->TabIndex = 6;
 			// 
 			// ChoosePicture
 			// 
 			this->ChoosePicture->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->ChoosePicture->ForeColor = System::Drawing::Color::Purple;
-			this->ChoosePicture->Location = System::Drawing::Point(188, 356);
+			this->ChoosePicture->Location = System::Drawing::Point(188, 447);
 			this->ChoosePicture->Name = L"ChoosePicture";
 			this->ChoosePicture->Size = System::Drawing::Size(214, 33);
 			this->ChoosePicture->TabIndex = 27;
@@ -284,5 +355,168 @@ namespace CAss2 {
 
 		}
 #pragma endregion
-	};
+	private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+		if (checkedListBoxDepartments->CheckedItems->Count == 0)
+		{
+			MessageBox::Show("Select at least one department");
+			return;
+		}
+
+		List<String^>^ deptIds = gcnew List<String^>();
+
+		for each (Object ^ obj in checkedListBoxDepartments->CheckedItems)
+		{
+			DataRowView^ item = safe_cast<DataRowView^>(obj);
+			deptIds->Add(item["id"]->ToString());
+		}
+
+		array<String^>^ arr = deptIds->ToArray();
+		String^ inClause = String::Join(",", arr);
+
+		String^ connStr =
+			"Server=localhost\\SQLEXPRESS;"
+			"Database=MyDB;"
+			"Trusted_Connection=True;"
+			"TrustServerCertificate=True;";
+
+		SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+		String^ query =
+			"SELECT DISTINCT c.id, c.course_name "
+			"FROM Courses c "
+			"INNER JOIN CourseDepartments cd ON c.id = cd.course_id "
+			"WHERE cd.department_id IN (" + inClause + ")";
+
+		SqlDataAdapter^ da = gcnew SqlDataAdapter(query, conn);
+		DataTable^ dt = gcnew DataTable();
+		da->Fill(dt);
+
+		checkedListBoxCourses->DataSource = dt;
+		checkedListBoxCourses->DisplayMember = "course_name";
+		checkedListBoxCourses->ValueMember = "id";
+	}
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+	if (checkedListBoxCourses->CheckedItems->Count == 0)
+	{
+		MessageBox::Show("Select at least one course");
+		return;
+	}
+
+	List<String^>^ courseIds = gcnew List<String^>();
+
+	for each (Object ^ obj in checkedListBoxCourses->CheckedItems)
+	{
+		DataRowView^ item = safe_cast<DataRowView^>(obj);
+		courseIds->Add(item["id"]->ToString());
+	}
+
+	array<String^>^ arr = courseIds->ToArray();
+	String^ inClause = String::Join(",", arr);
+
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	String^ query =
+		"SELECT DISTINCT p.id, p.name "
+		"FROM Professors p "
+		"INNER JOIN ProfessorCourses pc ON p.id = pc.professor_id "
+		"WHERE pc.course_id IN (" + inClause + ")";
+
+	SqlDataAdapter^ da = gcnew SqlDataAdapter(query, conn);
+	DataTable^ dt = gcnew DataTable();
+	da->Fill(dt);
+
+	checkedListBoxProfessors->DataSource = dt;
+	checkedListBoxProfessors->DisplayMember = "name";
+	checkedListBoxProfessors->ValueMember = "id";
+}
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	// ================= Validation =================
+	if (String::IsNullOrWhiteSpace(txtName->Text))
+	{
+		MessageBox::Show("Enter assistant name");
+		return;
+	}
+
+	if (String::IsNullOrWhiteSpace(txtNID->Text) || txtNID->Text->Length != 14)
+	{
+		MessageBox::Show("Enter valid National ID (14 digits)");
+		return;
+	}
+
+	if (checkedListBoxCourses->CheckedItems->Count == 0 ||
+		checkedListBoxProfessors->CheckedItems->Count == 0)
+	{
+		MessageBox::Show("Select at least one course and professor");
+		return;
+	}
+
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	try
+	{
+		conn->Open();
+
+		// ================= Generate Code =================
+		SqlCommand^ cmdCode = gcnew SqlCommand(
+			"SELECT ISNULL(MAX(code),7000)+1 FROM Assistants", conn);
+
+		int code = Convert::ToInt32(cmdCode->ExecuteScalar());
+
+		// ================= Insert Assistant =================
+		SqlCommand^ cmdInsert = gcnew SqlCommand(
+			"INSERT INTO Assistants (code, NationalNumber, name) "
+			"OUTPUT INSERTED.id VALUES (@code,@nid,@name)", conn);
+
+		cmdInsert->Parameters->AddWithValue("@code", code);
+		cmdInsert->Parameters->AddWithValue("@nid", txtNID->Text);
+		cmdInsert->Parameters->AddWithValue("@name", txtName->Text);
+
+		int assistantId = Convert::ToInt32(cmdInsert->ExecuteScalar());
+
+		// ================= Insert Assignments =================
+		for each (Object ^ co in checkedListBoxCourses->CheckedItems)
+		{
+			DataRowView^ c = safe_cast<DataRowView^>(co);
+
+			for each (Object ^ pr in checkedListBoxProfessors->CheckedItems)
+			{
+				DataRowView^ p = safe_cast<DataRowView^>(pr);
+
+				SqlCommand^ cmdAssign = gcnew SqlCommand(
+					"INSERT INTO AssistantAssignments "
+					"(assistant_id, course_id, professor_id) "
+					"VALUES (@aid,@cid,@pid)", conn);
+
+				cmdAssign->Parameters->AddWithValue("@aid", assistantId);
+				cmdAssign->Parameters->AddWithValue("@cid", c["id"]);
+				cmdAssign->Parameters->AddWithValue("@pid", p["id"]);
+
+				cmdAssign->ExecuteNonQuery();
+			}
+		}
+
+		MessageBox::Show("Assistant added successfully ✅", "Success");
+	}
+	catch (Exception^ ex)
+	{
+		MessageBox::Show(ex->Message, "Error");
+	}
+	finally
+	{
+		conn->Close();
+	}
+}
+};
 }

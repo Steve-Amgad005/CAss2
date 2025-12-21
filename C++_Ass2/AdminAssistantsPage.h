@@ -11,12 +11,53 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
 
 	/// <summary>
 	/// Summary for AdminAssistantsPage
 	/// </summary>
 	public ref class AdminAssistantsPage : public System::Windows::Forms::Form
 	{
+		void LoadAssistants()
+		{
+			String^ connStr =
+				"Server=localhost\\SQLEXPRESS;"
+				"Database=MyDB;"
+				"Trusted_Connection=True;"
+				"TrustServerCertificate=True;";
+
+			SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+			try
+			{
+				String^ query =
+					"SELECT "
+					"a.id, "
+					"a.name AS [Assistant Name], "
+					"a.code AS [Code], "
+					"a.NationalNumber AS [National Number], "
+					"STRING_AGG(c.course_name, ', ') AS [Courses], "
+					"p.name AS [Professor Name] "
+					"FROM Assistants a "
+					"INNER JOIN AssistantAssignments aa ON a.id = aa.assistant_id "
+					"INNER JOIN Professors p ON aa.professor_id = p.id "
+					"INNER JOIN Courses c ON aa.course_id = c.id "
+					"GROUP BY "
+					"a.id, a.name, a.code, a.NationalNumber, p.name "
+					"ORDER BY a.name";
+
+				SqlDataAdapter^ da = gcnew SqlDataAdapter(query, conn);
+				DataTable^ dt = gcnew DataTable();
+				da->Fill(dt);
+
+				dgvAssistants->DataSource = dt;
+			}
+			catch (Exception^ ex)
+			{
+				MessageBox::Show(ex->Message, "Error");
+			}
+		}
+
 
 		Form^ currentPopup = nullptr;
 
@@ -35,6 +76,7 @@ namespace CAss2 {
 		{
 			InitializeComponent();
 			AdminCode = code;
+			LoadAssistants();
 			//
 			//TODO: Add the constructor code here
 			//
@@ -55,7 +97,8 @@ namespace CAss2 {
 	protected:
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::PictureBox^ pictureBox1;
-	private: System::Windows::Forms::DataGridView^ dataGridViewStudents;
+	private: System::Windows::Forms::DataGridView^ dgvAssistants;
+
 	private: System::Windows::Forms::Button^ button5;
 	private: System::Windows::Forms::Button^ button4;
 	private: System::Windows::Forms::Button^ button3;
@@ -82,7 +125,7 @@ namespace CAss2 {
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
-			this->dataGridViewStudents = (gcnew System::Windows::Forms::DataGridView());
+			this->dgvAssistants = (gcnew System::Windows::Forms::DataGridView());
 			this->button5 = (gcnew System::Windows::Forms::Button());
 			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
@@ -90,7 +133,7 @@ namespace CAss2 {
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->panel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewStudents))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvAssistants))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// panel1
@@ -128,11 +171,11 @@ namespace CAss2 {
 			this->pictureBox1->TabIndex = 0;
 			this->pictureBox1->TabStop = false;
 			// 
-			// dataGridViewStudents
+			// dgvAssistants
 			// 
 			dataGridViewCellStyle1->BackColor = System::Drawing::Color::White;
-			this->dataGridViewStudents->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-			this->dataGridViewStudents->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
+			this->dgvAssistants->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+			this->dgvAssistants->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
 			dataGridViewCellStyle2->BackColor = System::Drawing::Color::DarkGray;
 			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
@@ -141,14 +184,14 @@ namespace CAss2 {
 			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
 			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
 			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dataGridViewStudents->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-			this->dataGridViewStudents->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridViewStudents->Location = System::Drawing::Point(179, 270);
-			this->dataGridViewStudents->Name = L"dataGridViewStudents";
+			this->dgvAssistants->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+			this->dgvAssistants->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dgvAssistants->Location = System::Drawing::Point(179, 270);
+			this->dgvAssistants->Name = L"dgvAssistants";
 			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
-			this->dataGridViewStudents->RowsDefaultCellStyle = dataGridViewCellStyle3;
-			this->dataGridViewStudents->Size = System::Drawing::Size(838, 302);
-			this->dataGridViewStudents->TabIndex = 18;
+			this->dgvAssistants->RowsDefaultCellStyle = dataGridViewCellStyle3;
+			this->dgvAssistants->Size = System::Drawing::Size(838, 302);
+			this->dgvAssistants->TabIndex = 18;
 			// 
 			// button5
 			// 
@@ -216,6 +259,7 @@ namespace CAss2 {
 			this->button2->TabIndex = 17;
 			this->button2->Text = L"Refresh";
 			this->button2->UseVisualStyleBackColor = false;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminAssistantsPage::button2_Click);
 			// 
 			// button1
 			// 
@@ -238,7 +282,7 @@ namespace CAss2 {
 			this->BackColor = System::Drawing::Color::Purple;
 			this->ClientSize = System::Drawing::Size(1242, 599);
 			this->Controls->Add(this->panel1);
-			this->Controls->Add(this->dataGridViewStudents);
+			this->Controls->Add(this->dgvAssistants);
 			this->Controls->Add(this->button5);
 			this->Controls->Add(this->button4);
 			this->Controls->Add(this->button3);
@@ -249,7 +293,7 @@ namespace CAss2 {
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewStudents))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dgvAssistants))->EndInit();
 			this->ResumeLayout(false);
 
 		}
@@ -270,5 +314,8 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 		   currentPopup = nullptr;
 	   }
 private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	LoadAssistants();
+}
 };
 }

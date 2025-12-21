@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace CAss2 {
 
@@ -8,6 +8,7 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
 
 	/// <summary>
 	/// Summary for AdminDeleteAssistants
@@ -37,7 +38,8 @@ namespace CAss2 {
 	private: System::Windows::Forms::Panel^ panel1;
 	protected:
 	private: System::Windows::Forms::Label^ label6;
-	private: System::Windows::Forms::TextBox^ textBox5;
+	private: System::Windows::Forms::TextBox^ txtAssistantCode;
+
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::Label^ label2;
 
@@ -56,7 +58,7 @@ namespace CAss2 {
 		{
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->label6 = (gcnew System::Windows::Forms::Label());
-			this->textBox5 = (gcnew System::Windows::Forms::TextBox());
+			this->txtAssistantCode = (gcnew System::Windows::Forms::TextBox());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->panel1->SuspendLayout();
@@ -67,7 +69,7 @@ namespace CAss2 {
 			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
 			this->panel1->Controls->Add(this->label6);
-			this->panel1->Controls->Add(this->textBox5);
+			this->panel1->Controls->Add(this->txtAssistantCode);
 			this->panel1->Controls->Add(this->button2);
 			this->panel1->Location = System::Drawing::Point(40, 94);
 			this->panel1->Name = L"panel1";
@@ -86,13 +88,13 @@ namespace CAss2 {
 			this->label6->TabIndex = 35;
 			this->label6->Text = L"Assistant Code";
 			// 
-			// textBox5
+			// txtAssistantCode
 			// 
-			this->textBox5->Location = System::Drawing::Point(192, 25);
-			this->textBox5->Multiline = true;
-			this->textBox5->Name = L"textBox5";
-			this->textBox5->Size = System::Drawing::Size(214, 33);
-			this->textBox5->TabIndex = 36;
+			this->txtAssistantCode->Location = System::Drawing::Point(192, 25);
+			this->txtAssistantCode->Multiline = true;
+			this->txtAssistantCode->Name = L"txtAssistantCode";
+			this->txtAssistantCode->Size = System::Drawing::Size(214, 33);
+			this->txtAssistantCode->TabIndex = 36;
 			// 
 			// button2
 			// 
@@ -105,6 +107,7 @@ namespace CAss2 {
 			this->button2->TabIndex = 18;
 			this->button2->Text = L"Delete";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminDeleteAssistants::button2_Click);
 			// 
 			// label2
 			// 
@@ -135,5 +138,81 @@ namespace CAss2 {
 
 		}
 #pragma endregion
-	};
+	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+		if (String::IsNullOrWhiteSpace(txtAssistantCode->Text))
+		{
+			MessageBox::Show("Enter assistant code");
+			return;
+		}
+
+		String^ connStr =
+			"Server=localhost\\SQLEXPRESS;"
+			"Database=MyDB;"
+			"Trusted_Connection=True;"
+			"TrustServerCertificate=True;";
+
+		SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+		try
+		{
+			conn->Open();
+
+			// ================= Get Assistant ID =================
+			SqlCommand^ cmdGet = gcnew SqlCommand(
+				"SELECT id FROM Assistants WHERE code=@code",
+				conn);
+
+			cmdGet->Parameters->AddWithValue("@code", txtAssistantCode->Text);
+
+			Object^ result = cmdGet->ExecuteScalar();
+
+			if (result == nullptr)
+			{
+				MessageBox::Show("Assistant not found");
+				return;
+			}
+
+			int assistantId = Convert::ToInt32(result);
+
+			// ================= Confirm =================
+			if (MessageBox::Show(
+				"Are you sure you want to delete this assistant?",
+				"Confirm Delete",
+				MessageBoxButtons::YesNo,
+				MessageBoxIcon::Warning) == System::Windows::Forms::DialogResult::No)
+			{
+				return;
+			}
+
+			// ================= Delete Assignments =================
+			SqlCommand^ cmdDelAssign = gcnew SqlCommand(
+				"DELETE FROM AssistantAssignments WHERE assistant_id=@id",
+				conn);
+
+			cmdDelAssign->Parameters->AddWithValue("@id", assistantId);
+			cmdDelAssign->ExecuteNonQuery();
+
+			// ================= Delete Assistant =================
+			SqlCommand^ cmdDelAssistant = gcnew SqlCommand(
+				"DELETE FROM Assistants WHERE id=@id",
+				conn);
+
+			cmdDelAssistant->Parameters->AddWithValue("@id", assistantId);
+			cmdDelAssistant->ExecuteNonQuery();
+
+			MessageBox::Show("Assistant deleted successfully ✅");
+
+			// ================= Clear Form =================
+			txtAssistantCode->Clear();
+		}
+		catch (Exception^ ex)
+		{
+			MessageBox::Show(ex->Message, "Error");
+		}
+		finally
+		{
+			conn->Close();
+		}
+	}
+};
 }
