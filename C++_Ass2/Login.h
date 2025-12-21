@@ -270,7 +270,6 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 		}
 
 		// ================= PROFESSOR =================
-		// ================= PROFESSOR =================
 		else if (role == "Professor") {
 
 			cmd->CommandText =

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace CAss2 {
 
@@ -15,7 +15,7 @@ namespace CAss2 {
 	/// </summary>
 	public ref class ProfessorEnterGrades : public System::Windows::Forms::Form
 	{
-		void LoadProfessorCourses()
+		void LoadProfessorCourses(int professorCode)
 		{
 			String^ connStr =
 				"Server=localhost\\SQLEXPRESS;"
@@ -29,6 +29,28 @@ namespace CAss2 {
 			{
 				conn->Open();
 
+				// =========================
+				// 1️⃣ Get Professor ID by Code
+				// =========================
+				SqlCommand^ cmdGetId = gcnew SqlCommand(
+					"SELECT id FROM Professors WHERE code = @code",
+					conn);
+
+				cmdGetId->Parameters->AddWithValue("@code", professorCode);
+
+				Object^ result = cmdGetId->ExecuteScalar();
+
+				if (result == nullptr)
+				{
+					MessageBox::Show("Professor not found");
+					return;
+				}
+
+				int professorId = Convert::ToInt32(result);
+
+				// =========================
+				// 2️⃣ Load Professor Courses
+				// =========================
 				String^ query =
 					"SELECT c.id, c.course_name "
 					"FROM Courses c "
@@ -45,15 +67,19 @@ namespace CAss2 {
 				comboBox1->DisplayMember = "course_name";
 				comboBox1->ValueMember = "id";
 				comboBox1->DataSource = dt;
-
-				conn->Close();
+				comboBox1->SelectedIndex = -1; // مفيش اختيار افتراضي
 			}
 			catch (Exception^ ex)
 			{
 				MessageBox::Show(ex->Message);
 			}
+			finally
+			{
+				conn->Close();
+			}
 		}
-		void LoadStudentsForCourse(int courseId)
+
+		void LoadStudentsByCourse(int courseId)
 		{
 			String^ connStr =
 				"Server=localhost\\SQLEXPRESS;"
@@ -68,16 +94,21 @@ namespace CAss2 {
 				conn->Open();
 
 				String^ query =
-					"SELECT s.code AS [Student Code], "
+					"SELECT "
+					"s.code AS [Student Code], "
 					"s.name AS [Student Name], "
-					"g.assignment1 AS [Assignment 1], "
-					"g.assignment2 AS [Assignment 2], "
-					"g.cw AS [CW], "
-					"g.final AS [Final] "
-					"FROM Students s "
-					"INNER JOIN StudentCourses sc ON s.id = sc.student_id "
-					"LEFT JOIN Grades g ON s.id = g.student_id AND g.course_id = sc.course_id "
-					"WHERE sc.course_id = @courseId";
+					"d.name AS [Department], "
+					"CASE s.year "
+					" WHEN 1 THEN 'First' "
+					" WHEN 2 THEN 'Second' "
+					" WHEN 3 THEN 'Third' "
+					" WHEN 4 THEN 'Fourth' "
+					"END AS [Year] "
+					"FROM StudentCourses sc "
+					"INNER JOIN Students s ON sc.student_id = s.id "
+					"INNER JOIN Departments d ON s.department_id = d.id "
+					"WHERE sc.course_id = @courseId "
+					"ORDER BY s.name";
 
 				SqlCommand^ cmd = gcnew SqlCommand(query, conn);
 				cmd->Parameters->AddWithValue("@courseId", courseId);
@@ -86,15 +117,18 @@ namespace CAss2 {
 				DataTable^ dt = gcnew DataTable();
 				da->Fill(dt);
 
-				dataGridView1->DataSource = dt;
-
-				conn->Close();
+				dataGridViewStudents->DataSource = dt;
 			}
 			catch (Exception^ ex)
 			{
 				MessageBox::Show(ex->Message);
 			}
+			finally
+			{
+				conn->Close();
+			}
 		}
+
 		void EnterGrades(int courseId)
 		{
 			String^ connStr = "Server=localhost\\SQLEXPRESS;Database=MyDB;Trusted_Connection=True;TrustServerCertificate=True;";
@@ -103,7 +137,7 @@ namespace CAss2 {
 			try
 			{
 				conn->Open();
-				for each (DataGridViewRow ^ row in dataGridView1->Rows)
+				for each (DataGridViewRow ^ row in dataGridViewStudents->Rows)
 				{
 					if (row->IsNewRow) continue;
 
@@ -138,7 +172,7 @@ namespace CAss2 {
 				}
 
 				MessageBox::Show("Grades entered successfully!");
-				LoadStudentsForCourse(courseId); // refresh grid
+				LoadStudentsByCourse(courseId); // refresh grid
 				conn->Close();
 			}
 			catch (Exception^ ex)
@@ -187,7 +221,8 @@ namespace CAss2 {
 	private: System::Windows::Forms::Panel^ panel2;
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::ComboBox^ comboBox1;
-	private: System::Windows::Forms::DataGridView^ dataGridView1;
+private: System::Windows::Forms::DataGridView^ dataGridViewStudents;
+
 
 
 
@@ -235,7 +270,7 @@ namespace CAss2 {
 			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->button2 = (gcnew System::Windows::Forms::Button());
-			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
+			this->dataGridViewStudents = (gcnew System::Windows::Forms::DataGridView());
 			this->label7 = (gcnew System::Windows::Forms::Label());
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->label5 = (gcnew System::Windows::Forms::Label());
@@ -247,7 +282,7 @@ namespace CAss2 {
 			this->panel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->BeginInit();
 			this->panel2->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewStudents))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// panel1
@@ -295,7 +330,7 @@ namespace CAss2 {
 			this->panel2->Controls->Add(this->textBox2);
 			this->panel2->Controls->Add(this->textBox1);
 			this->panel2->Controls->Add(this->button2);
-			this->panel2->Controls->Add(this->dataGridView1);
+			this->panel2->Controls->Add(this->dataGridViewStudents);
 			this->panel2->Controls->Add(this->label7);
 			this->panel2->Controls->Add(this->label6);
 			this->panel2->Controls->Add(this->label5);
@@ -362,11 +397,12 @@ namespace CAss2 {
 			this->button2->UseVisualStyleBackColor = true;
 			this->button2->Click += gcnew System::EventHandler(this, &ProfessorEnterGrades::button2_Click);
 			// 
-			// dataGridView1
+			// dataGridViewStudents
 			// 
-			this->dataGridView1->AllowUserToDeleteRows = false;
+			this->dataGridViewStudents->AllowUserToDeleteRows = false;
 			dataGridViewCellStyle1->BackColor = System::Drawing::Color::White;
-			this->dataGridView1->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+			this->dataGridViewStudents->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+			this->dataGridViewStudents->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
 			dataGridViewCellStyle2->BackColor = System::Drawing::Color::DarkGray;
 			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
@@ -375,14 +411,14 @@ namespace CAss2 {
 			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
 			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
 			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dataGridView1->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Location = System::Drawing::Point(454, 17);
-			this->dataGridView1->Name = L"dataGridView1";
+			this->dataGridViewStudents->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+			this->dataGridViewStudents->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridViewStudents->Location = System::Drawing::Point(454, 17);
+			this->dataGridViewStudents->Name = L"dataGridViewStudents";
 			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
-			this->dataGridView1->RowsDefaultCellStyle = dataGridViewCellStyle3;
-			this->dataGridView1->Size = System::Drawing::Size(643, 380);
-			this->dataGridView1->TabIndex = 10;
+			this->dataGridViewStudents->RowsDefaultCellStyle = dataGridViewCellStyle3;
+			this->dataGridViewStudents->Size = System::Drawing::Size(643, 380);
+			this->dataGridViewStudents->TabIndex = 10;
 			// 
 			// label7
 			// 
@@ -464,6 +500,7 @@ namespace CAss2 {
 			// 
 			// comboBox1
 			// 
+			this->comboBox1->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
 			this->comboBox1->FormattingEnabled = true;
 			this->comboBox1->Location = System::Drawing::Point(235, 39);
 			this->comboBox1->Name = L"comboBox1";
@@ -506,26 +543,24 @@ namespace CAss2 {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->EndInit();
 			this->panel2->ResumeLayout(false);
 			this->panel2->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewStudents))->EndInit();
 			this->ResumeLayout(false);
 
 		}
 #pragma endregion
 private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
-	if (comboBox1->SelectedValue != nullptr)
-	{
-		int courseId = Convert::ToInt32(comboBox1->SelectedValue);
-		LoadStudentsForCourse(courseId);
+	if (comboBox1->SelectedIndex == -1)
+		return;
 
-	}
+	int courseId = Convert::ToInt32(comboBox1->SelectedValue);//System.InvalidCastException: 'Unable to cast object of type 'System.Data.DataRowView' to type 'System.IConvertible',
+	LoadStudentsByCourse(courseId);
 }
 
 	private: System::Void label2_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
 	private: System::Void ProfessorEnterGrades_Load(System::Object^ sender, System::EventArgs^ e) {
-		MessageBox::Show("Professor ID = " + professorId.ToString());
-		LoadProfessorCourses();
+		LoadProfessorCourses(professorId);
 	}
 
 	// declaration for back button handler

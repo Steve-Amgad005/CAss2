@@ -49,7 +49,7 @@ using namespace System::Data::SqlClient;
 				if (reader->Read())
 				{
 					label2->Text = reader["name"]->ToString();
-					label10->Text = reader["Departments"]->ToString();
+					label10->Text = reader["Departments"]->ToString()->Replace(" , ", "\n");
 				}
 
 				reader->Close();
@@ -60,7 +60,7 @@ using namespace System::Data::SqlClient;
 				MessageBox::Show(ex->Message);
 			}
 		}
-		void LoadProfessorCourses()
+		void LoadProfessorCourses(int professorId)
 		{
 			String^ connStr =
 				"Server=localhost\\SQLEXPRESS;"
@@ -74,18 +74,24 @@ using namespace System::Data::SqlClient;
 				conn->Open();
 
 				String^ query =
-					"SELECT c.year AS [Year], "
+					"SELECT "
+					"c.year AS [Year], "
 					"d.name AS [Department], "
 					"c.course_name AS [Course], "
 					"COUNT(sc.student_id) AS StudentCount "
-					"FROM Courses c "
+					"FROM Professors p "
+					"INNER JOIN ProfessorCourses pc ON p.id = pc.professor_id "
+					"INNER JOIN Courses c ON pc.course_id = c.id "
 					"INNER JOIN CourseDepartments cd ON c.id = cd.course_id "
 					"INNER JOIN Departments d ON cd.department_id = d.id "
 					"LEFT JOIN StudentCourses sc ON c.id = sc.course_id "
+					"WHERE p.code = @profCode "
 					"GROUP BY c.year, d.name, c.course_name "
 					"ORDER BY c.year, d.name, c.course_name;";
 
 				SqlDataAdapter^ da = gcnew SqlDataAdapter(query, conn);
+				da->SelectCommand->Parameters->AddWithValue("@profCode", professorId);
+
 				DataTable^ dt = gcnew DataTable();
 				da->Fill(dt);
 
@@ -98,6 +104,7 @@ using namespace System::Data::SqlClient;
 				MessageBox::Show(ex->Message);
 			}
 		}
+
 
 
 
@@ -447,9 +454,8 @@ using namespace System::Data::SqlClient;
 	// declaration for Attendance Management button handler
 	private: System::Void button7_Click(System::Object^ sender, System::EventArgs^ e);
 private: System::Void ProfessorPage_Load(System::Object^ sender, System::EventArgs^ e) {
-	MessageBox::Show("Professor ID = " + ProfID.ToString());
 	LoadProfessorData();
-	LoadProfessorCourses();
+	LoadProfessorCourses(ProfID);
 }
 private: System::Void label10_Click(System::Object^ sender, System::EventArgs^ e) {
 }

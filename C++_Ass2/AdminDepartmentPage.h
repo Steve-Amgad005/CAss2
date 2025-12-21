@@ -33,20 +33,24 @@ namespace CAss2 {
 			{
 				String^ query =
 					"SELECT "
+					"d.id, "
 					"d.name AS [Department], "
-					"c.name AS [College], "
 
-					"(SELECT COUNT(*) FROM Students s "
+					"(SELECT COUNT(*) "
+					" FROM Students s "
 					" WHERE s.department_id = d.id) AS [Students Count], "
 
-					"(SELECT COUNT(*) FROM Courses co "
-					" WHERE co.department_id = d.id) AS [Courses Count], "
+					"(SELECT COUNT(DISTINCT cd.course_id) "
+					" FROM CourseDepartments cd "
+					" WHERE cd.department_id = d.id) AS [Courses Count], "
 
-					"(SELECT COUNT(*) FROM Professors p "
-					" WHERE p.department_id = d.id) AS [Professors Count] "
+					"(SELECT COUNT(DISTINCT pd.professor_id) "
+					" FROM ProfessorDepartments pd "
+					" WHERE pd.department_id = d.id) AS [Professors Count] "
 
 					"FROM Departments d "
-					"INNER JOIN Colleges c ON d.college_id = c.id";
+					"ORDER BY d.name";
+
 
 
 				SqlDataAdapter^ da = gcnew SqlDataAdapter(query, conn);

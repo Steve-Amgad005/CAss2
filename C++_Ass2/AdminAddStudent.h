@@ -529,7 +529,10 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 
 		SqlCommand^ cmdCourses = gcnew SqlCommand(
 			"INSERT INTO StudentCourses (student_id, course_id) "
-			"SELECT @sid, id FROM Courses WHERE department_id=@dept AND year=@year",
+			"SELECT @sid, c.id "
+			"FROM Courses c "
+			"INNER JOIN CourseDepartments cd ON c.id = cd.course_id "
+			"WHERE cd.department_id = @dept AND c.year = @year",
 			conn);
 
 		cmdCourses->Parameters->AddWithValue("@sid", studentId);
