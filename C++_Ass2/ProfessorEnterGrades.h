@@ -15,6 +15,20 @@ namespace CAss2 {
 	/// </summary>
 	public ref class ProfessorEnterGrades : public System::Windows::Forms::Form
 	{
+		int CalculateTotal(int a1, int a2, int cw, int final)
+{
+	return a1 + a2 + cw + final;
+}
+
+String^ CalculateGrade(int total)
+{
+	if (total >= 90) return "A";
+	else if (total >= 80) return "B";
+	else if (total >= 70) return "C";
+	else if (total >= 60) return "D";
+	else return "F";
+}
+
 		void LoadProfessorCourses(int professorCode)
 		{
 			String^ connStr =
@@ -64,10 +78,10 @@ namespace CAss2 {
 				DataTable^ dt = gcnew DataTable();
 				da->Fill(dt);
 
-				comboBox1->DisplayMember = "course_name";
-				comboBox1->ValueMember = "id";
-				comboBox1->DataSource = dt;
-				comboBox1->SelectedIndex = -1; // مفيش اختيار افتراضي
+				cmbCourses->DisplayMember = "course_name";
+				cmbCourses->ValueMember = "id";
+				cmbCourses->DataSource = dt;
+				cmbCourses->SelectedIndex = -1; // مفيش اختيار افتراضي
 			}
 			catch (Exception^ ex)
 			{
@@ -98,15 +112,26 @@ namespace CAss2 {
 					"s.code AS [Student Code], "
 					"s.name AS [Student Name], "
 					"d.name AS [Department], "
+
 					"CASE s.year "
 					" WHEN 1 THEN 'First' "
 					" WHEN 2 THEN 'Second' "
 					" WHEN 3 THEN 'Third' "
 					" WHEN 4 THEN 'Fourth' "
-					"END AS [Year] "
+					"END AS [Year], "
+
+					"ISNULL(g.assignment1, '') AS [A1], "
+					"ISNULL(g.assignment2, '') AS [A2], "
+					"ISNULL(g.cw, '') AS [CW], "
+					"ISNULL(g.final, '') AS [Final], "
+					"ISNULL(g.total, '') AS [Total], "
+					"ISNULL(g.grade, '') AS [Grade] "
+
 					"FROM StudentCourses sc "
 					"INNER JOIN Students s ON sc.student_id = s.id "
 					"INNER JOIN Departments d ON s.department_id = d.id "
+					"LEFT JOIN Grades g ON "
+					"   g.student_id = s.id AND g.course_id = sc.course_id "
 					"WHERE sc.course_id = @courseId "
 					"ORDER BY s.name";
 
@@ -128,6 +153,7 @@ namespace CAss2 {
 				conn->Close();
 			}
 		}
+
 
 		void EnterGrades(int courseId)
 		{
@@ -220,7 +246,8 @@ namespace CAss2 {
 
 	private: System::Windows::Forms::Panel^ panel2;
 	private: System::Windows::Forms::Label^ label2;
-	private: System::Windows::Forms::ComboBox^ comboBox1;
+private: System::Windows::Forms::ComboBox^ cmbCourses;
+
 private: System::Windows::Forms::DataGridView^ dataGridViewStudents;
 
 
@@ -235,11 +262,16 @@ private: System::Windows::Forms::DataGridView^ dataGridViewStudents;
 	private: System::Windows::Forms::Label^ label3;
 	private: System::Windows::Forms::Label^ label7;
 	private: System::Windows::Forms::Button^ button2;
-	private: System::Windows::Forms::TextBox^ textBox5;
-	private: System::Windows::Forms::TextBox^ textBox4;
-	private: System::Windows::Forms::TextBox^ textBox3;
-	private: System::Windows::Forms::TextBox^ textBox2;
-	private: System::Windows::Forms::TextBox^ textBox1;
+private: System::Windows::Forms::TextBox^ txtFinal;
+
+private: System::Windows::Forms::TextBox^ txtCW;
+
+private: System::Windows::Forms::TextBox^ txtA2;
+
+private: System::Windows::Forms::TextBox^ txtA1;
+
+private: System::Windows::Forms::TextBox^ txtStudentCode;
+
 	private: System::Windows::Forms::Button^ button1;
 	private: System::Windows::Forms::PictureBox^ pictureBox2;
 
@@ -264,11 +296,11 @@ private: System::Windows::Forms::DataGridView^ dataGridViewStudents;
 			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->panel2 = (gcnew System::Windows::Forms::Panel());
-			this->textBox5 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox4 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->txtFinal = (gcnew System::Windows::Forms::TextBox());
+			this->txtCW = (gcnew System::Windows::Forms::TextBox());
+			this->txtA2 = (gcnew System::Windows::Forms::TextBox());
+			this->txtA1 = (gcnew System::Windows::Forms::TextBox());
+			this->txtStudentCode = (gcnew System::Windows::Forms::TextBox());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->dataGridViewStudents = (gcnew System::Windows::Forms::DataGridView());
 			this->label7 = (gcnew System::Windows::Forms::Label());
@@ -277,7 +309,7 @@ private: System::Windows::Forms::DataGridView^ dataGridViewStudents;
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
-			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
+			this->cmbCourses = (gcnew System::Windows::Forms::ComboBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->panel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->BeginInit();
@@ -324,11 +356,11 @@ private: System::Windows::Forms::DataGridView^ dataGridViewStudents;
 			this->panel2->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
 			this->panel2->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Center;
-			this->panel2->Controls->Add(this->textBox5);
-			this->panel2->Controls->Add(this->textBox4);
-			this->panel2->Controls->Add(this->textBox3);
-			this->panel2->Controls->Add(this->textBox2);
-			this->panel2->Controls->Add(this->textBox1);
+			this->panel2->Controls->Add(this->txtFinal);
+			this->panel2->Controls->Add(this->txtCW);
+			this->panel2->Controls->Add(this->txtA2);
+			this->panel2->Controls->Add(this->txtA1);
+			this->panel2->Controls->Add(this->txtStudentCode);
 			this->panel2->Controls->Add(this->button2);
 			this->panel2->Controls->Add(this->dataGridViewStudents);
 			this->panel2->Controls->Add(this->label7);
@@ -337,52 +369,52 @@ private: System::Windows::Forms::DataGridView^ dataGridViewStudents;
 			this->panel2->Controls->Add(this->label4);
 			this->panel2->Controls->Add(this->label3);
 			this->panel2->Controls->Add(this->label2);
-			this->panel2->Controls->Add(this->comboBox1);
+			this->panel2->Controls->Add(this->cmbCourses);
 			this->panel2->Location = System::Drawing::Point(22, 146);
 			this->panel2->Name = L"panel2";
 			this->panel2->Size = System::Drawing::Size(1122, 419);
 			this->panel2->TabIndex = 3;
 			this->panel2->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &ProfessorEnterGrades::panel2_Paint);
 			// 
-			// textBox5
+			// txtFinal
 			// 
-			this->textBox5->Location = System::Drawing::Point(184, 280);
-			this->textBox5->Multiline = true;
-			this->textBox5->Name = L"textBox5";
-			this->textBox5->Size = System::Drawing::Size(214, 33);
-			this->textBox5->TabIndex = 12;
+			this->txtFinal->Location = System::Drawing::Point(184, 280);
+			this->txtFinal->Multiline = true;
+			this->txtFinal->Name = L"txtFinal";
+			this->txtFinal->Size = System::Drawing::Size(214, 33);
+			this->txtFinal->TabIndex = 12;
 			// 
-			// textBox4
+			// txtCW
 			// 
-			this->textBox4->Location = System::Drawing::Point(184, 229);
-			this->textBox4->Multiline = true;
-			this->textBox4->Name = L"textBox4";
-			this->textBox4->Size = System::Drawing::Size(214, 33);
-			this->textBox4->TabIndex = 12;
+			this->txtCW->Location = System::Drawing::Point(184, 229);
+			this->txtCW->Multiline = true;
+			this->txtCW->Name = L"txtCW";
+			this->txtCW->Size = System::Drawing::Size(214, 33);
+			this->txtCW->TabIndex = 12;
 			// 
-			// textBox3
+			// txtA2
 			// 
-			this->textBox3->Location = System::Drawing::Point(184, 181);
-			this->textBox3->Multiline = true;
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(214, 33);
-			this->textBox3->TabIndex = 12;
+			this->txtA2->Location = System::Drawing::Point(184, 181);
+			this->txtA2->Multiline = true;
+			this->txtA2->Name = L"txtA2";
+			this->txtA2->Size = System::Drawing::Size(214, 33);
+			this->txtA2->TabIndex = 12;
 			// 
-			// textBox2
+			// txtA1
 			// 
-			this->textBox2->Location = System::Drawing::Point(184, 132);
-			this->textBox2->Multiline = true;
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(214, 33);
-			this->textBox2->TabIndex = 12;
+			this->txtA1->Location = System::Drawing::Point(184, 132);
+			this->txtA1->Multiline = true;
+			this->txtA1->Name = L"txtA1";
+			this->txtA1->Size = System::Drawing::Size(214, 33);
+			this->txtA1->TabIndex = 12;
 			// 
-			// textBox1
+			// txtStudentCode
 			// 
-			this->textBox1->Location = System::Drawing::Point(184, 85);
-			this->textBox1->Multiline = true;
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(214, 33);
-			this->textBox1->TabIndex = 12;
+			this->txtStudentCode->Location = System::Drawing::Point(184, 85);
+			this->txtStudentCode->Multiline = true;
+			this->txtStudentCode->Name = L"txtStudentCode";
+			this->txtStudentCode->Size = System::Drawing::Size(214, 33);
+			this->txtStudentCode->TabIndex = 12;
 			// 
 			// button2
 			// 
@@ -498,15 +530,15 @@ private: System::Windows::Forms::DataGridView^ dataGridViewStudents;
 			this->label2->Text = L"Select Course";
 			this->label2->Click += gcnew System::EventHandler(this, &ProfessorEnterGrades::label2_Click);
 			// 
-			// comboBox1
+			// cmbCourses
 			// 
-			this->comboBox1->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Location = System::Drawing::Point(235, 39);
-			this->comboBox1->Name = L"comboBox1";
-			this->comboBox1->Size = System::Drawing::Size(121, 21);
-			this->comboBox1->TabIndex = 0;
-			this->comboBox1->SelectedIndexChanged += gcnew System::EventHandler(this, &ProfessorEnterGrades::comboBox1_SelectedIndexChanged);
+			this->cmbCourses->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->cmbCourses->FormattingEnabled = true;
+			this->cmbCourses->Location = System::Drawing::Point(235, 39);
+			this->cmbCourses->Name = L"cmbCourses";
+			this->cmbCourses->Size = System::Drawing::Size(121, 21);
+			this->cmbCourses->TabIndex = 0;
+			this->cmbCourses->SelectedIndexChanged += gcnew System::EventHandler(this, &ProfessorEnterGrades::comboBox1_SelectedIndexChanged);
 			// 
 			// button1
 			// 
@@ -550,10 +582,10 @@ private: System::Windows::Forms::DataGridView^ dataGridViewStudents;
 #pragma endregion
 private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
-	if (comboBox1->SelectedIndex == -1)
+	if (cmbCourses->SelectedIndex == -1)
 		return;
 
-	int courseId = Convert::ToInt32(comboBox1->SelectedValue);//System.InvalidCastException: 'Unable to cast object of type 'System.Data.DataRowView' to type 'System.IConvertible',
+	int courseId = Convert::ToInt32(cmbCourses->SelectedValue);//System.InvalidCastException: 'Unable to cast object of type 'System.Data.DataRowView' to type 'System.IConvertible',
 	LoadStudentsByCourse(courseId);
 }
 
@@ -569,11 +601,89 @@ private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, Sys
 	private: System::Void panel2_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
 	}
 private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
-	 if (comboBox1->SelectedValue != nullptr)
-    {
-        int courseId = Convert::ToInt32(comboBox1->SelectedValue);
-        EnterGrades(courseId);
-    }
+	// ================= Validation =================
+	if (String::IsNullOrWhiteSpace(txtStudentCode->Text))
+	{
+		MessageBox::Show("Enter student code");
+		return;
+	}
+
+	if (cmbCourses->SelectedIndex == -1)
+	{
+		MessageBox::Show("Select course");
+		return;
+	}
+
+	int a1 = Convert::ToInt32(txtA1->Text);
+	int a2 = Convert::ToInt32(txtA2->Text);
+	int cw = Convert::ToInt32(txtCW->Text);
+	int final = Convert::ToInt32(txtFinal->Text);
+
+	int total = CalculateTotal(a1, a2, cw, final);
+	String^ grade = CalculateGrade(total);
+
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	try
+	{
+		conn->Open();
+
+		// ================= Get Student ID =================
+		SqlCommand^ cmdGetStudent = gcnew SqlCommand(
+			"SELECT id FROM Students WHERE code = @code",
+			conn);
+
+		cmdGetStudent->Parameters->AddWithValue("@code", txtStudentCode->Text);
+
+		Object^ result = cmdGetStudent->ExecuteScalar();
+		if (result == nullptr)
+		{
+			MessageBox::Show("Student not found");
+			return;
+		}
+
+		int studentId = Convert::ToInt32(result);
+		int courseId = Convert::ToInt32(cmbCourses->SelectedValue);
+
+		// ================= Insert / Update Grades =================
+		SqlCommand^ cmd = gcnew SqlCommand(
+			"IF EXISTS (SELECT 1 FROM Grades WHERE student_id=@sid AND course_id=@cid) "
+			"UPDATE Grades SET "
+			"assignment1=@a1, assignment2=@a2, cw=@cw, final=@final, total=@total, grade=@grade "
+			"WHERE student_id=@sid AND course_id=@cid "
+			"ELSE "
+			"INSERT INTO Grades "
+			"(student_id, course_id, assignment1, assignment2, cw, final, total, grade) "
+			"VALUES (@sid,@cid,@a1,@a2,@cw,@final,@total,@grade)",
+			conn);
+
+		cmd->Parameters->AddWithValue("@sid", studentId);
+		cmd->Parameters->AddWithValue("@cid", courseId);
+		cmd->Parameters->AddWithValue("@a1", a1);
+		cmd->Parameters->AddWithValue("@a2", a2);
+		cmd->Parameters->AddWithValue("@cw", cw);
+		cmd->Parameters->AddWithValue("@final", final);
+		cmd->Parameters->AddWithValue("@total", total);
+		cmd->Parameters->AddWithValue("@grade", grade);
+
+		cmd->ExecuteNonQuery();
+
+		MessageBox::Show("Grades entered successfully ✅");
+	}
+	catch (Exception^ ex)
+	{
+		MessageBox::Show(ex->Message);
+	}
+	finally
+	{
+		conn->Close();
+	}
 }
 };
 }
