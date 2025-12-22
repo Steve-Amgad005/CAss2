@@ -674,7 +674,8 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 
 		cmd->ExecuteNonQuery();
 
-		MessageBox::Show("Grades entered successfully ✅");
+		MessageBox::Show("Grades entered successfully");
+		LoadStudentsByCourse(courseId);
 	}
 	catch (Exception^ ex)
 	{

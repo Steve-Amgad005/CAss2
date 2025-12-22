@@ -546,13 +546,18 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 	}
 
 	int fees = 0;
+
 	if (cmbFeesStatus->Text == "Paid")
 	{
-		if (!Int32::TryParse(txtFees->Text, fees) || fees > 155000)
+		if (!Int32::TryParse(txtFees->Text, fees) || fees <= 0 || fees > 155000)
 		{
-			MessageBox::Show("Invalid fees amount", "Validation Error");
+			MessageBox::Show("Invalid fees amount (1 - 155000)");
 			return;
 		}
+	}
+	else // Unpaid
+	{
+		fees = 0;
 	}
 
 	// ==========================
@@ -626,6 +631,17 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 	}
 }
 private: System::Void cmbFeesStatus_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+	if (cmbFeesStatus->Text == "Unpaid")
+	{
+		txtFees->Text = "0";
+		txtFees->Enabled = false;
+	}
+	else if (cmbFeesStatus->Text == "Paid")
+	{
+		txtFees->Enabled = true;
+		txtFees->Clear();
+		txtFees->Focus();
+	}
 }
 private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 	OpenFileDialog^ ofd = gcnew OpenFileDialog();

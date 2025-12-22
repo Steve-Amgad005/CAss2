@@ -405,7 +405,8 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
 
 }
-private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e)
+{
 	String^ connStr =
 		"Server=localhost\\SQLEXPRESS;"
 		"Database=MyDB;"
@@ -453,21 +454,23 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 		return;
 	}
 
-	int fees = 0;
-	if (cmbFeesStatus->Text != "Not Paid")
-	{
-		if (String::IsNullOrWhiteSpace(txtFees->Text))
-		{
-			MessageBox::Show("Enter fees amount");
-			return;
-		}
+	// ==========================
+	// Fees Logic (Paid / Unpaid)
+	// ==========================
 
-		fees = Convert::ToInt32(txtFees->Text);
-		if (fees <= 0 || fees > 155000)
+	int fees = 0;
+
+	if (cmbFeesStatus->Text == "Paid")
+	{
+		if (!Int32::TryParse(txtFees->Text, fees) || fees <= 0 || fees > 155000)
 		{
-			MessageBox::Show("Invalid fees amount");
+			MessageBox::Show("Invalid fees amount (1 - 155000)");
 			return;
 		}
+	}
+	else // Unpaid
+	{
+		fees = 0;
 	}
 
 	// ==========================
@@ -497,12 +500,14 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 
 		SqlDataReader^ r = cmdGen->ExecuteReader();
 		r->Read();
+
 		int code = Convert::ToInt32(r[0]);
 		int seat = Convert::ToInt32(r[1]);
+
 		r->Close();
 
 		// ==========================
-		// Insert Student WITH Image
+		// Insert Student
 		// ==========================
 
 		String^ insertStudent =
@@ -525,7 +530,7 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 		int studentId = Convert::ToInt32(cmdStudent->ExecuteScalar());
 
 		// ==========================
-		// Insert Courses
+		// Insert Student Courses
 		// ==========================
 
 		SqlCommand^ cmdCourses = gcnew SqlCommand(
@@ -554,7 +559,7 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 		cmdFees->Parameters->AddWithValue("@status", cmbFeesStatus->Text);
 		cmdFees->ExecuteNonQuery();
 
-		MessageBox::Show("Student added successfully");
+		MessageBox::Show("Student added successfully", "Success");
 
 		conn->Close();
 	}
@@ -562,10 +567,20 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 	{
 		MessageBox::Show(ex->Message, "Error");
 	}
-
 }
-private: System::Void cmbFeesStatus_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
+private: System::Void cmbFeesStatus_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+	if (cmbFeesStatus->Text == "Unpaid")
+	{
+		txtFees->Text = "0";
+		txtFees->Enabled = false;
+	}
+	else if (cmbFeesStatus->Text == "Paid")
+	{
+		txtFees->Enabled = true;
+		txtFees->Clear();
+		txtFees->Focus();
+	}
 }
 };
 }

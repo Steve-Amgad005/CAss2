@@ -429,7 +429,7 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 			cmdUpdate->ExecuteNonQuery();
 		}
 
-		MessageBox::Show("Attendance marked ✔");
+		MessageBox::Show("Attendance marked");
 
 		// 🔄 Reload grid
 		LoadAttendanceByCourse(courseId);
