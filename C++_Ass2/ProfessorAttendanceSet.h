@@ -8,16 +8,112 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
 
 	/// <summary>
 	/// Summary for ProfessorAttendanceSet
 	/// </summary>
 	public ref class ProfessorAttendanceSet : public System::Windows::Forms::Form
 	{
+	private:
+			int professorCode;
+
+			void LoadAttendanceByCourse(int courseId)
+			{
+				String^ connStr =
+					"Server=localhost\\SQLEXPRESS;"
+					"Database=MyDB;"
+					"Trusted_Connection=True;"
+					"TrustServerCertificate=True;";
+
+				SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+				try
+				{
+					conn->Open();
+
+					String^ query =
+						"SELECT "
+						"s.code AS [Student Code], "
+						"s.name AS [Student Name], "
+						"10 AS [Total Lectures], "
+						"ISNULL(a.attended_lectures, 0) AS [Attended Lectures] "
+						"FROM StudentCourses sc "
+						"INNER JOIN Students s ON sc.student_id = s.id "
+						"LEFT JOIN Attendance a "
+						"ON a.student_id = s.id AND a.course_id = sc.course_id "
+						"WHERE sc.course_id = @courseId "
+						"ORDER BY s.name";
+
+					SqlCommand^ cmd = gcnew SqlCommand(query, conn);
+					cmd->Parameters->AddWithValue("@courseId", courseId);
+
+					SqlDataAdapter^ da = gcnew SqlDataAdapter(cmd);
+					DataTable^ dt = gcnew DataTable();
+					da->Fill(dt);
+
+					dataGridViewAttendance->DataSource = dt;
+				}
+				catch (Exception^ ex)
+				{
+					MessageBox::Show(ex->Message);
+				}
+				finally
+				{
+					conn->Close();
+				}
+			}
+
+
+		void LoadProfessorCourses(int profCode)
+		{
+			String^ connStr =
+				"Server=localhost\\SQLEXPRESS;"
+				"Database=MyDB;"
+				"Trusted_Connection=True;"
+				"TrustServerCertificate=True;";
+
+			SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+			try
+			{
+				conn->Open();
+
+				String^ query =
+					"SELECT c.id, c.course_name "
+					"FROM Courses c "
+					"INNER JOIN ProfessorCourses pc ON c.id = pc.course_id "
+					"INNER JOIN Professors p ON pc.professor_id = p.id "
+					"WHERE p.code = @code";
+
+				SqlCommand^ cmd = gcnew SqlCommand(query, conn);
+				cmd->Parameters->AddWithValue("@code", profCode);
+
+				SqlDataAdapter^ da = gcnew SqlDataAdapter(cmd);
+				DataTable^ dt = gcnew DataTable();
+				da->Fill(dt);
+
+				comboBoxCourses->DataSource = dt;
+				comboBoxCourses->DisplayMember = "course_name";
+				comboBoxCourses->ValueMember = "id";
+			}
+			catch (Exception^ ex)
+			{
+				MessageBox::Show(ex->Message);
+			}
+			finally
+			{
+				conn->Close();
+			}
+		}
+
 	public:
-		ProfessorAttendanceSet(void)
+		ProfessorAttendanceSet(int code)
 		{
 			InitializeComponent();
+			professorCode = code;
+			LoadProfessorCourses(professorCode);
+			LoadAttendanceByCourse(professorCode);
 			//
 			//TODO: Add the constructor code here
 			//
@@ -42,8 +138,10 @@ namespace CAss2 {
 
 
 	private: System::Windows::Forms::TextBox^ textBox1;
-	private: System::Windows::Forms::Button^ button2;
-	private: System::Windows::Forms::DataGridView^ dataGridView1;
+private: System::Windows::Forms::DataGridView^ dataGridViewAttendance;
+
+
+
 
 
 
@@ -56,14 +154,16 @@ namespace CAss2 {
 
 	private: System::Windows::Forms::Label^ label3;
 	private: System::Windows::Forms::Label^ label2;
-	private: System::Windows::Forms::ComboBox^ comboBox1;
+	private: System::Windows::Forms::ComboBox^ comboBoxCourses;
+
+
 	private: System::Windows::Forms::Panel^ panel1;
 	private: System::Windows::Forms::PictureBox^ pictureBox2;
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::Button^ button3;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ StudentCode;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ StudentName;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Attendance;
+
+
+
 
 	private:
 		/// <summary>
@@ -84,21 +184,17 @@ namespace CAss2 {
 			System::Windows::Forms::DataGridViewCellStyle^ dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->panel2 = (gcnew System::Windows::Forms::Panel());
+			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->button2 = (gcnew System::Windows::Forms::Button());
-			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
+			this->dataGridViewAttendance = (gcnew System::Windows::Forms::DataGridView());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
-			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
+			this->comboBoxCourses = (gcnew System::Windows::Forms::ComboBox());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->button3 = (gcnew System::Windows::Forms::Button());
-			this->StudentCode = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->StudentName = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->Attendance = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->panel2->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewAttendance))->BeginInit();
 			this->panel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->BeginInit();
 			this->SuspendLayout();
@@ -128,16 +224,27 @@ namespace CAss2 {
 			this->panel2->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Center;
 			this->panel2->Controls->Add(this->button3);
 			this->panel2->Controls->Add(this->textBox1);
-			this->panel2->Controls->Add(this->button2);
-			this->panel2->Controls->Add(this->dataGridView1);
+			this->panel2->Controls->Add(this->dataGridViewAttendance);
 			this->panel2->Controls->Add(this->label3);
 			this->panel2->Controls->Add(this->label2);
-			this->panel2->Controls->Add(this->comboBox1);
+			this->panel2->Controls->Add(this->comboBoxCourses);
 			this->panel2->Location = System::Drawing::Point(25, 152);
 			this->panel2->Name = L"panel2";
 			this->panel2->Size = System::Drawing::Size(1122, 419);
 			this->panel2->TabIndex = 15;
 			this->panel2->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &ProfessorAttendanceSet::panel2_Paint);
+			// 
+			// button3
+			// 
+			this->button3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->button3->ForeColor = System::Drawing::Color::Purple;
+			this->button3->Location = System::Drawing::Point(96, 154);
+			this->button3->Name = L"button3";
+			this->button3->Size = System::Drawing::Size(226, 48);
+			this->button3->TabIndex = 13;
+			this->button3->Text = L"Attend";
+			this->button3->UseVisualStyleBackColor = true;
 			// 
 			// textBox1
 			// 
@@ -147,24 +254,12 @@ namespace CAss2 {
 			this->textBox1->Size = System::Drawing::Size(214, 33);
 			this->textBox1->TabIndex = 12;
 			// 
-			// button2
+			// dataGridViewAttendance
 			// 
-			this->button2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->button2->ForeColor = System::Drawing::Color::Purple;
-			this->button2->Location = System::Drawing::Point(96, 336);
-			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(226, 48);
-			this->button2->TabIndex = 11;
-			this->button2->Text = L"Apply";
-			this->button2->UseVisualStyleBackColor = true;
-			// 
-			// dataGridView1
-			// 
-			this->dataGridView1->AllowUserToDeleteRows = false;
+			this->dataGridViewAttendance->AllowUserToDeleteRows = false;
 			dataGridViewCellStyle1->BackColor = System::Drawing::Color::White;
-			this->dataGridView1->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-			this->dataGridView1->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
+			this->dataGridViewAttendance->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+			this->dataGridViewAttendance->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
 			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
 			dataGridViewCellStyle2->BackColor = System::Drawing::Color::DarkGray;
 			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular,
@@ -173,18 +268,14 @@ namespace CAss2 {
 			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
 			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
 			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->dataGridView1->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(3) {
-				this->StudentCode,
-					this->StudentName, this->Attendance
-			});
-			this->dataGridView1->Location = System::Drawing::Point(454, 17);
-			this->dataGridView1->Name = L"dataGridView1";
+			this->dataGridViewAttendance->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+			this->dataGridViewAttendance->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridViewAttendance->Location = System::Drawing::Point(454, 17);
+			this->dataGridViewAttendance->Name = L"dataGridViewAttendance";
 			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
-			this->dataGridView1->RowsDefaultCellStyle = dataGridViewCellStyle3;
-			this->dataGridView1->Size = System::Drawing::Size(643, 380);
-			this->dataGridView1->TabIndex = 10;
+			this->dataGridViewAttendance->RowsDefaultCellStyle = dataGridViewCellStyle3;
+			this->dataGridViewAttendance->Size = System::Drawing::Size(643, 380);
+			this->dataGridViewAttendance->TabIndex = 10;
 			// 
 			// label3
 			// 
@@ -194,9 +285,9 @@ namespace CAss2 {
 			this->label3->ForeColor = System::Drawing::Color::White;
 			this->label3->Location = System::Drawing::Point(17, 88);
 			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(130, 24);
+			this->label3->Size = System::Drawing::Size(125, 24);
 			this->label3->TabIndex = 1;
-			this->label3->Text = L"Student Name";
+			this->label3->Text = L"Student Code";
 			this->label3->Click += gcnew System::EventHandler(this, &ProfessorAttendanceSet::label3_Click);
 			// 
 			// label2
@@ -211,13 +302,15 @@ namespace CAss2 {
 			this->label2->TabIndex = 1;
 			this->label2->Text = L"Select Course";
 			// 
-			// comboBox1
+			// comboBoxCourses
 			// 
-			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Location = System::Drawing::Point(235, 39);
-			this->comboBox1->Name = L"comboBox1";
-			this->comboBox1->Size = System::Drawing::Size(121, 21);
-			this->comboBox1->TabIndex = 0;
+			this->comboBoxCourses->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->comboBoxCourses->FormattingEnabled = true;
+			this->comboBoxCourses->Location = System::Drawing::Point(235, 39);
+			this->comboBoxCourses->Name = L"comboBoxCourses";
+			this->comboBoxCourses->Size = System::Drawing::Size(121, 21);
+			this->comboBoxCourses->TabIndex = 0;
+			this->comboBoxCourses->SelectedIndexChanged += gcnew System::EventHandler(this, &ProfessorAttendanceSet::comboBox1_SelectedIndexChanged);
 			// 
 			// panel1
 			// 
@@ -253,33 +346,6 @@ namespace CAss2 {
 			this->label1->TabIndex = 2;
 			this->label1->Text = L"New Cairo Technological University";
 			// 
-			// button3
-			// 
-			this->button3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->button3->ForeColor = System::Drawing::Color::Purple;
-			this->button3->Location = System::Drawing::Point(96, 154);
-			this->button3->Name = L"button3";
-			this->button3->Size = System::Drawing::Size(226, 48);
-			this->button3->TabIndex = 13;
-			this->button3->Text = L"Attend";
-			this->button3->UseVisualStyleBackColor = true;
-			// 
-			// StudentCode
-			// 
-			this->StudentCode->HeaderText = L"Student Code";
-			this->StudentCode->Name = L"StudentCode";
-			// 
-			// StudentName
-			// 
-			this->StudentName->HeaderText = L"Sudent Name";
-			this->StudentName->Name = L"StudentName";
-			// 
-			// Attendance
-			// 
-			this->Attendance->HeaderText = L"Attendance";
-			this->Attendance->Name = L"Attendance";
-			// 
 			// ProfessorAttendanceSet
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -293,7 +359,7 @@ namespace CAss2 {
 			this->Text = L"ProfessorAttendanceSet";
 			this->panel2->ResumeLayout(false);
 			this->panel2->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewAttendance))->EndInit();
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->EndInit();
@@ -308,5 +374,16 @@ private: System::Void panel2_Paint(System::Object^ sender, System::Windows::Form
 
 	// back button handler declaration
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+	if (comboBoxCourses->SelectedValue == nullptr)
+		return;
+
+	if (comboBoxCourses->SelectedValue->GetType() == DataRowView::typeid)
+		return;
+
+	int courseId = Convert::ToInt32(comboBoxCourses->SelectedValue);
+	LoadAttendanceByCourse(courseId);
+}
+	  
 };
 }

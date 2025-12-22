@@ -22,7 +22,8 @@ namespace CAss2 {
 	}
 
 	System::Void ProfessorPage::button7_Click(System::Object^ sender, System::EventArgs^ e) {
-		CAss2::ProfessorAttendanceSet^ attendForm = gcnew CAss2::ProfessorAttendanceSet();
+		int codeInt = this->ProfID;
+		CAss2::ProfessorAttendanceSet^ attendForm = gcnew CAss2::ProfessorAttendanceSet(codeInt);
 		attendForm->Show();
 		this->Hide();
 	}

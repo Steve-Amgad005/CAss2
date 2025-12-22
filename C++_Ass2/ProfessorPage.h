@@ -111,10 +111,6 @@ using namespace System::Data::SqlClient;
 	private:
 		int ProfID;
 	public:
-		ProfessorPage()
-		{
-			InitializeComponent();
-		}
 		ProfessorPage(int code)
 		{
 			ProfID = code;

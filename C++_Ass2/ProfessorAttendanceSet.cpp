@@ -7,7 +7,8 @@ using namespace System::Windows::Forms;
 namespace CAss2 {
 
 	System::Void ProfessorAttendanceSet::button1_Click(System::Object^ sender, System::EventArgs^ e) {
-		CAss2::ProfessorPage^ profPage = gcnew CAss2::ProfessorPage();
+		int codeInt = this->professorCode;
+		CAss2::ProfessorPage^ profPage = gcnew CAss2::ProfessorPage(codeInt);
 		profPage->Show();
 		this->Hide();
 	}

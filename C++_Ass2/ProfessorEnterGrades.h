@@ -585,7 +585,7 @@ private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, Sys
 	if (cmbCourses->SelectedIndex == -1)
 		return;
 
-	int courseId = Convert::ToInt32(cmbCourses->SelectedValue);//System.InvalidCastException: 'Unable to cast object of type 'System.Data.DataRowView' to type 'System.IConvertible',
+	int courseId = Convert::ToInt32(cmbCourses->SelectedValue);
 	LoadStudentsByCourse(courseId);
 }
 
