@@ -96,6 +96,7 @@ namespace CAss2 {
 	private: System::Windows::Forms::Button^ button3;
 	private: System::Windows::Forms::ComboBox^ cmbFeesStatus;
 	private: System::Windows::Forms::TextBox^ txtFees;
+	private: System::Windows::Forms::PictureBox^ picStudent;
 
 	private:
 		/// <summary>
@@ -129,7 +130,9 @@ namespace CAss2 {
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->label7 = (gcnew System::Windows::Forms::Label());
+			this->picStudent = (gcnew System::Windows::Forms::PictureBox());
 			this->panel1->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picStudent))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// label2
@@ -166,7 +169,7 @@ namespace CAss2 {
 			this->panel1->Controls->Add(this->label6);
 			this->panel1->Controls->Add(this->button2);
 			this->panel1->Controls->Add(this->label7);
-			this->panel1->Location = System::Drawing::Point(40, 86);
+			this->panel1->Location = System::Drawing::Point(42, 152);
 			this->panel1->Name = L"panel1";
 			this->panel1->Size = System::Drawing::Size(429, 512);
 			this->panel1->TabIndex = 2;
@@ -190,6 +193,7 @@ namespace CAss2 {
 			this->cmbFeesStatus->Name = L"cmbFeesStatus";
 			this->cmbFeesStatus->Size = System::Drawing::Size(82, 33);
 			this->cmbFeesStatus->TabIndex = 32;
+			this->cmbFeesStatus->SelectedIndexChanged += gcnew System::EventHandler(this, &AdminModifyStudent::cmbFeesStatus_SelectedIndexChanged);
 			// 
 			// button3
 			// 
@@ -235,6 +239,7 @@ namespace CAss2 {
 			this->button1->TabIndex = 27;
 			this->button1->Text = L"Choose Picture";
 			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &AdminModifyStudent::button1_Click);
 			// 
 			// label1
 			// 
@@ -364,12 +369,21 @@ namespace CAss2 {
 			this->label7->TabIndex = 13;
 			this->label7->Text = L"Fees";
 			// 
+			// picStudent
+			// 
+			this->picStudent->Location = System::Drawing::Point(13, 22);
+			this->picStudent->Name = L"picStudent";
+			this->picStudent->Size = System::Drawing::Size(100, 104);
+			this->picStudent->TabIndex = 4;
+			this->picStudent->TabStop = false;
+			// 
 			// AdminModifyStudent
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::Purple;
-			this->ClientSize = System::Drawing::Size(508, 621);
+			this->ClientSize = System::Drawing::Size(508, 676);
+			this->Controls->Add(this->picStudent);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->panel1);
 			this->Name = L"AdminModifyStudent";
@@ -377,6 +391,7 @@ namespace CAss2 {
 			this->Load += gcnew System::EventHandler(this, &AdminModifyStudent::AdminModifyStudent_Load);
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picStudent))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -407,6 +422,7 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 
 		String^ query =
 			"SELECT s.id, s.name, s.NationalNumber, s.year, s.department_id, "
+			"       s.ProfileImage, "
 			"       p.amount, p.status "
 			"FROM Students s "
 			"LEFT JOIN Payments p ON p.student_id = s.id "
@@ -426,23 +442,29 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 		}
 
 		// ==========================
-		// تعبئة البيانات
+		// Basic Data
 		// ==========================
 		currentStudentId = Convert::ToInt32(dr["id"]);
 		txtName->Text = dr["name"]->ToString();
 		txtNID->Text = dr["NationalNumber"]->ToString();
 
-		// السنة
+		// ==========================
+		// Year
+		// ==========================
 		int year = Convert::ToInt32(dr["year"]);
 		if (year == 1) cmbYear->Text = "First Year";
 		else if (year == 2) cmbYear->Text = "Second Year";
 		else if (year == 3) cmbYear->Text = "Third Year";
 		else if (year == 4) cmbYear->Text = "Fourth Year";
 
-		// القسم
+		// ==========================
+		// Department
+		// ==========================
 		cmbDepartment->SelectedValue = Convert::ToInt32(dr["department_id"]);
 
-		// المصاريف
+		// ==========================
+		// Fees
+		// ==========================
 		if (dr["status"] != DBNull::Value)
 		{
 			cmbFeesStatus->Text = dr["status"]->ToString();
@@ -454,6 +476,21 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 			txtFees->Clear();
 		}
 
+		// ==========================
+		// Load Image
+		// ==========================
+		if (dr["ProfileImage"] != DBNull::Value)
+		{
+			array<Byte>^ imageBytes = (array<Byte>^)dr["ProfileImage"];
+			System::IO::MemoryStream^ ms = gcnew System::IO::MemoryStream(imageBytes);
+			picStudent->Image = Image::FromStream(ms);
+			picStudent->SizeMode = PictureBoxSizeMode::StretchImage;
+		}
+		else
+		{
+			picStudent->Image = nullptr; // أو صورة افتراضية
+		}
+
 		dr->Close();
 		conn->Close();
 	}
@@ -461,6 +498,7 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 	{
 		MessageBox::Show(ex->Message, "Error");
 	}
+
 }
 private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
 	if (currentStudentId == -1)
@@ -518,6 +556,18 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 	}
 
 	// ==========================
+	// Convert Image
+	// ==========================
+	array<Byte>^ imageBytes = nullptr;
+
+	if (picStudent->Image != nullptr)
+	{
+		System::IO::MemoryStream^ ms = gcnew System::IO::MemoryStream();
+		picStudent->Image->Save(ms, System::Drawing::Imaging::ImageFormat::Png);
+		imageBytes = ms->ToArray();
+	}
+
+	// ==========================
 	// Update DB
 	// ==========================
 	String^ connStr =
@@ -532,13 +582,14 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 	{
 		conn->Open();
 
-		// -------- Update Students
+		// -------- Update Students (WITH IMAGE)
 		String^ updateStudent =
 			"UPDATE Students SET "
 			"name = @name, "
 			"NationalNumber = @nid, "
 			"year = @year, "
-			"department_id = @dept "
+			"department_id = @dept, "
+			"ProfileImage = @img "
 			"WHERE id = @id";
 
 		SqlCommand^ cmdStd = gcnew SqlCommand(updateStudent, conn);
@@ -546,6 +597,8 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 		cmdStd->Parameters->AddWithValue("@nid", txtNID->Text);
 		cmdStd->Parameters->AddWithValue("@year", year);
 		cmdStd->Parameters->AddWithValue("@dept", cmbDepartment->SelectedValue);
+		cmdStd->Parameters->AddWithValue("@img",
+			imageBytes != nullptr ? (Object^)imageBytes : DBNull::Value);
 		cmdStd->Parameters->AddWithValue("@id", currentStudentId);
 		cmdStd->ExecuteNonQuery();
 
@@ -562,12 +615,36 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 		cmdFees->Parameters->AddWithValue("@status", cmbFeesStatus->Text);
 		cmdFees->ExecuteNonQuery();
 
-		MessageBox::Show("Student updated successfully!", "Success", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		MessageBox::Show("Student updated successfully", "Success",
+			MessageBoxButtons::OK, MessageBoxIcon::Information);
+
 		conn->Close();
 	}
 	catch (Exception^ ex)
 	{
 		MessageBox::Show(ex->Message, "Error");
+	}
+}
+private: System::Void cmbFeesStatus_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+	OpenFileDialog^ ofd = gcnew OpenFileDialog();
+
+	// Allow only PNG & JPG
+	ofd->Filter = "Image Files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg";
+	ofd->Title = "Select Student Image";
+
+	if (ofd->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+	{
+		// Free old image (important)
+		if (picStudent->Image != nullptr)
+		{
+			delete picStudent->Image;
+			picStudent->Image = nullptr;
+		}
+
+		picStudent->Image = Image::FromFile(ofd->FileName);
+		picStudent->SizeMode = PictureBoxSizeMode::StretchImage;
 	}
 }
 };

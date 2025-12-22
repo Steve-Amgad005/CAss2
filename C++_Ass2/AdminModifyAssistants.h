@@ -72,8 +72,8 @@ namespace CAss2 {
 
 	private: System::Windows::Forms::CheckedListBox^ checkedListBoxDepartments;
 
-	private: System::Windows::Forms::Button^ ChoosePicture;
-	private: System::Windows::Forms::Label^ label1;
+
+
 	private: System::Windows::Forms::Label^ label3;
 	private: System::Windows::Forms::Label^ label4;
 	private: System::Windows::Forms::TextBox^ txtNID;
@@ -107,8 +107,6 @@ namespace CAss2 {
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->txtAssistantCode = (gcnew System::Windows::Forms::TextBox());
 			this->checkedListBoxDepartments = (gcnew System::Windows::Forms::CheckedListBox());
-			this->ChoosePicture = (gcnew System::Windows::Forms::Button());
-			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->txtNID = (gcnew System::Windows::Forms::TextBox());
@@ -187,30 +185,6 @@ namespace CAss2 {
 			this->checkedListBoxDepartments->Size = System::Drawing::Size(214, 49);
 			this->checkedListBoxDepartments->TabIndex = 6;
 			// 
-			// ChoosePicture
-			// 
-			this->ChoosePicture->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->ChoosePicture->ForeColor = System::Drawing::Color::Purple;
-			this->ChoosePicture->Location = System::Drawing::Point(191, 505);
-			this->ChoosePicture->Name = L"ChoosePicture";
-			this->ChoosePicture->Size = System::Drawing::Size(214, 33);
-			this->ChoosePicture->TabIndex = 27;
-			this->ChoosePicture->Text = L"Choose Picture";
-			this->ChoosePicture->UseVisualStyleBackColor = true;
-			// 
-			// label1
-			// 
-			this->label1->AutoSize = true;
-			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label1->ForeColor = System::Drawing::Color::White;
-			this->label1->Location = System::Drawing::Point(24, 508);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(68, 24);
-			this->label1->TabIndex = 26;
-			this->label1->Text = L"Picture";
-			// 
 			// label3
 			// 
 			this->label3->AutoSize = true;
@@ -268,7 +242,7 @@ namespace CAss2 {
 			this->button2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button2->ForeColor = System::Drawing::Color::Purple;
-			this->button2->Location = System::Drawing::Point(96, 556);
+			this->button2->Location = System::Drawing::Point(96, 535);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(226, 48);
 			this->button2->TabIndex = 18;
@@ -310,8 +284,6 @@ namespace CAss2 {
 			this->panel1->Controls->Add(this->label6);
 			this->panel1->Controls->Add(this->txtAssistantCode);
 			this->panel1->Controls->Add(this->checkedListBoxDepartments);
-			this->panel1->Controls->Add(this->ChoosePicture);
-			this->panel1->Controls->Add(this->label1);
 			this->panel1->Controls->Add(this->label3);
 			this->panel1->Controls->Add(this->label4);
 			this->panel1->Controls->Add(this->txtNID);
@@ -714,7 +686,7 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 			}
 		}
 
-		MessageBox::Show("Assistant updated successfully ✅");
+		MessageBox::Show("Assistant updated successfully");
 	}
 	catch (Exception^ ex)
 	{

@@ -70,12 +70,12 @@ namespace CAss2 {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::PictureBox^ picStudent;
+
 	protected:
 
 
 
-	private: System::Windows::Forms::Label^ label1;
+
 
 
 	private: System::Windows::Forms::Label^ label3;
@@ -90,7 +90,7 @@ namespace CAss2 {
 	private: System::Windows::Forms::Panel^ panel1;
 	private: System::Windows::Forms::CheckedListBox^ checkedListBoxDepartments;
 
-	private: System::Windows::Forms::Button^ ChoosePicture;
+
 	private: System::Windows::Forms::CheckedListBox^ checkedListBoxCourses;
 
 	private: System::Windows::Forms::Label^ label6;
@@ -109,8 +109,6 @@ namespace CAss2 {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->picStudent = (gcnew System::Windows::Forms::PictureBox());
-			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->txtNID = (gcnew System::Windows::Forms::TextBox());
@@ -123,31 +121,8 @@ namespace CAss2 {
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->checkedListBoxDepartments = (gcnew System::Windows::Forms::CheckedListBox());
-			this->ChoosePicture = (gcnew System::Windows::Forms::Button());
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picStudent))->BeginInit();
 			this->panel1->SuspendLayout();
 			this->SuspendLayout();
-			// 
-			// picStudent
-			// 
-			this->picStudent->Location = System::Drawing::Point(16, 12);
-			this->picStudent->Name = L"picStudent";
-			this->picStudent->Size = System::Drawing::Size(100, 104);
-			this->picStudent->TabIndex = 5;
-			this->picStudent->TabStop = false;
-			this->picStudent->Click += gcnew System::EventHandler(this, &AdminAddProfessor::picStudent_Click);
-			// 
-			// label1
-			// 
-			this->label1->AutoSize = true;
-			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label1->ForeColor = System::Drawing::Color::White;
-			this->label1->Location = System::Drawing::Point(21, 359);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(68, 24);
-			this->label1->TabIndex = 26;
-			this->label1->Text = L"Picture";
 			// 
 			// label3
 			// 
@@ -206,7 +181,7 @@ namespace CAss2 {
 			this->button2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button2->ForeColor = System::Drawing::Color::Purple;
-			this->button2->Location = System::Drawing::Point(102, 434);
+			this->button2->Location = System::Drawing::Point(102, 369);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(226, 48);
 			this->button2->TabIndex = 18;
@@ -235,8 +210,6 @@ namespace CAss2 {
 			this->panel1->Controls->Add(this->label6);
 			this->panel1->Controls->Add(this->button3);
 			this->panel1->Controls->Add(this->checkedListBoxDepartments);
-			this->panel1->Controls->Add(this->ChoosePicture);
-			this->panel1->Controls->Add(this->label1);
 			this->panel1->Controls->Add(this->label3);
 			this->panel1->Controls->Add(this->label4);
 			this->panel1->Controls->Add(this->txtNID);
@@ -245,7 +218,7 @@ namespace CAss2 {
 			this->panel1->Controls->Add(this->button2);
 			this->panel1->Location = System::Drawing::Point(40, 147);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(429, 525);
+			this->panel1->Size = System::Drawing::Size(429, 465);
 			this->panel1->TabIndex = 3;
 			this->panel1->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &AdminAddProfessor::panel1_Paint);
 			// 
@@ -291,30 +264,16 @@ namespace CAss2 {
 			this->checkedListBoxDepartments->TabIndex = 6;
 			this->checkedListBoxDepartments->SelectedIndexChanged += gcnew System::EventHandler(this, &AdminAddProfessor::checkedListBox1_SelectedIndexChanged);
 			// 
-			// ChoosePicture
-			// 
-			this->ChoosePicture->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->ChoosePicture->ForeColor = System::Drawing::Color::Purple;
-			this->ChoosePicture->Location = System::Drawing::Point(188, 356);
-			this->ChoosePicture->Name = L"ChoosePicture";
-			this->ChoosePicture->Size = System::Drawing::Size(214, 33);
-			this->ChoosePicture->TabIndex = 27;
-			this->ChoosePicture->Text = L"Choose Picture";
-			this->ChoosePicture->UseVisualStyleBackColor = true;
-			// 
 			// AdminAddProfessor
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::Purple;
-			this->ClientSize = System::Drawing::Size(508, 697);
-			this->Controls->Add(this->picStudent);
+			this->ClientSize = System::Drawing::Size(508, 648);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->panel1);
 			this->Name = L"AdminAddProfessor";
 			this->Text = L"AdminAddProfessor";
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picStudent))->EndInit();
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
 			this->ResumeLayout(false);

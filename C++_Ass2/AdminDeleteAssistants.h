@@ -200,7 +200,7 @@ namespace CAss2 {
 			cmdDelAssistant->Parameters->AddWithValue("@id", assistantId);
 			cmdDelAssistant->ExecuteNonQuery();
 
-			MessageBox::Show("Assistant deleted successfully ✅");
+			MessageBox::Show("Assistant deleted successfully");
 
 			// ================= Clear Form =================
 			txtAssistantCode->Clear();

@@ -120,6 +120,7 @@ namespace CAss2 {
 		void InitializeComponent(void)
 		{
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->cmbFeesStatus = (gcnew System::Windows::Forms::ComboBox());
 			this->txtFees = (gcnew System::Windows::Forms::TextBox());
 			this->ChoosePicture = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
@@ -135,7 +136,6 @@ namespace CAss2 {
 			this->label7 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->picStudent = (gcnew System::Windows::Forms::PictureBox());
-			this->cmbFeesStatus = (gcnew System::Windows::Forms::ComboBox());
 			this->panel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->picStudent))->BeginInit();
 			this->SuspendLayout();
@@ -162,6 +162,19 @@ namespace CAss2 {
 			this->panel1->Name = L"panel1";
 			this->panel1->Size = System::Drawing::Size(429, 451);
 			this->panel1->TabIndex = 0;
+			// 
+			// cmbFeesStatus
+			// 
+			this->cmbFeesStatus->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->cmbFeesStatus->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->cmbFeesStatus->FormattingEnabled = true;
+			this->cmbFeesStatus->Items->AddRange(gcnew cli::array< System::Object^  >(2) { L"Paid", L"Unpaid" });
+			this->cmbFeesStatus->Location = System::Drawing::Point(92, 300);
+			this->cmbFeesStatus->Name = L"cmbFeesStatus";
+			this->cmbFeesStatus->Size = System::Drawing::Size(82, 33);
+			this->cmbFeesStatus->TabIndex = 29;
+			this->cmbFeesStatus->SelectedIndexChanged += gcnew System::EventHandler(this, &AdminAddStudent::cmbFeesStatus_SelectedIndexChanged);
 			// 
 			// txtFees
 			// 
@@ -336,18 +349,6 @@ namespace CAss2 {
 			this->picStudent->Size = System::Drawing::Size(100, 104);
 			this->picStudent->TabIndex = 2;
 			this->picStudent->TabStop = false;
-			// 
-			// cmbFeesStatus
-			// 
-			this->cmbFeesStatus->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->cmbFeesStatus->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->cmbFeesStatus->FormattingEnabled = true;
-			this->cmbFeesStatus->Items->AddRange(gcnew cli::array< System::Object^  >(2) { L"Paid", L"Unpaid" });
-			this->cmbFeesStatus->Location = System::Drawing::Point(92, 300);
-			this->cmbFeesStatus->Name = L"cmbFeesStatus";
-			this->cmbFeesStatus->Size = System::Drawing::Size(82, 33);
-			this->cmbFeesStatus->TabIndex = 29;
 			// 
 			// AdminAddStudent
 			// 
@@ -553,7 +554,7 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 		cmdFees->Parameters->AddWithValue("@status", cmbFeesStatus->Text);
 		cmdFees->ExecuteNonQuery();
 
-		MessageBox::Show("Student added successfully ✔");
+		MessageBox::Show("Student added successfully");
 
 		conn->Close();
 	}
@@ -561,6 +562,9 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 	{
 		MessageBox::Show(ex->Message, "Error");
 	}
+
+}
+private: System::Void cmbFeesStatus_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
 }
 };
