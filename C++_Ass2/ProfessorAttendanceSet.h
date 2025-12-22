@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace CAss2 {
 
@@ -137,7 +137,7 @@ namespace CAss2 {
 
 
 
-	private: System::Windows::Forms::TextBox^ textBox1;
+
 private: System::Windows::Forms::DataGridView^ dataGridViewAttendance;
 
 
@@ -152,7 +152,7 @@ private: System::Windows::Forms::DataGridView^ dataGridViewAttendance;
 
 
 
-	private: System::Windows::Forms::Label^ label3;
+
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::ComboBox^ comboBoxCourses;
 
@@ -185,9 +185,7 @@ private: System::Windows::Forms::DataGridView^ dataGridViewAttendance;
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->panel2 = (gcnew System::Windows::Forms::Panel());
 			this->button3 = (gcnew System::Windows::Forms::Button());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->dataGridViewAttendance = (gcnew System::Windows::Forms::DataGridView());
-			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->comboBoxCourses = (gcnew System::Windows::Forms::ComboBox());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
@@ -223,9 +221,7 @@ private: System::Windows::Forms::DataGridView^ dataGridViewAttendance;
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
 			this->panel2->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Center;
 			this->panel2->Controls->Add(this->button3);
-			this->panel2->Controls->Add(this->textBox1);
 			this->panel2->Controls->Add(this->dataGridViewAttendance);
-			this->panel2->Controls->Add(this->label3);
 			this->panel2->Controls->Add(this->label2);
 			this->panel2->Controls->Add(this->comboBoxCourses);
 			this->panel2->Location = System::Drawing::Point(25, 152);
@@ -239,20 +235,13 @@ private: System::Windows::Forms::DataGridView^ dataGridViewAttendance;
 			this->button3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button3->ForeColor = System::Drawing::Color::Purple;
-			this->button3->Location = System::Drawing::Point(96, 154);
+			this->button3->Location = System::Drawing::Point(110, 197);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(226, 48);
 			this->button3->TabIndex = 13;
 			this->button3->Text = L"Attend";
 			this->button3->UseVisualStyleBackColor = true;
-			// 
-			// textBox1
-			// 
-			this->textBox1->Location = System::Drawing::Point(184, 85);
-			this->textBox1->Multiline = true;
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(214, 33);
-			this->textBox1->TabIndex = 12;
+			this->button3->Click += gcnew System::EventHandler(this, &ProfessorAttendanceSet::button3_Click);
 			// 
 			// dataGridViewAttendance
 			// 
@@ -276,19 +265,6 @@ private: System::Windows::Forms::DataGridView^ dataGridViewAttendance;
 			this->dataGridViewAttendance->RowsDefaultCellStyle = dataGridViewCellStyle3;
 			this->dataGridViewAttendance->Size = System::Drawing::Size(643, 380);
 			this->dataGridViewAttendance->TabIndex = 10;
-			// 
-			// label3
-			// 
-			this->label3->AutoSize = true;
-			this->label3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label3->ForeColor = System::Drawing::Color::White;
-			this->label3->Location = System::Drawing::Point(17, 88);
-			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(125, 24);
-			this->label3->TabIndex = 1;
-			this->label3->Text = L"Student Code";
-			this->label3->Click += gcnew System::EventHandler(this, &ProfessorAttendanceSet::label3_Click);
 			// 
 			// label2
 			// 
@@ -385,5 +361,87 @@ private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, Sys
 	LoadAttendanceByCourse(courseId);
 }
 	  
+private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+	if (dataGridViewAttendance->SelectedRows->Count == 0)
+	{
+		MessageBox::Show("Select a student first");
+		return;
+	}
+
+	int courseId = Convert::ToInt32(comboBoxCourses->SelectedValue);
+
+	int studentCode =
+		Convert::ToInt32(dataGridViewAttendance->SelectedRows[0]
+			->Cells["Student Code"]->Value);
+
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	try
+	{
+		conn->Open();
+
+		// 🔹 Get student_id
+		SqlCommand^ cmdGetStudent = gcnew SqlCommand(
+			"SELECT id FROM Students WHERE code = @code", conn);
+
+		cmdGetStudent->Parameters->AddWithValue("@code", studentCode);
+		int studentId = Convert::ToInt32(cmdGetStudent->ExecuteScalar());
+
+		// 🔹 Check attendance exists
+		SqlCommand^ cmdCheck = gcnew SqlCommand(
+			"SELECT COUNT(*) FROM Attendance "
+			"WHERE student_id=@sid AND course_id=@cid", conn);
+
+		cmdCheck->Parameters->AddWithValue("@sid", studentId);
+		cmdCheck->Parameters->AddWithValue("@cid", courseId);
+
+		int exists = Convert::ToInt32(cmdCheck->ExecuteScalar());
+
+		if (exists == 0)
+		{
+			// 🟢 First lecture
+			SqlCommand^ cmdInsert = gcnew SqlCommand(
+				"INSERT INTO Attendance "
+				"(student_id, course_id, total_lectures, attended_lectures) "
+				"VALUES (@sid,@cid,1,1)", conn);
+
+			cmdInsert->Parameters->AddWithValue("@sid", studentId);
+			cmdInsert->Parameters->AddWithValue("@cid", courseId);
+			cmdInsert->ExecuteNonQuery();
+		}
+		else
+		{
+			// 🔵 Update attendance
+			SqlCommand^ cmdUpdate = gcnew SqlCommand(
+				"UPDATE Attendance SET "
+				"total_lectures = total_lectures + 1, "
+				"attended_lectures = attended_lectures + 1 "
+				"WHERE student_id=@sid AND course_id=@cid", conn);
+
+			cmdUpdate->Parameters->AddWithValue("@sid", studentId);
+			cmdUpdate->Parameters->AddWithValue("@cid", courseId);
+			cmdUpdate->ExecuteNonQuery();
+		}
+
+		MessageBox::Show("Attendance marked ✔");
+
+		// 🔄 Reload grid
+		LoadAttendanceByCourse(courseId);
+	}
+	catch (Exception^ ex)
+	{
+		MessageBox::Show(ex->Message);
+	}
+	finally
+	{
+		conn->Close();
+	}
+}
 };
 }
