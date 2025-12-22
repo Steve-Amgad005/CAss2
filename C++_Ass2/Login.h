@@ -45,7 +45,8 @@ namespace CAss2 {
 		}
 	private: System::Windows::Forms::Panel^ panel1;
 	private: System::Windows::Forms::Label^ label1;
-	private: System::Windows::Forms::Label^ label2;
+	private: System::Windows::Forms::Label^ labelCode;
+
 	private: System::Windows::Forms::Label^ label3;
 	private: System::Windows::Forms::Button^ button1;
 	private: System::Windows::Forms::Label^ label4;
@@ -74,7 +75,7 @@ namespace CAss2 {
 			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
-			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->labelCode = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->panel1->SuspendLayout();
 			this->SuspendLayout();
@@ -89,7 +90,7 @@ namespace CAss2 {
 			this->panel1->Controls->Add(this->textBox2);
 			this->panel1->Controls->Add(this->textBox1);
 			this->panel1->Controls->Add(this->label3);
-			this->panel1->Controls->Add(this->label2);
+			this->panel1->Controls->Add(this->labelCode);
 			this->panel1->Controls->Add(this->label1);
 			this->panel1->Location = System::Drawing::Point(122, 62);
 			this->panel1->Name = L"panel1";
@@ -165,18 +166,18 @@ namespace CAss2 {
 			this->label3->Text = L"National Number";
 			this->label3->Click += gcnew System::EventHandler(this, &Login::label3_Click);
 			// 
-			// label2
+			// labelCode
 			// 
-			this->label2->AutoSize = true;
-			this->label2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->labelCode->AutoSize = true;
+			this->labelCode->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 21.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label2->ForeColor = System::Drawing::Color::White;
-			this->label2->Location = System::Drawing::Point(48, 126);
-			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(191, 33);
-			this->label2->TabIndex = 1;
-			this->label2->Text = L"Student Code";
-			this->label2->Click += gcnew System::EventHandler(this, &Login::label2_Click);
+			this->labelCode->ForeColor = System::Drawing::Color::White;
+			this->labelCode->Location = System::Drawing::Point(48, 126);
+			this->labelCode->Name = L"labelCode";
+			this->labelCode->Size = System::Drawing::Size(191, 33);
+			this->labelCode->TabIndex = 1;
+			this->labelCode->Text = L"Student Code";
+			this->labelCode->Click += gcnew System::EventHandler(this, &Login::label2_Click);
 			// 
 			// label1
 			// 
@@ -322,6 +323,23 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 	}
 }
 private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+	if (comboBox1->SelectedItem == nullptr)
+		return;
+
+	String^ role = comboBox1->SelectedItem->ToString();
+
+	if (role == "Student")
+	{
+		labelCode->Text = "Student Code";
+	}
+	else if (role == "Professor")
+	{
+		labelCode->Text = "Professor Code";
+	}
+	else if (role == "Admin")
+	{
+		labelCode->Text = "Admin Code";
+	}
 }
 };
 }
