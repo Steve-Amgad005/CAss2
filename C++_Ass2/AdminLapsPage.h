@@ -33,16 +33,19 @@ namespace CAss2 {
 			{
 				String^ query =
 					"SELECT "
+					"l.id AS [Lab ID], "
 					"l.name AS [Lab Name], "
 					"b.name AS [Building], "
 					"f.floor_number AS [Floor], "
 					"l.capacity AS [Capacity], "
-					"l.computers_count AS [Computers], "
-					"CASE WHEN l.has_air_condition = 1 "
-					"     THEN 'Yes' ELSE 'No' END AS [Air Condition] "
+					"l.computers_count AS [PCs], "
+					"l.ac_count AS [ACs], "
+					"CASE WHEN l.has_projector = 1 THEN 'Yes' ELSE 'No' END AS [Projector], "
+					"CASE WHEN l.has_air_condition = 1 THEN 'Yes' ELSE 'No' END AS [Air Condition] "
 					"FROM Labs l "
 					"INNER JOIN Floors f ON l.floor_id = f.id "
-					"INNER JOIN Buildings b ON f.building_id = b.id";
+					"INNER JOIN Buildings b ON f.building_id = b.id "
+					"ORDER BY b.name, f.floor_number, l.name";
 
 				SqlDataAdapter^ da = gcnew SqlDataAdapter(query, conn);
 				DataTable^ dt = gcnew DataTable();
@@ -200,6 +203,7 @@ namespace CAss2 {
 			this->button2->TabIndex = 16;
 			this->button2->Text = L"Refresh";
 			this->button2->UseVisualStyleBackColor = false;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminLapsPage::button2_Click);
 			// 
 			// button1
 			// 
@@ -292,16 +296,19 @@ namespace CAss2 {
 #pragma endregion
 	private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e) {
 		AdminAddLap^ addLapForm = gcnew AdminAddLap();
-		addLapForm->Show();
+		addLapForm->ShowDialog();
 	}
 private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
  	AdminModifyLap^ modifyLapForm = gcnew AdminModifyLap();
-	modifyLapForm->Show();
+	modifyLapForm->ShowDialog();
 }
 private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
 	AdminDeleteLap^ deleteLapForm = gcnew AdminDeleteLap();
-	deleteLapForm->Show();
+	deleteLapForm->ShowDialog();
 }
 private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	LoadAllLabs();
+}
 };
 }

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace CAss2 {
 
@@ -8,6 +8,7 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
 
 	/// <summary>
 	/// Summary for AdminAddDepartment
@@ -43,10 +44,11 @@ namespace CAss2 {
 
 
 	private: System::Windows::Forms::Label^ label3;
-	private: System::Windows::Forms::Label^ label4;
-	private: System::Windows::Forms::TextBox^ textBox2;
+	private: System::Windows::Forms::TextBox^ txtDepartmentName;
 
-	private: System::Windows::Forms::TextBox^ textBox1;
+
+
+
 
 	private: System::Windows::Forms::Button^ button2;
 
@@ -67,9 +69,7 @@ namespace CAss2 {
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->label3 = (gcnew System::Windows::Forms::Label());
-			this->label4 = (gcnew System::Windows::Forms::Label());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->txtDepartmentName = (gcnew System::Windows::Forms::TextBox());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->panel1->SuspendLayout();
 			this->SuspendLayout();
@@ -91,13 +91,11 @@ namespace CAss2 {
 			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
 			this->panel1->Controls->Add(this->label3);
-			this->panel1->Controls->Add(this->label4);
-			this->panel1->Controls->Add(this->textBox2);
-			this->panel1->Controls->Add(this->textBox1);
+			this->panel1->Controls->Add(this->txtDepartmentName);
 			this->panel1->Controls->Add(this->button2);
 			this->panel1->Location = System::Drawing::Point(40, 147);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(429, 244);
+			this->panel1->Size = System::Drawing::Size(429, 201);
 			this->panel1->TabIndex = 2;
 			// 
 			// label3
@@ -112,52 +110,33 @@ namespace CAss2 {
 			this->label3->TabIndex = 17;
 			this->label3->Text = L"Department Name";
 			// 
-			// label4
+			// txtDepartmentName
 			// 
-			this->label4->AutoSize = true;
-			this->label4->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label4->ForeColor = System::Drawing::Color::White;
-			this->label4->Location = System::Drawing::Point(23, 90);
-			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(158, 24);
-			this->label4->TabIndex = 16;
-			this->label4->Text = L"Department Code";
-			// 
-			// textBox2
-			// 
-			this->textBox2->Location = System::Drawing::Point(190, 91);
-			this->textBox2->Multiline = true;
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(214, 33);
-			this->textBox2->TabIndex = 22;
-			// 
-			// textBox1
-			// 
-			this->textBox1->Location = System::Drawing::Point(190, 44);
-			this->textBox1->Multiline = true;
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(214, 33);
-			this->textBox1->TabIndex = 23;
+			this->txtDepartmentName->Location = System::Drawing::Point(190, 44);
+			this->txtDepartmentName->Multiline = true;
+			this->txtDepartmentName->Name = L"txtDepartmentName";
+			this->txtDepartmentName->Size = System::Drawing::Size(214, 33);
+			this->txtDepartmentName->TabIndex = 23;
 			// 
 			// button2
 			// 
 			this->button2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button2->ForeColor = System::Drawing::Color::Purple;
-			this->button2->Location = System::Drawing::Point(99, 170);
+			this->button2->Location = System::Drawing::Point(97, 117);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(226, 48);
 			this->button2->TabIndex = 18;
 			this->button2->Text = L"add";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminAddDepartment::button2_Click);
 			// 
 			// AdminAddDepartment
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::Purple;
-			this->ClientSize = System::Drawing::Size(508, 442);
+			this->ClientSize = System::Drawing::Size(508, 384);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->panel1);
 			this->Name = L"AdminAddDepartment";
@@ -169,5 +148,53 @@ namespace CAss2 {
 
 		}
 #pragma endregion
-	};
+	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	
+		// ==========================
+		// Validation
+		// ==========================
+		if (String::IsNullOrWhiteSpace(txtDepartmentName->Text))
+		{
+			MessageBox::Show("Please enter department name", "Validation Error");
+			return;
+		}
+
+		String^ connStr =
+			"Server=localhost\\SQLEXPRESS;"
+			"Database=MyDB;"
+			"Trusted_Connection=True;"
+			"TrustServerCertificate=True;";
+
+		SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+		try
+		{
+			conn->Open();
+
+			// ==========================
+			// Insert Department
+			// ==========================
+			String^ query =
+				"INSERT INTO Departments (name, college_id) "
+				"VALUES (@name, 1)";
+
+			SqlCommand^ cmd = gcnew SqlCommand(query, conn);
+			cmd->Parameters->AddWithValue("@name", txtDepartmentName->Text);
+
+			cmd->ExecuteNonQuery();
+
+			MessageBox::Show("Department added successfully", "Success");
+
+			// Clear textbox
+			txtDepartmentName->Clear();
+
+			conn->Close();
+		}
+		catch (Exception^ ex)
+		{
+			MessageBox::Show(ex->Message, "Error");
+		}
+
+	}
+};
 }

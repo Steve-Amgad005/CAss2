@@ -223,7 +223,7 @@ namespace CAss2 {
 			this->button6->Name = L"button6";
 			this->button6->Size = System::Drawing::Size(240, 60);
 			this->button6->TabIndex = 6;
-			this->button6->Text = L"Laps";
+			this->button6->Text = L"Labs";
 			this->button6->UseVisualStyleBackColor = false;
 			this->button6->Click += gcnew System::EventHandler(this, &AdminPage::button6_Click);
 			// 

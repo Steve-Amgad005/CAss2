@@ -232,6 +232,7 @@ namespace CAss2 {
 			this->button2->TabIndex = 10;
 			this->button2->Text = L"Refresh";
 			this->button2->UseVisualStyleBackColor = false;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminDepartmentPage::button2_Click);
 			// 
 			// button1
 			// 
@@ -322,6 +323,9 @@ private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e
 private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
 	AdminDeleteDepartment^ deleteDeptForm = gcnew AdminDeleteDepartment();
 	deleteDeptForm->ShowDialog();
+}
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	LoadDepartmentsData();
 }
 };
 }

@@ -8,12 +8,14 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
 
 	/// <summary>
 	/// Summary for AdminDeleteDepartment
 	/// </summary>
 	public ref class AdminDeleteDepartment : public System::Windows::Forms::Form
 	{
+		int currentDepartmentId = -1;
 	public:
 		AdminDeleteDepartment(void)
 		{
@@ -38,7 +40,8 @@ namespace CAss2 {
 	protected:
 	private: System::Windows::Forms::Panel^ panel1;
 	private: System::Windows::Forms::Label^ label1;
-	private: System::Windows::Forms::TextBox^ textBox3;
+	private: System::Windows::Forms::TextBox^ txtDepartmentId;
+
 	private: System::Windows::Forms::Button^ button2;
 
 	private:
@@ -57,7 +60,7 @@ namespace CAss2 {
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
+			this->txtDepartmentId = (gcnew System::Windows::Forms::TextBox());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->panel1->SuspendLayout();
 			this->SuspendLayout();
@@ -80,7 +83,7 @@ namespace CAss2 {
 			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
 			this->panel1->Controls->Add(this->label1);
-			this->panel1->Controls->Add(this->textBox3);
+			this->panel1->Controls->Add(this->txtDepartmentId);
 			this->panel1->Controls->Add(this->button2);
 			this->panel1->Location = System::Drawing::Point(37, 133);
 			this->panel1->Name = L"panel1";
@@ -99,13 +102,14 @@ namespace CAss2 {
 			this->label1->TabIndex = 27;
 			this->label1->Text = L"Department Code";
 			// 
-			// textBox3
+			// txtDepartmentId
 			// 
-			this->textBox3->Location = System::Drawing::Point(190, 35);
-			this->textBox3->Multiline = true;
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(214, 33);
-			this->textBox3->TabIndex = 28;
+			this->txtDepartmentId->Location = System::Drawing::Point(190, 35);
+			this->txtDepartmentId->Multiline = true;
+			this->txtDepartmentId->Name = L"txtDepartmentId";
+			this->txtDepartmentId->Size = System::Drawing::Size(214, 33);
+			this->txtDepartmentId->TabIndex = 28;
+			this->txtDepartmentId->TextChanged += gcnew System::EventHandler(this, &AdminDeleteDepartment::textBox3_TextChanged);
 			// 
 			// button2
 			// 
@@ -118,6 +122,7 @@ namespace CAss2 {
 			this->button2->TabIndex = 24;
 			this->button2->Text = L"Delete";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminDeleteDepartment::button2_Click);
 			// 
 			// AdminDeleteDepartment
 			// 
@@ -138,5 +143,86 @@ namespace CAss2 {
 #pragma endregion
 	private: System::Void label2_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	if (String::IsNullOrWhiteSpace(txtDepartmentId->Text))
+	{
+		MessageBox::Show("Enter Department ID");
+		return;
+	}
+
+	int deptId = Convert::ToInt32(txtDepartmentId->Text);
+
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	try
+	{
+		conn->Open();
+
+		// ==========================
+		// Check usage
+		// ==========================
+		SqlCommand^ cmdCheck = gcnew SqlCommand(
+			"SELECT "
+			"(SELECT COUNT(*) FROM Students WHERE department_id = @id) + "
+			"(SELECT COUNT(*) FROM ProfessorDepartments WHERE department_id = @id) + "
+			"(SELECT COUNT(*) FROM CourseDepartments WHERE department_id = @id)",
+			conn);
+
+		cmdCheck->Parameters->AddWithValue("@id", deptId);
+
+		int usedCount = Convert::ToInt32(cmdCheck->ExecuteScalar());
+
+		if (usedCount > 0)
+		{
+			MessageBox::Show(
+				"Cannot delete department.\nDepartment is already in use.",
+				"Delete Blocked",
+				MessageBoxButtons::OK,
+				MessageBoxIcon::Warning);
+			return;
+		}
+
+		// ==========================
+		// Confirm delete
+		// ==========================
+		if (MessageBox::Show(
+			"Are you sure you want to delete this department?",
+			"Confirm Delete",
+			MessageBoxButtons::YesNo,
+			MessageBoxIcon::Warning) == System::Windows::Forms::DialogResult::No)
+		{
+			return;
+		}
+
+		// ==========================
+		// Delete
+		// ==========================
+		SqlCommand^ cmdDelete = gcnew SqlCommand(
+			"DELETE FROM Departments WHERE id = @id",
+			conn);
+
+		cmdDelete->Parameters->AddWithValue("@id", deptId);
+		cmdDelete->ExecuteNonQuery();
+
+		MessageBox::Show("Department deleted successfully");
+
+		txtDepartmentId->Clear();
+		currentDepartmentId = -1;
+
+		conn->Close();
+	}
+	catch (Exception^ ex)
+	{
+		MessageBox::Show(ex->Message, "Error");
+	}
+}
+private: System::Void textBox3_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+}
 };
 }

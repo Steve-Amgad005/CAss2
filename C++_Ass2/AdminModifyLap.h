@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace CAss2 {
 
@@ -8,12 +8,15 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
 
 	/// <summary>
 	/// Summary for AdminModifyLap
 	/// </summary>
 	public ref class AdminModifyLap : public System::Windows::Forms::Form
 	{
+		int currentLabId = -1;
+
 	public:
 		AdminModifyLap(void)
 		{
@@ -35,20 +38,27 @@ namespace CAss2 {
 			}
 		}
 	private: System::Windows::Forms::Panel^ panel1;
+	private: System::Windows::Forms::CheckBox^ chkProjector;
+	private: System::Windows::Forms::TextBox^ txtCapacity;
 	protected:
-	private: System::Windows::Forms::CheckBox^ checkBox1;
-	private: System::Windows::Forms::TextBox^ textBox4;
+
+
 	private: System::Windows::Forms::Label^ label4;
-	private: System::Windows::Forms::TextBox^ textBox1;
+	private: System::Windows::Forms::TextBox^ txtACs;
+
 	private: System::Windows::Forms::Label^ label1;
-	private: System::Windows::Forms::TextBox^ textBox3;
+	private: System::Windows::Forms::TextBox^ txtPCs;
+
 	private: System::Windows::Forms::Label^ label3;
-	private: System::Windows::Forms::TextBox^ textBox2;
+	private: System::Windows::Forms::TextBox^ txtLabName;
+
 	private: System::Windows::Forms::Label^ label5;
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Label^ label6;
-	private: System::Windows::Forms::TextBox^ textBox5;
+	private: System::Windows::Forms::TextBox^ txtLabId;
+
+	private: System::Windows::Forms::Button^ button1;
 
 	private:
 		/// <summary>
@@ -64,19 +74,20 @@ namespace CAss2 {
 		void InitializeComponent(void)
 		{
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->checkBox1 = (gcnew System::Windows::Forms::CheckBox());
-			this->textBox4 = (gcnew System::Windows::Forms::TextBox());
+			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->txtLabId = (gcnew System::Windows::Forms::TextBox());
+			this->chkProjector = (gcnew System::Windows::Forms::CheckBox());
+			this->txtCapacity = (gcnew System::Windows::Forms::TextBox());
 			this->label4 = (gcnew System::Windows::Forms::Label());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->txtACs = (gcnew System::Windows::Forms::TextBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
+			this->txtPCs = (gcnew System::Windows::Forms::TextBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
+			this->txtLabName = (gcnew System::Windows::Forms::TextBox());
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->label2 = (gcnew System::Windows::Forms::Label());
-			this->label6 = (gcnew System::Windows::Forms::Label());
-			this->textBox5 = (gcnew System::Windows::Forms::TextBox());
 			this->panel1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -84,16 +95,17 @@ namespace CAss2 {
 			// 
 			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->panel1->Controls->Add(this->button1);
 			this->panel1->Controls->Add(this->label6);
-			this->panel1->Controls->Add(this->textBox5);
-			this->panel1->Controls->Add(this->checkBox1);
-			this->panel1->Controls->Add(this->textBox4);
+			this->panel1->Controls->Add(this->txtLabId);
+			this->panel1->Controls->Add(this->chkProjector);
+			this->panel1->Controls->Add(this->txtCapacity);
 			this->panel1->Controls->Add(this->label4);
-			this->panel1->Controls->Add(this->textBox1);
+			this->panel1->Controls->Add(this->txtACs);
 			this->panel1->Controls->Add(this->label1);
-			this->panel1->Controls->Add(this->textBox3);
+			this->panel1->Controls->Add(this->txtPCs);
 			this->panel1->Controls->Add(this->label3);
-			this->panel1->Controls->Add(this->textBox2);
+			this->panel1->Controls->Add(this->txtLabName);
 			this->panel1->Controls->Add(this->label5);
 			this->panel1->Controls->Add(this->button2);
 			this->panel1->Location = System::Drawing::Point(40, 90);
@@ -101,26 +113,60 @@ namespace CAss2 {
 			this->panel1->Size = System::Drawing::Size(429, 444);
 			this->panel1->TabIndex = 6;
 			// 
-			// checkBox1
+			// button1
 			// 
-			this->checkBox1->AutoSize = true;
-			this->checkBox1->Font = (gcnew System::Drawing::Font(L"Microsoft New Tai Lue", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->button1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->checkBox1->ForeColor = System::Drawing::Color::White;
-			this->checkBox1->Location = System::Drawing::Point(29, 321);
-			this->checkBox1->Name = L"checkBox1";
-			this->checkBox1->Size = System::Drawing::Size(108, 29);
-			this->checkBox1->TabIndex = 34;
-			this->checkBox1->Text = L"Projector";
-			this->checkBox1->UseVisualStyleBackColor = true;
+			this->button1->ForeColor = System::Drawing::Color::Purple;
+			this->button1->Location = System::Drawing::Point(143, 64);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(130, 30);
+			this->button1->TabIndex = 37;
+			this->button1->Text = L"Show";
+			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &AdminModifyLap::button1_Click);
 			// 
-			// textBox4
+			// label6
 			// 
-			this->textBox4->Location = System::Drawing::Point(192, 265);
-			this->textBox4->Multiline = true;
-			this->textBox4->Name = L"textBox4";
-			this->textBox4->Size = System::Drawing::Size(214, 33);
-			this->textBox4->TabIndex = 33;
+			this->label6->AutoSize = true;
+			this->label6->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label6->ForeColor = System::Drawing::Color::White;
+			this->label6->Location = System::Drawing::Point(43, 34);
+			this->label6->Name = L"label6";
+			this->label6->Size = System::Drawing::Size(63, 24);
+			this->label6->TabIndex = 35;
+			this->label6->Text = L"Lap ID";
+			// 
+			// txtLabId
+			// 
+			this->txtLabId->Location = System::Drawing::Point(192, 25);
+			this->txtLabId->Multiline = true;
+			this->txtLabId->Name = L"txtLabId";
+			this->txtLabId->Size = System::Drawing::Size(214, 33);
+			this->txtLabId->TabIndex = 36;
+			this->txtLabId->TextChanged += gcnew System::EventHandler(this, &AdminModifyLap::textBox5_TextChanged);
+			// 
+			// chkProjector
+			// 
+			this->chkProjector->AutoSize = true;
+			this->chkProjector->Font = (gcnew System::Drawing::Font(L"Microsoft New Tai Lue", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->chkProjector->ForeColor = System::Drawing::Color::White;
+			this->chkProjector->Location = System::Drawing::Point(29, 321);
+			this->chkProjector->Name = L"chkProjector";
+			this->chkProjector->Size = System::Drawing::Size(108, 29);
+			this->chkProjector->TabIndex = 34;
+			this->chkProjector->Text = L"Projector";
+			this->chkProjector->UseVisualStyleBackColor = true;
+			// 
+			// txtCapacity
+			// 
+			this->txtCapacity->Location = System::Drawing::Point(192, 265);
+			this->txtCapacity->Multiline = true;
+			this->txtCapacity->Name = L"txtCapacity";
+			this->txtCapacity->Size = System::Drawing::Size(214, 33);
+			this->txtCapacity->TabIndex = 33;
 			// 
 			// label4
 			// 
@@ -134,13 +180,13 @@ namespace CAss2 {
 			this->label4->TabIndex = 32;
 			this->label4->Text = L"Capacity";
 			// 
-			// textBox1
+			// txtACs
 			// 
-			this->textBox1->Location = System::Drawing::Point(192, 211);
-			this->textBox1->Multiline = true;
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(214, 33);
-			this->textBox1->TabIndex = 31;
+			this->txtACs->Location = System::Drawing::Point(192, 211);
+			this->txtACs->Multiline = true;
+			this->txtACs->Name = L"txtACs";
+			this->txtACs->Size = System::Drawing::Size(214, 33);
+			this->txtACs->TabIndex = 31;
 			// 
 			// label1
 			// 
@@ -154,13 +200,13 @@ namespace CAss2 {
 			this->label1->TabIndex = 30;
 			this->label1->Text = L"No. Of ACs";
 			// 
-			// textBox3
+			// txtPCs
 			// 
-			this->textBox3->Location = System::Drawing::Point(192, 159);
-			this->textBox3->Multiline = true;
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(214, 33);
-			this->textBox3->TabIndex = 29;
+			this->txtPCs->Location = System::Drawing::Point(192, 159);
+			this->txtPCs->Multiline = true;
+			this->txtPCs->Name = L"txtPCs";
+			this->txtPCs->Size = System::Drawing::Size(214, 33);
+			this->txtPCs->TabIndex = 29;
 			// 
 			// label3
 			// 
@@ -174,13 +220,13 @@ namespace CAss2 {
 			this->label3->TabIndex = 17;
 			this->label3->Text = L"Lap Name";
 			// 
-			// textBox2
+			// txtLabName
 			// 
-			this->textBox2->Location = System::Drawing::Point(192, 114);
-			this->textBox2->Multiline = true;
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(214, 33);
-			this->textBox2->TabIndex = 22;
+			this->txtLabName->Location = System::Drawing::Point(192, 114);
+			this->txtLabName->Multiline = true;
+			this->txtLabName->Name = L"txtLabName";
+			this->txtLabName->Size = System::Drawing::Size(214, 33);
+			this->txtLabName->TabIndex = 22;
 			// 
 			// label5
 			// 
@@ -205,6 +251,7 @@ namespace CAss2 {
 			this->button2->TabIndex = 18;
 			this->button2->Text = L"Modify";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminModifyLap::button2_Click);
 			// 
 			// label2
 			// 
@@ -217,26 +264,6 @@ namespace CAss2 {
 			this->label2->Size = System::Drawing::Size(196, 39);
 			this->label2->TabIndex = 7;
 			this->label2->Text = L"Modify Lap";
-			// 
-			// label6
-			// 
-			this->label6->AutoSize = true;
-			this->label6->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label6->ForeColor = System::Drawing::Color::White;
-			this->label6->Location = System::Drawing::Point(43, 34);
-			this->label6->Name = L"label6";
-			this->label6->Size = System::Drawing::Size(63, 24);
-			this->label6->TabIndex = 35;
-			this->label6->Text = L"Lap ID";
-			// 
-			// textBox5
-			// 
-			this->textBox5->Location = System::Drawing::Point(192, 25);
-			this->textBox5->Multiline = true;
-			this->textBox5->Name = L"textBox5";
-			this->textBox5->Size = System::Drawing::Size(214, 33);
-			this->textBox5->TabIndex = 36;
 			// 
 			// AdminModifyLap
 			// 
@@ -255,5 +282,160 @@ namespace CAss2 {
 
 		}
 #pragma endregion
-	};
+	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+		if (String::IsNullOrWhiteSpace(txtLabId->Text))
+		{
+			MessageBox::Show("Enter Lab ID");
+			return;
+		}
+
+		int labId = Convert::ToInt32(txtLabId->Text);
+
+		String^ connStr =
+			"Server=localhost\\SQLEXPRESS;"
+			"Database=MyDB;"
+			"Trusted_Connection=True;"
+			"TrustServerCertificate=True;";
+
+		SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+		try
+		{
+			conn->Open();
+
+			SqlCommand^ cmd = gcnew SqlCommand(
+				"SELECT name, capacity, computers_count, ac_count, has_projector "
+				"FROM Labs WHERE id = @id",
+				conn);
+
+			cmd->Parameters->AddWithValue("@id", labId);
+
+			SqlDataReader^ dr = cmd->ExecuteReader();
+
+			if (!dr->Read())
+			{
+				MessageBox::Show("Lab not found");
+				dr->Close();
+				return;
+			}
+
+			// ✔ خزّن الـ ID
+			currentLabId = labId;
+
+			// ✔ عبّي البيانات
+			txtLabName->Text = dr["name"]->ToString();
+			txtCapacity->Text = dr["capacity"]->ToString();
+			txtPCs->Text = dr["computers_count"]->ToString();
+			txtACs->Text = dr["ac_count"]->ToString();
+			chkProjector->Checked = Convert::ToBoolean(dr["has_projector"]);
+
+			dr->Close();
+		}
+		catch (Exception^ ex)
+		{
+			MessageBox::Show(ex->Message);
+		}
+		finally
+		{
+			conn->Close();
+		}
+	}
+private: System::Void textBox5_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	// =============================
+	// Check Show First
+	// =============================
+	if (currentLabId == -1)
+	{
+		MessageBox::Show("Please click Show first");
+		return;
+	}
+
+	// =============================
+	// Validation
+	// =============================
+	if (String::IsNullOrWhiteSpace(txtLabName->Text))
+	{
+		MessageBox::Show("Enter lab name");
+		return;
+	}
+
+	int capacity, pcs, acs;
+
+	if (!Int32::TryParse(txtCapacity->Text, capacity) || capacity <= 0)
+	{
+		MessageBox::Show("Invalid capacity");
+		return;
+	}
+
+	if (!Int32::TryParse(txtPCs->Text, pcs) || pcs < 0)
+	{
+		MessageBox::Show("Invalid PCs count");
+		return;
+	}
+
+	if (!Int32::TryParse(txtACs->Text, acs) || acs < 0)
+	{
+		MessageBox::Show("Invalid ACs count");
+		return;
+	}
+
+	bool hasProjector = chkProjector->Checked;
+
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	try
+	{
+		conn->Open();
+
+		SqlCommand^ cmd = gcnew SqlCommand(
+			"UPDATE Labs SET "
+			"name = @name, "
+			"capacity = @capacity, "
+			"computers_count = @pcs, "
+			"ac_count = @acs, "
+			"has_projector = @proj "
+			"WHERE id = @id",
+			conn);
+
+		cmd->Parameters->AddWithValue("@name", txtLabName->Text);
+		cmd->Parameters->AddWithValue("@capacity", capacity);
+		cmd->Parameters->AddWithValue("@pcs", pcs);
+		cmd->Parameters->AddWithValue("@acs", acs);
+		cmd->Parameters->AddWithValue("@proj", hasProjector);
+		cmd->Parameters->AddWithValue("@id", currentLabId);
+
+		cmd->ExecuteNonQuery();
+
+		MessageBox::Show("Lab updated successfully");
+
+		// =============================
+		// Reset
+		// =============================
+		currentLabId = -1;
+		txtLabId->Clear();
+		txtLabName->Clear();
+		txtCapacity->Clear();
+		txtPCs->Clear();
+		txtACs->Clear();
+		chkProjector->Checked = false;
+	}
+	catch (Exception^ ex)
+	{
+		MessageBox::Show(ex->Message);
+	}
+	finally
+	{
+		conn->Close();
+	}
+}
+};
 }

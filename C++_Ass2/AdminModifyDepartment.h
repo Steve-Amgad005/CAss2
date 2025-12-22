@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace CAss2 {
 
@@ -8,12 +8,15 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
 
 	/// <summary>
 	/// Summary for AdminModifyDepartment
 	/// </summary>
 	public ref class AdminModifyDepartment : public System::Windows::Forms::Form
 	{
+		int currentDepartmentId = -1;
+
 	public:
 		AdminModifyDepartment(void)
 		{
@@ -38,12 +41,16 @@ namespace CAss2 {
 	protected:
 	private: System::Windows::Forms::Panel^ panel1;
 	private: System::Windows::Forms::Label^ label3;
-	private: System::Windows::Forms::Label^ label4;
-	private: System::Windows::Forms::TextBox^ textBox2;
-	private: System::Windows::Forms::TextBox^ textBox1;
+	private: System::Windows::Forms::TextBox^ txtDepartmentName;
+
+
+
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::Label^ label1;
-	private: System::Windows::Forms::TextBox^ textBox3;
+	private: System::Windows::Forms::TextBox^ txtDepartmentId;
+
+
+	private: System::Windows::Forms::Button^ button1;
 
 
 
@@ -62,13 +69,12 @@ namespace CAss2 {
 		{
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->label3 = (gcnew System::Windows::Forms::Label());
-			this->label4 = (gcnew System::Windows::Forms::Label());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->button2 = (gcnew System::Windows::Forms::Button());
+			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
+			this->txtDepartmentId = (gcnew System::Windows::Forms::TextBox());
+			this->button2 = (gcnew System::Windows::Forms::Button());
+			this->label3 = (gcnew System::Windows::Forms::Label());
+			this->txtDepartmentName = (gcnew System::Windows::Forms::TextBox());
 			this->panel1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -88,70 +94,30 @@ namespace CAss2 {
 			// 
 			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->panel1->Controls->Add(this->button1);
 			this->panel1->Controls->Add(this->label1);
-			this->panel1->Controls->Add(this->textBox3);
+			this->panel1->Controls->Add(this->txtDepartmentId);
 			this->panel1->Controls->Add(this->button2);
 			this->panel1->Controls->Add(this->label3);
-			this->panel1->Controls->Add(this->label4);
-			this->panel1->Controls->Add(this->textBox2);
-			this->panel1->Controls->Add(this->textBox1);
+			this->panel1->Controls->Add(this->txtDepartmentName);
 			this->panel1->Location = System::Drawing::Point(39, 75);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(429, 283);
+			this->panel1->Size = System::Drawing::Size(429, 253);
 			this->panel1->TabIndex = 4;
 			this->panel1->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &AdminModifyDepartment::panel1_Paint);
 			// 
-			// label3
+			// button1
 			// 
-			this->label3->AutoSize = true;
-			this->label3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->button1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label3->ForeColor = System::Drawing::Color::White;
-			this->label3->Location = System::Drawing::Point(20, 115);
-			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(163, 24);
-			this->label3->TabIndex = 17;
-			this->label3->Text = L"Department Name";
-			// 
-			// label4
-			// 
-			this->label4->AutoSize = true;
-			this->label4->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label4->ForeColor = System::Drawing::Color::White;
-			this->label4->Location = System::Drawing::Point(22, 161);
-			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(158, 24);
-			this->label4->TabIndex = 16;
-			this->label4->Text = L"Department Code";
-			// 
-			// textBox2
-			// 
-			this->textBox2->Location = System::Drawing::Point(189, 162);
-			this->textBox2->Multiline = true;
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(214, 33);
-			this->textBox2->TabIndex = 22;
-			// 
-			// textBox1
-			// 
-			this->textBox1->Location = System::Drawing::Point(189, 115);
-			this->textBox1->Multiline = true;
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(214, 33);
-			this->textBox1->TabIndex = 23;
-			// 
-			// button2
-			// 
-			this->button2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->button2->ForeColor = System::Drawing::Color::Purple;
-			this->button2->Location = System::Drawing::Point(100, 221);
-			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(226, 48);
-			this->button2->TabIndex = 24;
-			this->button2->Text = L"Modify";
-			this->button2->UseVisualStyleBackColor = true;
+			this->button1->ForeColor = System::Drawing::Color::Purple;
+			this->button1->Location = System::Drawing::Point(159, 62);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(107, 36);
+			this->button1->TabIndex = 29;
+			this->button1->Text = L"Show";
+			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &AdminModifyDepartment::button1_Click);
 			// 
 			// label1
 			// 
@@ -165,13 +131,47 @@ namespace CAss2 {
 			this->label1->TabIndex = 27;
 			this->label1->Text = L"Department Code";
 			// 
-			// textBox3
+			// txtDepartmentId
 			// 
-			this->textBox3->Location = System::Drawing::Point(189, 23);
-			this->textBox3->Multiline = true;
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(214, 33);
-			this->textBox3->TabIndex = 28;
+			this->txtDepartmentId->Location = System::Drawing::Point(189, 23);
+			this->txtDepartmentId->Multiline = true;
+			this->txtDepartmentId->Name = L"txtDepartmentId";
+			this->txtDepartmentId->Size = System::Drawing::Size(214, 33);
+			this->txtDepartmentId->TabIndex = 28;
+			this->txtDepartmentId->TextChanged += gcnew System::EventHandler(this, &AdminModifyDepartment::textBox3_TextChanged);
+			// 
+			// button2
+			// 
+			this->button2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->button2->ForeColor = System::Drawing::Color::Purple;
+			this->button2->Location = System::Drawing::Point(101, 175);
+			this->button2->Name = L"button2";
+			this->button2->Size = System::Drawing::Size(226, 48);
+			this->button2->TabIndex = 24;
+			this->button2->Text = L"Modify";
+			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminModifyDepartment::button2_Click);
+			// 
+			// label3
+			// 
+			this->label3->AutoSize = true;
+			this->label3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label3->ForeColor = System::Drawing::Color::White;
+			this->label3->Location = System::Drawing::Point(20, 115);
+			this->label3->Name = L"label3";
+			this->label3->Size = System::Drawing::Size(163, 24);
+			this->label3->TabIndex = 17;
+			this->label3->Text = L"Department Name";
+			// 
+			// txtDepartmentName
+			// 
+			this->txtDepartmentName->Location = System::Drawing::Point(189, 115);
+			this->txtDepartmentName->Multiline = true;
+			this->txtDepartmentName->Name = L"txtDepartmentName";
+			this->txtDepartmentName->Size = System::Drawing::Size(214, 33);
+			this->txtDepartmentName->TabIndex = 23;
 			// 
 			// AdminModifyDepartment
 			// 
@@ -192,5 +192,104 @@ namespace CAss2 {
 #pragma endregion
 	private: System::Void panel1_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
 	}
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+	if (String::IsNullOrWhiteSpace(txtDepartmentId->Text))
+	{
+		MessageBox::Show("Enter Department ID", "Validation Error");
+		return;
+	}
+
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	try
+	{
+		conn->Open();
+
+		SqlCommand^ cmd = gcnew SqlCommand(
+			"SELECT id, name FROM Departments WHERE id = @id",
+			conn);
+
+		cmd->Parameters->AddWithValue("@id",
+			Convert::ToInt32(txtDepartmentId->Text));
+
+		SqlDataReader^ dr = cmd->ExecuteReader();
+
+		if (!dr->Read())
+		{
+			MessageBox::Show("Department not found");
+			dr->Close();
+			return;
+		}
+
+		// خزّن الـ ID
+		currentDepartmentId = Convert::ToInt32(dr["id"]);
+
+		// حط الاسم في TextBox
+		txtDepartmentName->Text = dr["name"]->ToString();
+
+		dr->Close();
+		conn->Close();
+	}
+	catch (Exception^ ex)
+	{
+		MessageBox::Show(ex->Message, "Error");
+	}
+}
+private: System::Void textBox3_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	if (currentDepartmentId == -1)
+	{
+		MessageBox::Show("Please click Show first", "Error");
+		return;
+	}
+
+	if (String::IsNullOrWhiteSpace(txtDepartmentName->Text))
+	{
+		MessageBox::Show("Enter department name", "Validation Error");
+		return;
+	}
+
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	try
+	{
+		conn->Open();
+
+		SqlCommand^ cmd = gcnew SqlCommand(
+			"UPDATE Departments SET name = @name WHERE id = @id",
+			conn);
+
+		cmd->Parameters->AddWithValue("@name", txtDepartmentName->Text);
+		cmd->Parameters->AddWithValue("@id", currentDepartmentId);
+
+		cmd->ExecuteNonQuery();
+
+		MessageBox::Show("Department updated successfully", "Success");
+
+		// Reset
+		currentDepartmentId = -1;
+		txtDepartmentId->Clear();
+		txtDepartmentName->Clear();
+
+		conn->Close();
+	}
+	catch (Exception^ ex)
+	{
+		MessageBox::Show(ex->Message, "Error");
+	}
+}
 };
 }
