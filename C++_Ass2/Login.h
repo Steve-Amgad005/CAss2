@@ -3,6 +3,8 @@
 #include "StudetMainPage.h"
 #include "AdminPage.h"
 #include "ProfessorPage.h"
+#include "NewsPage.h"
+
 using namespace System;
 using namespace System::Data::SqlClient;
 namespace CAss2 {
@@ -53,6 +55,7 @@ namespace CAss2 {
 	private: System::Windows::Forms::TextBox^ textBox2;
 	private: System::Windows::Forms::TextBox^ textBox1;
 	private: System::Windows::Forms::ComboBox^ comboBox1;
+	private: System::Windows::Forms::Button^ button2;
 	protected:
 
 	private:
@@ -77,6 +80,7 @@ namespace CAss2 {
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->labelCode = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->panel1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -191,6 +195,19 @@ namespace CAss2 {
 			this->label1->TabIndex = 0;
 			this->label1->Text = L"Login";
 			// 
+			// button2
+			// 
+			this->button2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->button2->ForeColor = System::Drawing::Color::Purple;
+			this->button2->Location = System::Drawing::Point(23, 12);
+			this->button2->Name = L"button2";
+			this->button2->Size = System::Drawing::Size(73, 48);
+			this->button2->TabIndex = 8;
+			this->button2->Text = L"News";
+			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &Login::button2_Click);
+			// 
 			// Login
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -198,6 +215,7 @@ namespace CAss2 {
 			this->BackColor = System::Drawing::Color::Purple;
 			this->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
 			this->ClientSize = System::Drawing::Size(872, 493);
+			this->Controls->Add(this->button2);
 			this->Controls->Add(this->panel1);
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
@@ -216,6 +234,7 @@ namespace CAss2 {
 	}
 	private: System::Void label3_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
+
 private: System::Void label4_Click(System::Object^ sender, System::EventArgs^ e) {
 	CAss2::Forgot^ forgotForm = gcnew CAss2::Forgot();
 	forgotForm->Show();
@@ -328,18 +347,19 @@ private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, Sys
 
 	String^ role = comboBox1->SelectedItem->ToString();
 
-	if (role == "Student")
-	{
+	if (role == "Student"){
 		labelCode->Text = "Student Code";
 	}
-	else if (role == "Professor")
-	{
+	else if (role == "Professor"){
 		labelCode->Text = "Professor Code";
 	}
-	else if (role == "Admin")
-	{
+	else if (role == "Admin"){
 		labelCode->Text = "Admin Code";
 	}
+}
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	NewsPage^ newsForm = gcnew NewsPage();
+	newsForm->ShowDialog();
 }
 };
 }

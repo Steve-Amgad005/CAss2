@@ -14,16 +14,12 @@ namespace CAss2 {
 	using namespace System::Diagnostics;
 	using namespace System::Data::SqlClient;
 
-	
-
-
 	/// <summary>
 	/// Summary for StudetMainPage
 	/// </summary>
 	public ref class StudetMainPage : public System::Windows::Forms::Form
 	{
-		void LoadStudentData()
-		{
+		void LoadStudentData(){
 			String^ connStr =
 				"Server=localhost\\SQLEXPRESS;"
 				"Database=MyDB;"
@@ -32,8 +28,7 @@ namespace CAss2 {
 
 			SqlConnection^ conn = gcnew SqlConnection(connStr);
 
-			try
-			{
+			try{
 				conn->Open();
 
 				String^ query =
@@ -48,8 +43,7 @@ namespace CAss2 {
 
 				SqlDataReader^ reader = cmd->ExecuteReader();
 
-				if (reader->Read())
-				{
+				if (reader->Read()){
 					// =========================
 					// Text data
 					// =========================
@@ -59,8 +53,7 @@ namespace CAss2 {
 					LableStdDept->Text = reader["DepartmentName"]->ToString();
 
 					int year = Convert::ToInt32(reader["year"]);
-					switch (year)
-					{
+					switch (year){
 					case 1: LableStdYear->Text = "First Year"; break;
 					case 2: LableStdYear->Text = "Second Year"; break;
 					case 3: LableStdYear->Text = "Third Year"; break;
@@ -78,7 +71,6 @@ namespace CAss2 {
 						array<Byte>^ imgBytes = (array<Byte>^)reader["ProfileImage"];
 						System::IO::MemoryStream^ ms = gcnew System::IO::MemoryStream(imgBytes);
 
-						// Free old image (important)
 						if (pictureBox2->Image != nullptr)
 						{
 							delete pictureBox2->Image;
@@ -103,7 +95,6 @@ namespace CAss2 {
 				MessageBox::Show(ex->Message);
 			}
 		}
-
 
 	private:
 		int StdCode;
@@ -614,7 +605,8 @@ namespace CAss2 {
 	}
 	private: System::Void label11_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
-	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
 		String^ connStr =
 			"Server=localhost\\SQLEXPRESS;"
 			"Database=MyDB;"
@@ -663,7 +655,9 @@ namespace CAss2 {
 		StudentGrades^ gradesForm = gcnew StudentGrades(StdCode);
 		gradesForm->Show();
 	}
+
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
+
 private: System::Void button7_Click(System::Object^ sender, System::EventArgs^ e) {
 	ProcessStartInfo^ psi = gcnew ProcessStartInfo();
 	psi->FileName = "https://nctu.edu.eg/";
@@ -700,7 +694,6 @@ private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e
 
 	SqlCommand^ cmd = gcnew SqlCommand(query, conn);
 
-	// ✅ تأكد إن StdCode int
 	cmd->Parameters->Add("@code", SqlDbType::Int)->Value = StdCode;
 
 	try

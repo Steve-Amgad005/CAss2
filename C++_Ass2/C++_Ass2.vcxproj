@@ -157,6 +157,7 @@
     <ClCompile Include="AdminStudentsPage.cpp" />
     <ClCompile Include="Forgot1.cpp" />
     <ClCompile Include="Login.cpp" />
+    <ClCompile Include="NewsPage.cpp" />
     <ClCompile Include="ProfessorAttendanceSet.cpp" />
     <ClCompile Include="ProfessorEnterGrades.cpp" />
     <ClCompile Include="ProfessorPage.cpp" />
@@ -271,6 +272,9 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Login.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="NewsPage.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="ProfessorAttendanceSet.h">
@@ -400,6 +404,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewsPage.resx">
+      <DependentUpon>NewsPage.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProfessorAttendanceSet.resx">
       <DependentUpon>ProfessorAttendanceSet.h</DependentUpon>

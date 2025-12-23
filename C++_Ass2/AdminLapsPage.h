@@ -39,7 +39,6 @@ namespace CAss2 {
 					"f.floor_number AS [Floor], "
 					"l.capacity AS [Capacity], "
 					"l.computers_count AS [PCs], "
-					"l.ac_count AS [ACs], "
 					"CASE WHEN l.has_projector = 1 THEN 'Yes' ELSE 'No' END AS [Projector], "
 					"CASE WHEN l.has_air_condition = 1 THEN 'Yes' ELSE 'No' END AS [Air Condition] "
 					"FROM Labs l "
@@ -287,6 +286,7 @@ namespace CAss2 {
 			this->Controls->Add(this->panel1);
 			this->Name = L"AdminLapsPage";
 			this->Text = L"AdminLapsPage";
+			this->Load += gcnew System::EventHandler(this, &AdminLapsPage::AdminLapsPage_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewLabs))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 			this->panel1->ResumeLayout(false);
@@ -310,6 +310,8 @@ private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e
 private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
 private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
 	LoadAllLabs();
+}
+private: System::Void AdminLapsPage_Load(System::Object^ sender, System::EventArgs^ e) {
 }
 };
 }

@@ -450,7 +450,7 @@ using namespace System::Data::SqlClient;
 	// declaration for Attendance Management button handler
 	private: System::Void button7_Click(System::Object^ sender, System::EventArgs^ e);
 private: System::Void ProfessorPage_Load(System::Object^ sender, System::EventArgs^ e) {
-	LoadProfessorData();
+		LoadProfessorData();
 	LoadProfessorCourses(ProfID);
 }
 private: System::Void label10_Click(System::Object^ sender, System::EventArgs^ e) {
