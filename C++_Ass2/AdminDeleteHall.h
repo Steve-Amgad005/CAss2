@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace CAss2 {
 
@@ -8,6 +8,7 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
 
 	/// <summary>
 	/// Summary for AdminDeleteHall
@@ -37,7 +38,8 @@ namespace CAss2 {
 	private: System::Windows::Forms::Panel^ panel1;
 	protected:
 	private: System::Windows::Forms::Label^ label6;
-	private: System::Windows::Forms::TextBox^ textBox5;
+	private: System::Windows::Forms::TextBox^ txtHallId;
+
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::Label^ label2;
 
@@ -56,7 +58,7 @@ namespace CAss2 {
 		{
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
 			this->label6 = (gcnew System::Windows::Forms::Label());
-			this->textBox5 = (gcnew System::Windows::Forms::TextBox());
+			this->txtHallId = (gcnew System::Windows::Forms::TextBox());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->panel1->SuspendLayout();
@@ -67,7 +69,7 @@ namespace CAss2 {
 			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
 			this->panel1->Controls->Add(this->label6);
-			this->panel1->Controls->Add(this->textBox5);
+			this->panel1->Controls->Add(this->txtHallId);
 			this->panel1->Controls->Add(this->button2);
 			this->panel1->Location = System::Drawing::Point(40, 95);
 			this->panel1->Name = L"panel1";
@@ -86,13 +88,13 @@ namespace CAss2 {
 			this->label6->TabIndex = 35;
 			this->label6->Text = L"Hall ID";
 			// 
-			// textBox5
+			// txtHallId
 			// 
-			this->textBox5->Location = System::Drawing::Point(192, 25);
-			this->textBox5->Multiline = true;
-			this->textBox5->Name = L"textBox5";
-			this->textBox5->Size = System::Drawing::Size(214, 33);
-			this->textBox5->TabIndex = 36;
+			this->txtHallId->Location = System::Drawing::Point(192, 25);
+			this->txtHallId->Multiline = true;
+			this->txtHallId->Name = L"txtHallId";
+			this->txtHallId->Size = System::Drawing::Size(214, 33);
+			this->txtHallId->TabIndex = 36;
 			// 
 			// button2
 			// 
@@ -105,6 +107,7 @@ namespace CAss2 {
 			this->button2->TabIndex = 18;
 			this->button2->Text = L"Delete";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminDeleteHall::button2_Click);
 			// 
 			// label2
 			// 
@@ -135,5 +138,82 @@ namespace CAss2 {
 
 		}
 #pragma endregion
-	};
+	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+		if (String::IsNullOrWhiteSpace(txtHallId->Text))
+		{
+			MessageBox::Show("Enter Hall ID");
+			return;
+		}
+
+		int hallId = Convert::ToInt32(txtHallId->Text);
+
+		String^ connStr =
+			"Server=localhost\\SQLEXPRESS;"
+			"Database=MyDB;"
+			"Trusted_Connection=True;"
+			"TrustServerCertificate=True;";
+
+		SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+		try
+		{
+			conn->Open();
+
+			// ==========================
+			// Check if hall is used
+			// ==========================
+			SqlCommand^ cmdCheck = gcnew SqlCommand(
+				"SELECT COUNT(*) FROM Schedule WHERE hall_id = @id", conn);
+
+			cmdCheck->Parameters->AddWithValue("@id", hallId);
+
+			int usedCount = Convert::ToInt32(cmdCheck->ExecuteScalar());
+
+			if (usedCount > 0)
+			{
+				MessageBox::Show(
+					"Cannot delete hall.\nHall is already used in schedule.",
+					"Delete Blocked",
+					MessageBoxButtons::OK,
+					MessageBoxIcon::Warning);
+				return;
+			}
+
+			// ==========================
+			// Confirm delete
+			// ==========================
+			if (MessageBox::Show(
+				"Are you sure you want to delete this hall?",
+				"Confirm Delete",
+				MessageBoxButtons::YesNo,
+				MessageBoxIcon::Warning)
+				== System::Windows::Forms::DialogResult::No)
+			{
+				return;
+			}
+
+			// ==========================
+			// Delete hall
+			// ==========================
+			SqlCommand^ cmdDelete = gcnew SqlCommand(
+				"DELETE FROM LectureHalls WHERE id = @id", conn);
+
+			cmdDelete->Parameters->AddWithValue("@id", hallId);
+			cmdDelete->ExecuteNonQuery();
+
+			MessageBox::Show("Hall deleted successfully");
+
+			// Clear fields
+			txtHallId->Clear();
+		}
+		catch (Exception^ ex)
+		{
+			MessageBox::Show(ex->Message, "Error");
+		}
+		finally
+		{
+			conn->Close();
+		}
+	}
+};
 }

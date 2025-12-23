@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 namespace CAss2 {
 
@@ -8,12 +8,16 @@ namespace CAss2 {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Data::SqlClient;
 
 	/// <summary>
 	/// Summary for AdminModifyHall
 	/// </summary>
 	public ref class AdminModifyHall : public System::Windows::Forms::Form
 	{
+		int currentHallId = -1;
+
+
 	public:
 		AdminModifyHall(void)
 		{
@@ -35,18 +39,24 @@ namespace CAss2 {
 			}
 		}
 	private: System::Windows::Forms::Panel^ panel1;
+	private: System::Windows::Forms::CheckBox^ chkProjector;
 	protected:
-	private: System::Windows::Forms::CheckBox^ checkBox1;
-	private: System::Windows::Forms::TextBox^ textBox4;
+
+	private: System::Windows::Forms::TextBox^ txtCapacity;
+
 	private: System::Windows::Forms::Label^ label4;
-	private: System::Windows::Forms::TextBox^ textBox1;
-	private: System::Windows::Forms::Label^ label1;
+
+
 	private: System::Windows::Forms::Label^ label3;
-	private: System::Windows::Forms::TextBox^ textBox2;
+	private: System::Windows::Forms::TextBox^ txtHallName;
+
 	private: System::Windows::Forms::Button^ button2;
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Label^ label5;
-	private: System::Windows::Forms::TextBox^ textBox3;
+	private: System::Windows::Forms::TextBox^ txtHallId;
+
+	private: System::Windows::Forms::Button^ button1;
+	private: System::Windows::Forms::CheckBox^ chkAC;
 
 	private:
 		/// <summary>
@@ -62,17 +72,17 @@ namespace CAss2 {
 		void InitializeComponent(void)
 		{
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->checkBox1 = (gcnew System::Windows::Forms::CheckBox());
-			this->textBox4 = (gcnew System::Windows::Forms::TextBox());
+			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->chkAC = (gcnew System::Windows::Forms::CheckBox());
+			this->label5 = (gcnew System::Windows::Forms::Label());
+			this->txtHallId = (gcnew System::Windows::Forms::TextBox());
+			this->chkProjector = (gcnew System::Windows::Forms::CheckBox());
+			this->txtCapacity = (gcnew System::Windows::Forms::TextBox());
 			this->label4 = (gcnew System::Windows::Forms::Label());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label3 = (gcnew System::Windows::Forms::Label());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
+			this->txtHallName = (gcnew System::Windows::Forms::TextBox());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->label2 = (gcnew System::Windows::Forms::Label());
-			this->label5 = (gcnew System::Windows::Forms::Label());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
 			this->panel1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -80,117 +90,46 @@ namespace CAss2 {
 			// 
 			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(0)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->panel1->Controls->Add(this->button1);
+			this->panel1->Controls->Add(this->chkAC);
 			this->panel1->Controls->Add(this->label5);
-			this->panel1->Controls->Add(this->textBox3);
-			this->panel1->Controls->Add(this->checkBox1);
-			this->panel1->Controls->Add(this->textBox4);
+			this->panel1->Controls->Add(this->txtHallId);
+			this->panel1->Controls->Add(this->chkProjector);
+			this->panel1->Controls->Add(this->txtCapacity);
 			this->panel1->Controls->Add(this->label4);
-			this->panel1->Controls->Add(this->textBox1);
-			this->panel1->Controls->Add(this->label1);
 			this->panel1->Controls->Add(this->label3);
-			this->panel1->Controls->Add(this->textBox2);
+			this->panel1->Controls->Add(this->txtHallName);
 			this->panel1->Controls->Add(this->button2);
 			this->panel1->Location = System::Drawing::Point(40, 106);
 			this->panel1->Name = L"panel1";
 			this->panel1->Size = System::Drawing::Size(429, 401);
 			this->panel1->TabIndex = 8;
 			// 
-			// checkBox1
+			// button1
 			// 
-			this->checkBox1->AutoSize = true;
-			this->checkBox1->Font = (gcnew System::Drawing::Font(L"Microsoft New Tai Lue", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->button1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->checkBox1->ForeColor = System::Drawing::Color::White;
-			this->checkBox1->Location = System::Drawing::Point(30, 277);
-			this->checkBox1->Name = L"checkBox1";
-			this->checkBox1->Size = System::Drawing::Size(108, 29);
-			this->checkBox1->TabIndex = 34;
-			this->checkBox1->Text = L"Projector";
-			this->checkBox1->UseVisualStyleBackColor = true;
+			this->button1->ForeColor = System::Drawing::Color::Purple;
+			this->button1->Location = System::Drawing::Point(170, 54);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(94, 36);
+			this->button1->TabIndex = 45;
+			this->button1->Text = L"Show";
+			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &AdminModifyHall::button1_Click);
 			// 
-			// textBox4
+			// chkAC
 			// 
-			this->textBox4->Location = System::Drawing::Point(193, 221);
-			this->textBox4->Multiline = true;
-			this->textBox4->Name = L"textBox4";
-			this->textBox4->Size = System::Drawing::Size(214, 33);
-			this->textBox4->TabIndex = 33;
-			// 
-			// label4
-			// 
-			this->label4->AutoSize = true;
-			this->label4->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->chkAC->AutoSize = true;
+			this->chkAC->Font = (gcnew System::Drawing::Font(L"Microsoft New Tai Lue", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label4->ForeColor = System::Drawing::Color::White;
-			this->label4->Location = System::Drawing::Point(26, 230);
-			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(81, 24);
-			this->label4->TabIndex = 32;
-			this->label4->Text = L"Capacity";
-			// 
-			// textBox1
-			// 
-			this->textBox1->Location = System::Drawing::Point(193, 167);
-			this->textBox1->Multiline = true;
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(214, 33);
-			this->textBox1->TabIndex = 31;
-			// 
-			// label1
-			// 
-			this->label1->AutoSize = true;
-			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label1->ForeColor = System::Drawing::Color::White;
-			this->label1->Location = System::Drawing::Point(26, 176);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(104, 24);
-			this->label1->TabIndex = 30;
-			this->label1->Text = L"No. Of ACs";
-			// 
-			// label3
-			// 
-			this->label3->AutoSize = true;
-			this->label3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label3->ForeColor = System::Drawing::Color::White;
-			this->label3->Location = System::Drawing::Point(26, 122);
-			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(98, 24);
-			this->label3->TabIndex = 17;
-			this->label3->Text = L"Hall Name";
-			// 
-			// textBox2
-			// 
-			this->textBox2->Location = System::Drawing::Point(193, 113);
-			this->textBox2->Multiline = true;
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(214, 33);
-			this->textBox2->TabIndex = 22;
-			// 
-			// button2
-			// 
-			this->button2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->button2->ForeColor = System::Drawing::Color::Purple;
-			this->button2->Location = System::Drawing::Point(103, 330);
-			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(226, 48);
-			this->button2->TabIndex = 18;
-			this->button2->Text = L"Modify";
-			this->button2->UseVisualStyleBackColor = true;
-			// 
-			// label2
-			// 
-			this->label2->AutoSize = true;
-			this->label2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 26.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label2->ForeColor = System::Drawing::Color::White;
-			this->label2->Location = System::Drawing::Point(157, 35);
-			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(200, 39);
-			this->label2->TabIndex = 9;
-			this->label2->Text = L"Modify Hall";
+			this->chkAC->ForeColor = System::Drawing::Color::White;
+			this->chkAC->Location = System::Drawing::Point(30, 225);
+			this->chkAC->Name = L"chkAC";
+			this->chkAC->Size = System::Drawing::Size(52, 29);
+			this->chkAC->TabIndex = 44;
+			this->chkAC->Text = L"Ac";
+			this->chkAC->UseVisualStyleBackColor = true;
 			// 
 			// label5
 			// 
@@ -204,13 +143,91 @@ namespace CAss2 {
 			this->label5->TabIndex = 35;
 			this->label5->Text = L"Hall ID";
 			// 
-			// textBox3
+			// txtHallId
 			// 
-			this->textBox3->Location = System::Drawing::Point(193, 15);
-			this->textBox3->Multiline = true;
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(214, 33);
-			this->textBox3->TabIndex = 36;
+			this->txtHallId->Location = System::Drawing::Point(193, 15);
+			this->txtHallId->Multiline = true;
+			this->txtHallId->Name = L"txtHallId";
+			this->txtHallId->Size = System::Drawing::Size(214, 33);
+			this->txtHallId->TabIndex = 36;
+			// 
+			// chkProjector
+			// 
+			this->chkProjector->AutoSize = true;
+			this->chkProjector->Font = (gcnew System::Drawing::Font(L"Microsoft New Tai Lue", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->chkProjector->ForeColor = System::Drawing::Color::White;
+			this->chkProjector->Location = System::Drawing::Point(30, 270);
+			this->chkProjector->Name = L"chkProjector";
+			this->chkProjector->Size = System::Drawing::Size(108, 29);
+			this->chkProjector->TabIndex = 34;
+			this->chkProjector->Text = L"Projector";
+			this->chkProjector->UseVisualStyleBackColor = true;
+			// 
+			// txtCapacity
+			// 
+			this->txtCapacity->Location = System::Drawing::Point(193, 163);
+			this->txtCapacity->Multiline = true;
+			this->txtCapacity->Name = L"txtCapacity";
+			this->txtCapacity->Size = System::Drawing::Size(214, 33);
+			this->txtCapacity->TabIndex = 33;
+			// 
+			// label4
+			// 
+			this->label4->AutoSize = true;
+			this->label4->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label4->ForeColor = System::Drawing::Color::White;
+			this->label4->Location = System::Drawing::Point(26, 172);
+			this->label4->Name = L"label4";
+			this->label4->Size = System::Drawing::Size(81, 24);
+			this->label4->TabIndex = 32;
+			this->label4->Text = L"Capacity";
+			// 
+			// label3
+			// 
+			this->label3->AutoSize = true;
+			this->label3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label3->ForeColor = System::Drawing::Color::White;
+			this->label3->Location = System::Drawing::Point(26, 122);
+			this->label3->Name = L"label3";
+			this->label3->Size = System::Drawing::Size(98, 24);
+			this->label3->TabIndex = 17;
+			this->label3->Text = L"Hall Name";
+			// 
+			// txtHallName
+			// 
+			this->txtHallName->Location = System::Drawing::Point(193, 113);
+			this->txtHallName->Multiline = true;
+			this->txtHallName->Name = L"txtHallName";
+			this->txtHallName->Size = System::Drawing::Size(214, 33);
+			this->txtHallName->TabIndex = 22;
+			// 
+			// button2
+			// 
+			this->button2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->button2->ForeColor = System::Drawing::Color::Purple;
+			this->button2->Location = System::Drawing::Point(103, 330);
+			this->button2->Name = L"button2";
+			this->button2->Size = System::Drawing::Size(226, 48);
+			this->button2->TabIndex = 18;
+			this->button2->Text = L"Modify";
+			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminModifyHall::button2_Click);
+			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 26.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label2->ForeColor = System::Drawing::Color::White;
+			this->label2->Location = System::Drawing::Point(157, 35);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(200, 39);
+			this->label2->TabIndex = 9;
+			this->label2->Text = L"Modify Hall";
 			// 
 			// AdminModifyHall
 			// 
@@ -229,5 +246,120 @@ namespace CAss2 {
 
 		}
 #pragma endregion
-	};
+	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+		if (String::IsNullOrWhiteSpace(txtHallId->Text))
+		{
+			MessageBox::Show("Enter Hall ID");
+			return;
+		}
+
+		int hallId = Convert::ToInt32(txtHallId->Text);
+
+		String^ connStr =
+			"Server=localhost\\SQLEXPRESS;"
+			"Database=MyDB;"
+			"Trusted_Connection=True;"
+			"TrustServerCertificate=True;";
+
+		SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+		try
+		{
+			conn->Open();
+
+			SqlCommand^ cmd = gcnew SqlCommand(
+				"SELECT name, capacity, has_air_condition, has_projector "
+				"FROM LectureHalls WHERE id = @id", conn);
+
+			cmd->Parameters->AddWithValue("@id", hallId);
+
+			SqlDataReader^ dr = cmd->ExecuteReader();
+
+			if (!dr->Read())
+			{
+				MessageBox::Show("Hall not found");
+				dr->Close();
+				return;
+			}
+
+			// حفظ الـ ID
+			currentHallId = hallId;
+
+			// تعبئة البيانات
+			txtHallName->Text = dr["name"]->ToString();
+			txtCapacity->Text = dr["capacity"]->ToString();
+			chkAC->Checked = Convert::ToBoolean(dr["has_air_condition"]);
+			chkProjector->Checked = Convert::ToBoolean(dr["has_projector"]);
+
+			dr->Close();
+		}
+		catch (Exception^ ex)
+		{
+			MessageBox::Show(ex->Message);
+		}
+		finally
+		{
+			conn->Close();
+		}
+	}
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	if (currentHallId == -1)
+	{
+		MessageBox::Show("Please load hall data first");
+		return;
+	}
+
+	if (String::IsNullOrWhiteSpace(txtHallName->Text))
+	{
+		MessageBox::Show("Enter hall name");
+		return;
+	}
+
+	int capacity = 0;
+	if (!Int32::TryParse(txtCapacity->Text, capacity) || capacity <= 0)
+	{
+		MessageBox::Show("Enter valid capacity");
+		return;
+	}
+
+	String^ connStr =
+		"Server=localhost\\SQLEXPRESS;"
+		"Database=MyDB;"
+		"Trusted_Connection=True;"
+		"TrustServerCertificate=True;";
+
+	SqlConnection^ conn = gcnew SqlConnection(connStr);
+
+	try
+	{
+		conn->Open();
+
+		SqlCommand^ cmd = gcnew SqlCommand(
+			"UPDATE LectureHalls SET "
+			"name = @name, "
+			"capacity = @cap, "
+			"has_air_condition = @ac, "
+			"has_projector = @proj "
+			"WHERE id = @id", conn);
+
+		cmd->Parameters->AddWithValue("@name", txtHallName->Text);
+		cmd->Parameters->AddWithValue("@cap", capacity);
+		cmd->Parameters->AddWithValue("@ac", chkAC->Checked);
+		cmd->Parameters->AddWithValue("@proj", chkProjector->Checked);
+		cmd->Parameters->AddWithValue("@id", currentHallId);
+
+		cmd->ExecuteNonQuery();
+
+		MessageBox::Show("Hall updated successfully");
+	}
+	catch (Exception^ ex)
+	{
+		MessageBox::Show(ex->Message);
+	}
+	finally
+	{
+		conn->Close();
+	}
+}
+};
 }

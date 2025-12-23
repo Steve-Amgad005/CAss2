@@ -261,6 +261,7 @@ private: System::Windows::Forms::DataGridView^ dataGridViewAttendance;
 			this->dataGridViewAttendance->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dataGridViewAttendance->Location = System::Drawing::Point(454, 17);
 			this->dataGridViewAttendance->Name = L"dataGridViewAttendance";
+			this->dataGridViewAttendance->ReadOnly = true;
 			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
 			this->dataGridViewAttendance->RowsDefaultCellStyle = dataGridViewCellStyle3;
 			this->dataGridViewAttendance->Size = System::Drawing::Size(643, 380);

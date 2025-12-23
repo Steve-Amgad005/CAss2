@@ -285,6 +285,7 @@ namespace CAss2 {
 			this->dataGridViewStudents->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dataGridViewStudents->Location = System::Drawing::Point(189, 255);
 			this->dataGridViewStudents->Name = L"dataGridViewStudents";
+			this->dataGridViewStudents->ReadOnly = true;
 			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
 			this->dataGridViewStudents->RowsDefaultCellStyle = dataGridViewCellStyle3;
 			this->dataGridViewStudents->Size = System::Drawing::Size(838, 302);

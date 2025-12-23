@@ -138,6 +138,7 @@ namespace CAss2 {
 			this->dataGridView1->GridColor = System::Drawing::Color::Purple;
 			this->dataGridView1->Location = System::Drawing::Point(12, 31);
 			this->dataGridView1->Name = L"dataGridView1";
+			this->dataGridView1->ReadOnly = true;
 			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
 			this->dataGridView1->RowsDefaultCellStyle = dataGridViewCellStyle3;
 			this->dataGridView1->Size = System::Drawing::Size(702, 494);

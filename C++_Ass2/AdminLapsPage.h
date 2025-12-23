@@ -149,6 +149,7 @@ namespace CAss2 {
 			this->dataGridViewLabs->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dataGridViewLabs->Location = System::Drawing::Point(179, 270);
 			this->dataGridViewLabs->Name = L"dataGridViewLabs";
+			this->dataGridViewLabs->ReadOnly = true;
 			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
 			this->dataGridViewLabs->RowsDefaultCellStyle = dataGridViewCellStyle3;
 			this->dataGridViewLabs->Size = System::Drawing::Size(838, 302);

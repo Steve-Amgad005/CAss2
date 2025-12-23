@@ -193,6 +193,7 @@ namespace CAss2 {
 			this->dgvCourses->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dgvCourses->Location = System::Drawing::Point(179, 270);
 			this->dgvCourses->Name = L"dgvCourses";
+			this->dgvCourses->ReadOnly = true;
 			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
 			this->dgvCourses->RowsDefaultCellStyle = dataGridViewCellStyle3;
 			this->dgvCourses->Size = System::Drawing::Size(838, 302);

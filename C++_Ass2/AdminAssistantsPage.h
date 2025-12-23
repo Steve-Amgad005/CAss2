@@ -188,6 +188,7 @@ namespace CAss2 {
 			this->dgvAssistants->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dgvAssistants->Location = System::Drawing::Point(179, 270);
 			this->dgvAssistants->Name = L"dgvAssistants";
+			this->dgvAssistants->ReadOnly = true;
 			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
 			this->dgvAssistants->RowsDefaultCellStyle = dataGridViewCellStyle3;
 			this->dgvAssistants->Size = System::Drawing::Size(838, 302);

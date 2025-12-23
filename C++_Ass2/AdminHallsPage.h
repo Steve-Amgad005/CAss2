@@ -35,6 +35,7 @@ namespace CAss2 {
 			{
 				String^ query =
 					"SELECT "
+					"h.id AS [Hall ID], "
 					"h.name AS [Hall Name], "
 					"b.name AS [Building], "
 					"f.floor_number AS [Floor], "
@@ -148,6 +149,7 @@ namespace CAss2 {
 			this->dataGridViewHalls->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dataGridViewHalls->Location = System::Drawing::Point(179, 270);
 			this->dataGridViewHalls->Name = L"dataGridViewHalls";
+			this->dataGridViewHalls->ReadOnly = true;
 			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
 			this->dataGridViewHalls->RowsDefaultCellStyle = dataGridViewCellStyle3;
 			this->dataGridViewHalls->Size = System::Drawing::Size(838, 302);
@@ -202,6 +204,7 @@ namespace CAss2 {
 			this->button2->TabIndex = 23;
 			this->button2->Text = L"Refresh";
 			this->button2->UseVisualStyleBackColor = false;
+			this->button2->Click += gcnew System::EventHandler(this, &AdminHallsPage::button2_Click);
 			// 
 			// button1
 			// 
@@ -294,16 +297,19 @@ namespace CAss2 {
 #pragma endregion
 	private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e) {
 		AdminAddHall^ addHallForm = gcnew AdminAddHall();
-		addHallForm->Show();
+		addHallForm->ShowDialog();
 	}
 private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
 	AdminModifyHall^ modifyHallForm = gcnew AdminModifyHall();
-	modifyHallForm->Show();
+	modifyHallForm->ShowDialog();
 }
 private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
 	AdminDeleteHall^ deleteHallForm = gcnew AdminDeleteHall();
-	deleteHallForm->Show();
+	deleteHallForm->ShowDialog();
 }
 private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+	LoadAllHalls();//Refresh the data grid view
+}
 };
 }

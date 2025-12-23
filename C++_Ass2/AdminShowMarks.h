@@ -208,6 +208,7 @@ private: System::Windows::Forms::ComboBox^ cmbYear;
 			this->dataGridViewMarks->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dataGridViewMarks->Location = System::Drawing::Point(95, 235);
 			this->dataGridViewMarks->Name = L"dataGridViewMarks";
+			this->dataGridViewMarks->ReadOnly = true;
 			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
 			this->dataGridViewMarks->RowsDefaultCellStyle = dataGridViewCellStyle3;
 			this->dataGridViewMarks->Size = System::Drawing::Size(837, 292);
